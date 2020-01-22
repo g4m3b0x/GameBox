@@ -26,18 +26,17 @@ io.on('connection', socket => {
   });
 });
 
-const nsp = io.of('/new-namespace');
-nsp.on('connection', socket => {
-  console.log('A new client has connected to NEW NAMESPACE!');
-  console.log(socket.id);
-  // nsp.emit('test', 'hello world');
-  // socket.emit('test', 'hello world');
+// const nsp = io.of('/new-namespace');
+// nsp.on('connection', socket => {
+//   console.log('A new client has connected to NEW NAMESPACE!');
+//   console.log(socket.id);
+//   nsp.emit('test', 'hello world');
+//   // socket.emit('test', 'hello world');
 
-  socket.on('disconnect', () => {
-    console.log('A client has disconnected from NEW NAMESPACE!');
-  });
-});
-// nsp.emit('test', 'hello world');
+//   socket.on('disconnect', () => {
+//     console.log('A client has disconnected from NEW NAMESPACE!');
+//   });
+// });
 
 // EXPRESS ROUTES
 
