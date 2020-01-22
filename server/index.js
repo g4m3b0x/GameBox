@@ -17,15 +17,26 @@ const socketio = require('socket.io');
 const io = socketio(server);            // creates a connection server for web sockets...
                                         // ...and places a socket.io/socket.io.js route onto server
 
-io.on('connection', serverSocket => {
-  console.log('A new client has connected!');
-  console.log(serverSocket.id);
+io.on('connection', socket => {
+  console.log('A new client has connected to DEFAULT!');
+  console.log(socket.id);
 
-  serverSocket.on('disconnect', () => {
-    console.log('A client has disconnected!');
+  socket.on('disconnect', () => {
+    console.log('A client has disconnected from DEFAULT!');
   });
 });
 
+// const nsp = io.of('/new-namespace');
+// nsp.on('connection', socket => {
+//   console.log('A new client has connected to NEW NAMESPACE!');
+//   console.log(socket.id);
+//   nsp.emit('test', 'hello world');
+//   // socket.emit('test', 'hello world');
+
+//   socket.on('disconnect', () => {
+//     console.log('A client has disconnected from NEW NAMESPACE!');
+//   });
+// });
 
 // EXPRESS ROUTES
 
