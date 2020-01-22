@@ -14,13 +14,16 @@ const server = app.listen(PORT, () => {
 // SOCKET.IO CODE
 
 const socketio = require('socket.io');
-const io = socketio(server);            // creates a connection server for web sockets...
-                                        // ...and places a socket.io/socket.io.js route onto server
+const io = socketio(server); // creates a connection server for web sockets...
+// ...and places a socket.io/socket.io.js route onto server
 
 io.on('connection', socket => {
   console.log('A new client has connected to DEFAULT!');
   console.log(socket.id);
-
+  socket.on('join room', room => {
+    socket.join(room);
+    io.in(room).emit('joined', 'you are in room');
+  });
   socket.on('disconnect', () => {
     console.log('A client has disconnected from DEFAULT!');
   });
