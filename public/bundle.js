@@ -104,9 +104,20 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+var randomRoom = function randomRoom() {
+  var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  var room = '';
+
+  for (var i = 0; i < 4; i++) {
+    room += alphabet[Math.floor(Math.random() * 26)];
+  }
+
+  return room;
+};
+
 var App = function App() {
   var handleClick = function handleClick() {
-    _index_js__WEBPACK_IMPORTED_MODULE_2__["default"].emit('join room', 'room 1');
+    _index_js__WEBPACK_IMPORTED_MODULE_2__["default"].emit('join room', randomRoom());
   };
 
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "THIS IS APP.JS!", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {

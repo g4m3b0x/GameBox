@@ -22,7 +22,7 @@ io.on('connection', socket => {
   console.log(socket.id);
   socket.on('join room', room => {
     socket.join(room);
-    io.in(room).emit('joined', 'you are in room');
+    io.in(room).emit('joined', `you are in room ${room}`);
   });
   socket.on('disconnect', () => {
     console.log('A client has disconnected from DEFAULT!');
