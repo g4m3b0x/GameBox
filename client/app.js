@@ -2,30 +2,33 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import socket from './index.js';
 
-const getRandomRoom = () => {
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  let room = '';
-  for (let i = 0; i < 4; i++) {
-    room += alphabet[Math.floor(Math.random() * 26)];
-  }
-  return room;
-};
+import Welcome from './components/welcome.js';
+
+// const getRandomRoom = () => {
+//   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+//   let room = '';
+//   for (let i = 0; i < 4; i++) {
+//     room += alphabet[Math.floor(Math.random() * 26)];
+//   }
+//   return room;
+// };
 
 const App = () => {
-  socket.on('joined', data => console.log(data));
+  // socket.on('joined', data => console.log(data));
 
-  console.log(socket);
-  const handleClick = () => {
-    socket.emit('join room', getRandomRoom());
-  };
-  const [name, setName] = useState('');
-  const joinClick = () => {
-    socket.emit('join room', name);
-  };
+  // console.log(socket);
+  // const handleClick = () => {
+  //   socket.emit('join room', getRandomRoom());
+  // };
+  // const [name, setName] = useState('');
+  // const joinClick = () => {
+  //   socket.emit('join room', name);
+  // };
 
   return (
     <div>
-      THIS IS APP.JS!
+      <Welcome />
+      {/* THIS IS APP.JS!
       <input
         type="text"
         name="room-name"
@@ -33,7 +36,7 @@ const App = () => {
         onChange={e => setName(e.target.value)}
       />
       <button onClick={joinClick}> Join Room</button>
-      <button onClick={handleClick}>Create Room</button>
+      <button onClick={handleClick}>Create Room</button> */}
     </div>
   );
 };
