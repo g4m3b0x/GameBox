@@ -12,7 +12,14 @@ const getRandomRoom = () => {
 };
 
 const App = () => {
+
+  // SOCKET INITIALIZATIONS
+  console.log(socket);
+  console.log(typeof socket);
+  socket.on('joined', data => console.log(data));
+
   const handleClick = () => {
+
     socket.emit('join room', getRandomRoom());
   };
 
