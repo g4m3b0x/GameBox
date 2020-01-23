@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import socket from './index.js';
 
-const randomRoom = () => {
+const getRandomRoom = () => {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   let room = '';
   for (let i = 0; i < 4; i++) {
@@ -13,13 +13,13 @@ const randomRoom = () => {
 
 const App = () => {
   const handleClick = () => {
-    socket.emit('join room', randomRoom());
+    socket.emit('join room', getRandomRoom());
   };
 
   return (
     <div>
       THIS IS APP.JS!
-      <button onClick={handleClick}>CLICK sME</button>
+      <button onClick={handleClick}>CLICK ME</button>
     </div>
   );
 };

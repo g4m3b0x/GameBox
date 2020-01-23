@@ -104,7 +104,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var randomRoom = function randomRoom() {
+var getRandomRoom = function getRandomRoom() {
   var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   var room = '';
 
@@ -117,12 +117,12 @@ var randomRoom = function randomRoom() {
 
 var App = function App() {
   var handleClick = function handleClick() {
-    _index_js__WEBPACK_IMPORTED_MODULE_2__["default"].emit('join room', randomRoom());
+    _index_js__WEBPACK_IMPORTED_MODULE_2__["default"].emit('join room', getRandomRoom());
   };
 
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "THIS IS APP.JS!", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     onClick: handleClick
-  }, "CLICK sME"));
+  }, "CLICK ME"));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (App);
