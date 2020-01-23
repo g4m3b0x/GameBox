@@ -3,10 +3,11 @@
 const path = require('path');
 const express = require('express');
 const app = express();
+const socketRoutes = require('./sockets');
 
 // START EXPRESS SERVER
 
-const PORT = 1337;
+const PORT = process.env.PORT || 1337;
 const server = app.listen(PORT, () => {
   console.log(`Express server running on port ${PORT}`);
 });
@@ -14,32 +15,9 @@ const server = app.listen(PORT, () => {
 // SOCKET.IO CODE
 
 const socketio = require('socket.io');
-const io = socketio(server); // creates a connection server for web sockets...
-// ...and places a socket.io/socket.io.js route onto server
-
-io.on('connection', socket => {
-  console.log('A new client has connected to DEFAULT!');
-  console.log(socket.id);
-  socket.on('join room', room => {
-    socket.join(room);
-    io.in(room).emit('joined', `you are in room ${room}`);
-  });
-  socket.on('disconnect', () => {
-    console.log('A client has disconnected from DEFAULT!');
-  });
-});
-
-// const nsp = io.of('/new-namespace');
-// nsp.on('connection', socket => {
-//   console.log('A new client has connected to NEW NAMESPACE!');
-//   console.log(socket.id);
-//   nsp.emit('test', 'hello world');
-//   // socket.emit('test', 'hello world');
-
-//   socket.on('disconnect', () => {
-//     console.log('A client has disconnected from NEW NAMESPACE!');
-//   });
-// });
+const io = socketio(server);  // creates a connection server for web sockets...
+                              // ...and places a socket.io/socket.io.js route onto server
+io.on('connection', socket => socketRoutes(socket, io));
 
 // EXPRESS ROUTES
 
