@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import socket from './index.js';
 
@@ -12,21 +12,28 @@ const getRandomRoom = () => {
 };
 
 const App = () => {
-
-  // SOCKET INITIALIZATIONS
-  console.log(socket);
-  console.log(typeof socket);
   socket.on('joined', data => console.log(data));
 
+  console.log(socket);
   const handleClick = () => {
-
     socket.emit('join room', getRandomRoom());
+  };
+  const [name, setName] = useState('');
+  const joinClick = () => {
+    socket.emit('join room', name);
   };
 
   return (
     <div>
       THIS IS APP.JS!
-      <button onClick={handleClick}>CLICK ME</button>
+      <input
+        type="text"
+        name="room-name"
+        value={name}
+        onChange={e => setName(e.target.value)}
+      />
+      <button onClick={joinClick}> Join Room</button>
+      <button onClick={handleClick}>Create Room</button>
     </div>
   );
 };
