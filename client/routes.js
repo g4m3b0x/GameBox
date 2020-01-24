@@ -1,24 +1,24 @@
-import React, {Component} from 'react';
-
+import React, { Component } from 'react';
+import socket from './index.js';
 import Welcome from './components/welcome';
-
+import Lobby from './components/lobby';
 // function or class component? decide later...
 class Routes extends Component {
-  constructor () {
+  constructor() {
     super();
+    this.state = { room: null };
   }
-
-  render () {
-    if (!this.props.game) {
-      return (
-        <Welcome />
-      );
+  componentDidMount() {
+    socket.on('joined', data => {
+      console.log(data);
+      this.setState({ room: data });
+    });
+  }
+  render() {
+    if (this.state.room === null) {
+      return <Welcome />;
     } else {
-      return (
-        <div>
-          IN GAME LOL
-        </div>
-      );
+      return <Lobby roomName={this.state.room} />;
     }
   }
 }
