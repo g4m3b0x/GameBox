@@ -5,10 +5,12 @@ class Welcome extends Component {
   constructor () {
     super();
     this.state = {
-      name: '',
+      userName: '',
+      roomName: '',
     };
-    this.handleClick = this.handleClick.bind(this);
-    this.joinClick = this.joinClick.bind(this);
+    this.clickCreate = this.clickCreate.bind(this);
+    this.clickJoin = this.clickJoin.bind(this);
+    this.handleType = this.handleType.bind(this);
   }
 
   componentDidMount () {
@@ -24,26 +26,44 @@ class Welcome extends Component {
     return room;
   };
 
-  handleClick () {
+  clickCreate () {
     socket.emit('join room', this.getRandomRoom());
   }
 
-  joinClick () {
-    socket.emit('join room', this.state.name);
+  clickJoin () {
+    socket.emit('join room', this.state.roomName);
+  }
+
+  handleType (e) {
+    this.setState({[e.target.name]: e.target.value});
   }
 
   render () {
     return (
       <div>
         THIS IS WELCOME.JS!
-        <input
-          type="text"
-          name="room-name"
-          value={this.state.name}
-          onChange={e => this.setState({name: e.target.value})}
-        />
-        <button onClick={this.joinClick}> Join Room</button>
-        <button onClick={this.handleClick}>Create Room</button>
+        <div>
+          <input
+            type="text"
+            name="userName"
+            value={this.state.userName}
+            placeholder="Enter username"
+            onChange={this.handleType}
+          />
+        </div>
+        <div>
+          <input
+            type="text"
+            name="roomName"
+            value={this.state.roomName}
+            placeholder="Enter 4-digit room code"
+            onChange={this.handleType}
+          />
+          <button onClick={this.clickJoin}> Join Room</button>
+        </div>
+        <div>
+          <button onClick={this.clickCreate}>Create Room</button>
+        </div>
       </div>
     );
   }
