@@ -5,8 +5,12 @@ module.exports = (socket, io) => {
 
   socket.on('join room', room => {
     socket.join(room);
-    console.log('here');
-    io.in(room).emit('joined', `you are in room ${room}`);
+    socket.emit('joined', room);
+  });
+
+  socket.on('sendMessage', messageInfo => {
+    const { room, message } = messageInfo;
+    io.in(room).emit('recieveMessage', message);
   });
 
   socket.on('disconnect', () => {

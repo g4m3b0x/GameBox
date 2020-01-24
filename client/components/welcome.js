@@ -1,44 +1,44 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import socket from '../index.js';
 
 class Welcome extends Component {
-  constructor () {
+  constructor() {
     super();
     this.state = {
       userName: '',
-      roomName: '',
+      roomName: ''
     };
     this.clickCreate = this.clickCreate.bind(this);
     this.clickJoin = this.clickJoin.bind(this);
     this.handleType = this.handleType.bind(this);
   }
 
-  componentDidMount () {
-    socket.on('joined', data => console.log(data));
+  componentDidMount() {
+    // socket.on('joined', data => console.log(data));
   }
 
-  getRandomRoom () {
+  getRandomRoom() {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     let room = '';
     for (let i = 0; i < 4; i++) {
       room += alphabet[Math.floor(Math.random() * 26)];
     }
     return room;
-  };
+  }
 
-  clickCreate () {
+  clickCreate() {
     socket.emit('join room', this.getRandomRoom());
   }
 
-  clickJoin () {
+  clickJoin() {
     socket.emit('join room', this.state.roomName);
   }
 
-  handleType (e) {
-    this.setState({[e.target.name]: e.target.value});
+  handleType(e) {
+    this.setState({ [e.target.name]: e.target.value });
   }
 
-  render () {
+  render() {
     return (
       <div>
         THIS IS WELCOME.JS!
