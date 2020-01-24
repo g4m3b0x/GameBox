@@ -104,25 +104,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
- // const getRandomRoom = () => {
-//   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-//   let room = '';
-//   for (let i = 0; i < 4; i++) {
-//     room += alphabet[Math.floor(Math.random() * 26)];
-//   }
-//   return room;
-// };
+
 
 var App = function App() {
-  // socket.on('joined', data => console.log(data));
-  // console.log(socket);
-  // const handleClick = () => {
-  //   socket.emit('join room', getRandomRoom());
-  // };
-  // const [name, setName] = useState('');
-  // const joinClick = () => {
-  //   socket.emit('join room', name);
-  // };
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_welcome_js__WEBPACK_IMPORTED_MODULE_3__["default"], null));
 };
 
@@ -143,6 +127,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../index.js */ "./client/index.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -175,10 +161,12 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Welcome).call(this));
     _this.state = {
-      name: ''
+      userName: '',
+      roomName: ''
     };
-    _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
-    _this.joinClick = _this.joinClick.bind(_assertThisInitialized(_this));
+    _this.clickCreate = _this.clickCreate.bind(_assertThisInitialized(_this));
+    _this.clickJoin = _this.clickJoin.bind(_assertThisInitialized(_this));
+    _this.handleType = _this.handleType.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -202,34 +190,40 @@ function (_Component) {
       return room;
     }
   }, {
-    key: "handleClick",
-    value: function handleClick() {
+    key: "clickCreate",
+    value: function clickCreate() {
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', this.getRandomRoom());
     }
   }, {
-    key: "joinClick",
-    value: function joinClick() {
-      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', this.state.name);
+    key: "clickJoin",
+    value: function clickJoin() {
+      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', this.state.roomName);
+    }
+  }, {
+    key: "handleType",
+    value: function handleType(e) {
+      this.setState(_defineProperty({}, e.target.name, e.target.value));
     }
   }, {
     key: "render",
     value: function render() {
-      var _this2 = this;
-
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "THIS IS WELCOME.JS!", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "THIS IS WELCOME.JS!", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
-        name: "room-name",
-        value: this.state.name,
-        onChange: function onChange(e) {
-          return _this2.setState({
-            name: e.target.value
-          });
-        }
+        name: "userName",
+        value: this.state.userName,
+        placeholder: "Enter username",
+        onChange: this.handleType
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        type: "text",
+        name: "roomName",
+        value: this.state.roomName,
+        placeholder: "Enter 4-digit room code",
+        onChange: this.handleType
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.joinClick
-      }, " Join Room"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.handleClick
-      }, "Create Room"));
+        onClick: this.clickJoin
+      }, " Join Room")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.clickCreate
+      }, "Create Room")));
     }
   }]);
 
