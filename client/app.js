@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import socket from './index.js';
+import React from 'react';
+// import axios from 'axios';
+// import socket from './index';
 
-import Welcome from './components/welcome.js';
+import Routes from './routes';
 
 const App = () => {
   return (
     <div>
-      <Welcome />
+      <Routes />
     </div>
   );
 };
