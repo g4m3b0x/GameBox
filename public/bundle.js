@@ -168,7 +168,8 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Lobby).call(this));
     _this.state = {
       messages: [],
-      message: ''
+      message: '',
+      users: []
     };
     _this.sendMessage = _this.sendMessage.bind(_assertThisInitialized(_this));
     _this.handleType = _this.handleType.bind(_assertThisInitialized(_this));
@@ -185,10 +186,15 @@ function (_Component) {
           messages: [].concat(_toConsumableArray(_this2.state.messages), [data])
         });
       });
+      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('newUser', function (data) {
+        _this2.setState({
+          users: data
+        });
+      });
     }
   }, {
     key: "sendMessage",
-    value: function sendMessage(e) {
+    value: function sendMessage() {
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('sendMessage', {
         room: this.props.roomName,
         message: this.state.message
@@ -214,6 +220,8 @@ function (_Component) {
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.sendMessage
       }, " Send")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ol", null, this.state.messages.map(function (message) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, message);
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ol", null, this.state.users.map(function (message) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, message);
       })));
     }
@@ -283,10 +291,6 @@ function (_Component) {
   }
 
   _createClass(Welcome, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {// socket.on('joined', data => console.log(data));
-    }
-  }, {
     key: "getRandomRoom",
     value: function getRandomRoom() {
       var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';

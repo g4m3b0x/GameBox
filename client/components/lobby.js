@@ -6,7 +6,8 @@ export default class Lobby extends Component {
     super();
     this.state = {
       messages: [],
-      message: ''
+      message: '',
+      users: []
     };
     this.sendMessage = this.sendMessage.bind(this);
     this.handleType = this.handleType.bind(this);
@@ -16,12 +17,16 @@ export default class Lobby extends Component {
     socket.on('recieveMessage', data => {
       this.setState({ messages: [...this.state.messages, data] });
     });
+    socket.on('newUser', data => {
+      this.setState({ users: data });
+    });
   }
-  sendMessage(e) {
+  sendMessage() {
     socket.emit('sendMessage', {
       room: this.props.roomName,
       message: this.state.message
     });
+
     this.setState({ message: '' });
   }
   handleType(e) {
@@ -43,6 +48,11 @@ export default class Lobby extends Component {
         </div>
         <ol>
           {this.state.messages.map(message => (
+            <li>{message}</li>
+          ))}
+        </ol>
+        <ol>
+          {this.state.users.map(message => (
             <li>{message}</li>
           ))}
         </ol>

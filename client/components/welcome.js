@@ -13,10 +13,6 @@ class Welcome extends Component {
     this.handleType = this.handleType.bind(this);
   }
 
-  componentDidMount() {
-    // socket.on('joined', data => console.log(data));
-  }
-
   getRandomRoom() {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     let room = '';
