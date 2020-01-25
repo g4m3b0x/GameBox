@@ -98,8 +98,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./routes */ "./client/routes.js");
- // import axios from 'axios';
-// import socket from './index';
 
 
 
@@ -168,7 +166,8 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Lobby).call(this));
     _this.state = {
       messages: [],
-      message: ''
+      message: '',
+      users: []
     };
     _this.sendMessage = _this.sendMessage.bind(_assertThisInitialized(_this));
     _this.handleType = _this.handleType.bind(_assertThisInitialized(_this));
@@ -180,15 +179,20 @@ function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('recieveMessage', function (data) {
+      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('receiveMessage', function (data) {
         _this2.setState({
           messages: [].concat(_toConsumableArray(_this2.state.messages), [data])
+        });
+      });
+      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('newUser', function (data) {
+        _this2.setState({
+          users: data
         });
       });
     }
   }, {
     key: "sendMessage",
-    value: function sendMessage(e) {
+    value: function sendMessage() {
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('sendMessage', {
         room: this.props.roomName,
         message: this.state.message
@@ -205,7 +209,7 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "YOU ARE IN THE LOBBY OF ROOM ", this.props.roomName, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         name: "message",
         value: this.state.message,
@@ -213,8 +217,14 @@ function (_Component) {
         onChange: this.handleType
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.sendMessage
-      }, " Send")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ol", null, this.state.messages.map(function (message) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, message);
+      }, "Send")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, this.state.messages.map(function (message, i) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          key: i
+        }, message);
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, this.state.users.map(function (message, i) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+          key: i
+        }, message);
       })));
     }
   }]);
@@ -283,10 +293,6 @@ function (_Component) {
   }
 
   _createClass(Welcome, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {// socket.on('joined', data => console.log(data));
-    }
-  }, {
     key: "getRandomRoom",
     value: function getRandomRoom() {
       var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -306,7 +312,7 @@ function (_Component) {
   }, {
     key: "clickJoin",
     value: function clickJoin() {
-      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', this.state.roomName);
+      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', this.state.roomName.toUpperCase());
     }
   }, {
     key: "handleType",
@@ -429,8 +435,6 @@ function (_Component) {
       var _this2 = this;
 
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('joined', function (data) {
-        console.log(data);
-
         _this2.setState({
           room: data
         });

@@ -6,24 +6,30 @@ export default class Lobby extends Component {
     super();
     this.state = {
       messages: [],
-      message: ''
+      message: '',
+      users: []
     };
     this.sendMessage = this.sendMessage.bind(this);
     this.handleType = this.handleType.bind(this);
   }
 
   componentDidMount() {
-    socket.on('recieveMessage', data => {
+    socket.on('receiveMessage', data => {
       this.setState({ messages: [...this.state.messages, data] });
     });
+    socket.on('newUser', data => {
+      this.setState({ users: data });
+    });
   }
-  sendMessage(e) {
+
+  sendMessage() {
     socket.emit('sendMessage', {
       room: this.props.roomName,
       message: this.state.message
     });
     this.setState({ message: '' });
   }
+
   handleType(e) {
     this.setState({ [e.target.name]: e.target.value });
   }
@@ -31,6 +37,7 @@ export default class Lobby extends Component {
   render() {
     return (
       <div>
+        YOU ARE IN THE LOBBY OF ROOM {this.props.roomName}
         <div>
           <input
             type="text"
@@ -39,13 +46,18 @@ export default class Lobby extends Component {
             placeholder="message"
             onChange={this.handleType}
           />
-          <button onClick={this.sendMessage}> Send</button>
+          <button onClick={this.sendMessage}>Send</button>
         </div>
-        <ol>
-          {this.state.messages.map(message => (
-            <li>{message}</li>
+        <ul>
+          {this.state.messages.map((message, i) => (
+            <li key={i}>{message}</li>
           ))}
-        </ol>
+        </ul>
+        <ul>
+          {this.state.users.map((message, i) => (
+            <li key={i}>{message}</li>
+          ))}
+        </ul>
       </div>
     );
   }

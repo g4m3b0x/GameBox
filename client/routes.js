@@ -2,15 +2,17 @@ import React, { Component } from 'react';
 import socket from './index.js';
 import Welcome from './components/welcome';
 import Lobby from './components/lobby';
+
 // function or class component? decide later...
 class Routes extends Component {
   constructor() {
     super();
-    this.state = { room: null };
+    this.state = {
+      room: null,
+    };
   }
   componentDidMount() {
     socket.on('joined', data => {
-      console.log(data);
       this.setState({ room: data });
     });
   }
