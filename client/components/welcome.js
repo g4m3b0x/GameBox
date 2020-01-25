@@ -27,7 +27,7 @@ class Welcome extends Component {
   }
 
   clickJoin() {
-    socket.emit('join room', this.state.roomName);
+    socket.emit('join room', this.state.roomName.toUpperCase());
   }
 
   handleType(e) {

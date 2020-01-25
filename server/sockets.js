@@ -3,40 +3,29 @@
 module.exports = (socket, io) => {
   console.log(`A new client ${socket.id} has connected to server!`);
 
-  socket.on('join room', room => {
-    const users = [];
-    socket.join(room);
-    socket.emit('joined', room);
-    const sockets = io.sockets.adapter.rooms[room].sockets;
-    for (let key in sockets) {
-      let user = io.sockets.connected[key].id;
-      users.push(user);
-    }
-    io.in(room).emit('newUser', users);
+  socket.on('join room', roomName => {
+    socket.join(roomName);
+    socket.emit('joined', roomName);
+    const room = io.sockets.adapter.rooms[roomName];
+    const users = Object.keys(room.sockets)
+      .map(key => io.sockets.connected[key].id);
+    io.in(roomName).emit('newUser', users);
   });
 
   socket.on('disconnecting', reason => {
-    let users = [];
-    let rooms = Object.keys(socket.rooms); // [socketId, roomName]  --> {}
-    console.log(rooms[1], 'disconnecting'); // roomName
-    console.log(io.sockets.adapter.rooms[rooms[1]]);
-    // console.log(io.sockets.adapter.rooms[rooms[1]].sockets);
-    console.log('REASON:', reason);
-    let room = io.sockets.adapter.rooms[rooms[1]];
+    const [socketId, roomName] = Object.keys(socket.rooms);
+    const room = io.sockets.adapter.rooms[roomName];
     if (room) {
-      const sockets = room.sockets; // when numbers, roomName is idx 0 instead
-
-      for (let key in sockets) {
-        let temp = io.sockets.connected[key].id;
-        if (temp !== rooms[0]) users.push(temp);
-      }
-      io.in(rooms[1]).emit('newUser', users);
+      const users = Object.keys(room.sockets)
+        .filter(key => socketId !== io.sockets.connected[key].id)
+        .map(key => io.sockets.connected[key].id);
+      io.in(roomName).emit('newUser', users);
     }
   });
 
   socket.on('sendMessage', messageInfo => {
     const { room, message } = messageInfo;
-    io.in(room).emit('recieveMessage', message);
+    io.in(room).emit('receiveMessage', message);
   });
 
   socket.on('disconnect', () => {
