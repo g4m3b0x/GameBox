@@ -8,13 +8,18 @@ class Routes extends Component {
   constructor() {
     super();
     this.state = {
+      userName: null,
       roomData: null,
     };
   }
 
   componentDidMount() {
-    socket.on('joined', data => {
-      this.setState({roomData: data});    // object from server memory
+    socket.on('joined room', data => {
+      const {userName, roomData} = data;
+      this.setState({
+        userName,
+        roomData,       // object from server memory
+      });
     });
   }
 
@@ -26,7 +31,10 @@ class Routes extends Component {
           this.state.roomData === null ? (
             <Welcome />
           ) : (
-            <Lobby roomData={this.state.roomData} />
+            <Lobby
+              userName={this.state.userName}
+              roomData={this.state.roomData}
+            />
           )
         }
         </div>

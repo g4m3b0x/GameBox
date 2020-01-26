@@ -13,36 +13,36 @@ img {
 }
 
 #app {
+  height: 100vh;
+  width: 100vw;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100vw;
 }
 
 #main {
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  width: 100%;
 }
 
 #header {
-  display: flex;
-  justify-content: center;
   height: 10%;
   width: 100%;
   /* background-color: gray; */
+  display: flex;
+  justify-content: center;
 }
 
 #middle {
-  display: flex;
-  justify-content: center;
-  height: 80%;
+  flex-grow: 1;
   width: 100%;
   /* background-color: blue; */
+  display: flex;
+  justify-content: center;
 }
 
 #footer {
@@ -59,38 +59,60 @@ img {
 }
 
 #welcome {
+  height: 100%;
+  width: 100%;
+  background-color: green;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
-  width: 100%;
-  background-color: green;
 }
 
 #lobby {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   height: 100%;
   width: 100%;
   background-color: yellow;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #lobby-header {
-  height: 10%;
+  height: 20%;
   width: 100%;
   background-color: blue;
 }
 
 #lobby-middle {
-  height: 80%;
+  flex-grow: 1;
   width: 100%;
   background-color: red;
+  display: flex;
+}
+
+#lobby-chat {
+  width: 75%;
+  background-color: green;
+  display: flex;
+  flex-direction: column;
+}
+
+#lobby-users {
+  flex-grow: 1;
+  background-color: yellow;
 }
 
 #lobby-bottom {
-  height: 10%;
+  height: 40px;
   width: 100%;
-  background-color: green;
+  /* background-color: green; */
+  display: flex;
+}
+
+#lobby-typeMessage {
+  width: 90%;
+}
+
+#lobby-bottom button {
+  flex-grow: 1;
 }
