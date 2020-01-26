@@ -72,14 +72,6 @@ export default class Lobby extends Component {
           />
           <button onClick={this.sendMessage}>Send</button>
         </div>
-
-        {/* 
-        <ul>
-          {this.state.users.map((message, i) => (
-            <li key={i}>{message}</li>
-          ))}
-        </ul> */}
-
       </div>
     );
   }

@@ -6,7 +6,7 @@ class Welcome extends Component {
     super();
     this.state = {
       userName: 'Player',     // restore to '' later 
-      roomName: '',     // restore to '' later
+      roomName: '',
     };
     this.validateUserName = this.validateUserName.bind(this);
     this.validateRoomName = this.validateRoomName.bind(this);
@@ -33,7 +33,7 @@ class Welcome extends Component {
     } else {
       socket.emit('join room', {
         userName: this.state.userName,
-        roomName: undefined, // this.getRandomRoom(),
+        roomName: undefined,
       });
     }
   }
