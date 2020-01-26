@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import socket from '../index.js';
 
-const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
 class Welcome extends Component {
   constructor() {
     super();
     this.state = {
       userName: 'Player',     // restore to '' later 
-      roomName: 'asdf',     // restore to '' later
+      roomName: '',
     };
     this.validateUserName = this.validateUserName.bind(this);
     this.validateRoomName = this.validateRoomName.bind(this);
@@ -17,21 +15,16 @@ class Welcome extends Component {
     this.handleType = this.handleType.bind(this);
   }
 
-  getRandomRoom() {
-    let room = '';
-    for (let i = 0; i < 4; i++) {
-      room += alphabet[Math.floor(Math.random() * 26)];
-    }
-    return room;
-  }
-
   validateUserName () {
     return !!this.state.userName;
   }
 
   validateRoomName () {
     return this.state.roomName.length === 4
-      && this.state.roomName.split('').every(c => alphabet.includes(c.toUpperCase()));
+      && this.state.roomName
+        .toUpperCase()
+        .split('')
+        .every(c => c >= 'A' && c <= 'Z');
   }
 
   clickCreate() {
@@ -40,7 +33,7 @@ class Welcome extends Component {
     } else {
       socket.emit('join room', {
         userName: this.state.userName,
-        roomName: this.getRandomRoom(),
+        roomName: undefined,
       });
     }
   }
