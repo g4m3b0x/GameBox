@@ -7,7 +7,7 @@ class Welcome extends Component {
   constructor() {
     super();
     this.state = {
-      userName: 'asdf',     // restore to '' later 
+      userName: 'Player',     // restore to '' later 
       roomName: 'asdf',     // restore to '' later
     };
     this.validateUserName = this.validateUserName.bind(this);
@@ -38,7 +38,10 @@ class Welcome extends Component {
     if (!this.validateUserName()) {
       console.log('INVALID USERNAME:', this.state.userName);
     } else {
-      socket.emit('join room', this.getRandomRoom());
+      socket.emit('join room', {
+        userName: this.state.userName,
+        roomName: this.getRandomRoom(),
+      });
     }
   }
 
@@ -48,7 +51,10 @@ class Welcome extends Component {
     } else if (!this.validateRoomName()) {
       console.log('INVALID ROOM NAME:', this.state.roomName);
     } else {
-      socket.emit('join room', this.state.roomName.toUpperCase());
+      socket.emit('join room', {
+        userName: this.state.userName,
+        roomName: this.state.roomName.toUpperCase(),
+      });
     }
   }
 
@@ -58,8 +64,7 @@ class Welcome extends Component {
 
   render() {
     return (
-      <div>
-        THIS IS WELCOME.JS!
+      <div id="welcome">
         <div>
           <input
             type="text"

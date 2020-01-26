@@ -6,7 +6,9 @@ const rooms = {};
 module.exports = (socket, io) => {
   console.log(`A new client ${socket.id} has connected to server!`);
 
-  socket.on('join room', roomName => {
+  socket.on('join room', data => {
+    const {userName, roomName} = data;
+
     // SERVER MEMORY CODE:
     if (!(roomName in rooms)) rooms[roomName] = {
       roomName,
@@ -15,7 +17,10 @@ module.exports = (socket, io) => {
 
     // SOCKET CODE:
     socket.join(roomName);
-    socket.emit('joined', rooms[roomName]);
+    socket.emit('joined room', {
+      userName: userName,
+      roomData: rooms[roomName],
+    });
     const room = io.sockets.adapter.rooms[roomName];
     const users = Object.keys(room.sockets)
       .map(key => io.sockets.connected[key].id);
@@ -41,11 +46,14 @@ module.exports = (socket, io) => {
 
   socket.on('sendMessage', data => {
     // SOCKET CODE:
-    const { roomName, message } = data;
-    io.in(roomName).emit('receiveMessage', message);
+    const { roomName, sender, message } = data;
+    io.in(roomName).emit('receiveMessage', {
+      sender,
+      message,
+    });
 
     // SERVER MEMORY CODE:
-    rooms[roomName].messages.push(message);
+    rooms[roomName].messages.push([sender, message]);
   });
 
   socket.on('disconnect', () => {

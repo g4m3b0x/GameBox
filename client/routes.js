@@ -8,20 +8,38 @@ class Routes extends Component {
   constructor() {
     super();
     this.state = {
+      userName: null,
       roomData: null,
     };
   }
+
   componentDidMount() {
-    socket.on('joined', data => {
-      this.setState({roomData: data});    // object from server memory
+    socket.on('joined room', data => {
+      const {userName, roomData} = data;
+      this.setState({
+        userName,
+        roomData,       // object from server memory
+      });
     });
   }
+
   render() {
-    if (this.state.roomData === null) {
-      return <Welcome />;
-    } else {
-      return <Lobby roomData={this.state.roomData} />;
-    }
+    return (
+      <div id="middle">
+        <div id="dynamic-area">
+        {
+          this.state.roomData === null ? (
+            <Welcome />
+          ) : (
+            <Lobby
+              userName={this.state.userName}
+              roomData={this.state.roomData}
+            />
+          )
+        }
+        </div>
+      </div>
+    )
   }
 }
 

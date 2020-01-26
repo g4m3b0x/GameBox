@@ -97,12 +97,18 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./routes */ "./client/routes.js");
+/* harmony import */ var _header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./header */ "./client/header.js");
+/* harmony import */ var _footer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./footer */ "./client/footer.js");
+/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./routes */ "./client/routes.js");
+
+
 
 
 
 var App = function App() {
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_routes__WEBPACK_IMPORTED_MODULE_1__["default"], null));
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    id: "main"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_header__WEBPACK_IMPORTED_MODULE_1__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_routes__WEBPACK_IMPORTED_MODULE_3__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_footer__WEBPACK_IMPORTED_MODULE_2__["default"], null));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (App);
@@ -123,6 +129,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _index_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../index.js */ "./client/index.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { if (!(Symbol.iterator in Object(arr) || Object.prototype.toString.call(arr) === "[object Arguments]")) { return; } var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -165,6 +179,7 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Lobby).call(this, props));
     _this.state = {
+      userName: _this.props.userName,
       roomName: _this.props.roomData.roomName,
       messages: _this.props.roomData.messages,
       users: [],
@@ -181,8 +196,11 @@ function (_Component) {
       var _this2 = this;
 
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('receiveMessage', function (data) {
+        var sender = data.sender,
+            message = data.message;
+
         _this2.setState({
-          messages: [].concat(_toConsumableArray(_this2.state.messages), [data])
+          messages: [].concat(_toConsumableArray(_this2.state.messages), [[sender, message]])
         });
       });
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('newUser', function (data) {
@@ -197,6 +215,7 @@ function (_Component) {
       if (!this.state.currentMessage) return;
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('sendMessage', {
         roomName: this.state.roomName,
+        sender: this.state.userName,
         message: this.state.currentMessage
       });
       this.setState({
@@ -211,23 +230,40 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "YOU ARE IN THE LOBBY OF ROOM ", this.state.roomName, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "lobby"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "lobby-header"
+      }, "YOU ARE IN THE LOBBY OF ROOM ", this.state.roomName), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "lobby-middle"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "lobby-chat"
+      }, this.state.messages.map(function (_ref, i) {
+        var _ref2 = _slicedToArray(_ref, 2),
+            sender = _ref2[0],
+            message = _ref2[1];
+
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: i
+        }, "".concat(sender, ": ").concat(message));
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "lobby-users"
+      }, this.state.users.map(function (user, i) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: i
+        }, "".concat(user));
+      }))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "lobby-bottom"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "lobby-typeMessage",
         type: "text",
         name: "currentMessage",
         value: this.state.currentMessage,
-        placeholder: "message",
+        placeholder: "Type a message...",
         onChange: this.handleType
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.sendMessage
-      }, "Send")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, this.state.messages.map(function (message, i) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-          key: i
-        }, message);
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", null, this.state.users.map(function (message, i) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-          key: i
-        }, message);
-      })));
+      }, "Send")));
     }
   }]);
 
@@ -286,7 +322,7 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Welcome).call(this));
     _this.state = {
-      userName: 'asdf',
+      userName: 'Player',
       // restore to '' later 
       roomName: 'asdf' // restore to '' later
 
@@ -328,7 +364,10 @@ function (_Component) {
       if (!this.validateUserName()) {
         console.log('INVALID USERNAME:', this.state.userName);
       } else {
-        _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', this.getRandomRoom());
+        _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', {
+          userName: this.state.userName,
+          roomName: this.getRandomRoom()
+        });
       }
     }
   }, {
@@ -339,7 +378,10 @@ function (_Component) {
       } else if (!this.validateRoomName()) {
         console.log('INVALID ROOM NAME:', this.state.roomName);
       } else {
-        _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', this.state.roomName.toUpperCase());
+        _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', {
+          userName: this.state.userName,
+          roomName: this.state.roomName.toUpperCase()
+        });
       }
     }
   }, {
@@ -350,7 +392,9 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "THIS IS WELCOME.JS!", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "welcome"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
         name: "userName",
         value: this.state.userName,
@@ -374,6 +418,54 @@ function (_Component) {
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 /* harmony default export */ __webpack_exports__["default"] = (Welcome);
+
+/***/ }),
+
+/***/ "./client/footer.js":
+/*!**************************!*\
+  !*** ./client/footer.js ***!
+  \**************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+var Footer = function Footer() {
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    id: "footer"
+  });
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Footer);
+
+/***/ }),
+
+/***/ "./client/header.js":
+/*!**************************!*\
+  !*** ./client/header.js ***!
+  \**************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+var Header = function Header() {
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    id: "header"
+  }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+    src: "/logo.jpg"
+  }));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (Header);
 
 /***/ }),
 
@@ -452,6 +544,7 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Routes).call(this));
     _this.state = {
+      userName: null,
       roomData: null
     };
     return _this;
@@ -462,23 +555,28 @@ function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('joined', function (data) {
-        _this2.setState({
-          roomData: data
-        }); // object from server memory
+      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('joined room', function (data) {
+        var userName = data.userName,
+            roomData = data.roomData;
 
+        _this2.setState({
+          userName: userName,
+          roomData: roomData // object from server memory
+
+        });
       });
     }
   }, {
     key: "render",
     value: function render() {
-      if (this.state.roomData === null) {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_welcome__WEBPACK_IMPORTED_MODULE_2__["default"], null);
-      } else {
-        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_lobby__WEBPACK_IMPORTED_MODULE_3__["default"], {
-          roomData: this.state.roomData
-        });
-      }
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "middle"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "dynamic-area"
+      }, this.state.roomData === null ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_welcome__WEBPACK_IMPORTED_MODULE_2__["default"], null) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_lobby__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        userName: this.state.userName,
+        roomData: this.state.roomData
+      })));
     }
   }]);
 
