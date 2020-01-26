@@ -7,13 +7,28 @@ module.exports = (socket, io) => {
   console.log(`A new client ${socket.id} has connected to server!`);
 
   socket.on('join room', data => {
-    const {userName, roomName} = data;
+    let {userName, roomName} = data;
 
-    // SERVER MEMORY CODE:
-    if (!(roomName in rooms)) rooms[roomName] = {
-      roomName,
-      messages: [],
-    }; 
+    // IF CREATING ROOM, GENERATE RANDOM UNUSED ROOM CODE:
+    if (!roomName) {
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+      do {
+        roomName = '';
+        for (let i = 0; i < 4; i++) {
+          roomName += alphabet[Math.floor(Math.random() * 26)];
+        }
+      } while (roomName in rooms);
+
+      // SERVER MEMORY CODE:
+      rooms[roomName] = {
+        roomName,
+        messages: [],
+      };
+    }
+
+    // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, RETURN
+    if (!(roomName in rooms)) return;
 
     // SOCKET CODE:
     socket.join(roomName);

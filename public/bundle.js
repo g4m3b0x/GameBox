@@ -308,7 +308,6 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 var Welcome =
 /*#__PURE__*/
@@ -324,7 +323,7 @@ function (_Component) {
     _this.state = {
       userName: 'Player',
       // restore to '' later 
-      roomName: 'asdf' // restore to '' later
+      roomName: '' // restore to '' later
 
     };
     _this.validateUserName = _this.validateUserName.bind(_assertThisInitialized(_this));
@@ -336,17 +335,6 @@ function (_Component) {
   }
 
   _createClass(Welcome, [{
-    key: "getRandomRoom",
-    value: function getRandomRoom() {
-      var room = '';
-
-      for (var i = 0; i < 4; i++) {
-        room += alphabet[Math.floor(Math.random() * 26)];
-      }
-
-      return room;
-    }
-  }, {
     key: "validateUserName",
     value: function validateUserName() {
       return !!this.state.userName;
@@ -354,8 +342,8 @@ function (_Component) {
   }, {
     key: "validateRoomName",
     value: function validateRoomName() {
-      return this.state.roomName.length === 4 && this.state.roomName.split('').every(function (c) {
-        return alphabet.includes(c.toUpperCase());
+      return this.state.roomName.length === 4 && this.state.roomName.toUpperCase().split('').every(function (c) {
+        return c >= 'A' && c <= 'Z';
       });
     }
   }, {
@@ -366,7 +354,8 @@ function (_Component) {
       } else {
         _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', {
           userName: this.state.userName,
-          roomName: this.getRandomRoom()
+          roomName: undefined // this.getRandomRoom(),
+
         });
       }
     }
