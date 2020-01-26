@@ -158,16 +158,17 @@ var Lobby =
 function (_Component) {
   _inherits(Lobby, _Component);
 
-  function Lobby() {
+  function Lobby(props) {
     var _this;
 
     _classCallCheck(this, Lobby);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Lobby).call(this));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Lobby).call(this, props));
     _this.state = {
-      messages: [],
-      message: '',
-      users: []
+      roomName: _this.props.roomData.roomName,
+      messages: _this.props.roomData.messages,
+      users: [],
+      currentMessage: ''
     };
     _this.sendMessage = _this.sendMessage.bind(_assertThisInitialized(_this));
     _this.handleType = _this.handleType.bind(_assertThisInitialized(_this));
@@ -193,12 +194,13 @@ function (_Component) {
   }, {
     key: "sendMessage",
     value: function sendMessage() {
+      if (!this.state.currentMessage) return;
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('sendMessage', {
-        room: this.props.roomName,
-        message: this.state.message
+        roomName: this.state.roomName,
+        message: this.state.currentMessage
       });
       this.setState({
-        message: ''
+        currentMessage: ''
       });
     }
   }, {
@@ -209,10 +211,10 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "YOU ARE IN THE LOBBY OF ROOM ", this.props.roomName, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "YOU ARE IN THE LOBBY OF ROOM ", this.state.roomName, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
         type: "text",
-        name: "message",
-        value: this.state.message,
+        name: "currentMessage",
+        value: this.state.currentMessage,
         placeholder: "message",
         onChange: this.handleType
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
@@ -450,7 +452,7 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Routes).call(this));
     _this.state = {
-      room: null
+      roomData: null
     };
     return _this;
   }
@@ -462,18 +464,19 @@ function (_Component) {
 
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('joined', function (data) {
         _this2.setState({
-          room: data
-        });
+          roomData: data
+        }); // object from server memory
+
       });
     }
   }, {
     key: "render",
     value: function render() {
-      if (this.state.room === null) {
+      if (this.state.roomData === null) {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_welcome__WEBPACK_IMPORTED_MODULE_2__["default"], null);
       } else {
         return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_lobby__WEBPACK_IMPORTED_MODULE_3__["default"], {
-          roomName: this.state.room
+          roomData: this.state.roomData
         });
       }
     }
