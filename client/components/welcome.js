@@ -1,20 +1,23 @@
 import React, { Component } from 'react';
 import socket from '../index.js';
 
+const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
 class Welcome extends Component {
   constructor() {
     super();
     this.state = {
-      userName: '',
-      roomName: ''
+      userName: 'asdf',     // restore to '' later 
+      roomName: 'asdf',     // restore to '' later
     };
+    this.validateUserName = this.validateUserName.bind(this);
+    this.validateRoomName = this.validateRoomName.bind(this);
     this.clickCreate = this.clickCreate.bind(this);
     this.clickJoin = this.clickJoin.bind(this);
     this.handleType = this.handleType.bind(this);
   }
 
   getRandomRoom() {
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     let room = '';
     for (let i = 0; i < 4; i++) {
       room += alphabet[Math.floor(Math.random() * 26)];
@@ -22,12 +25,31 @@ class Welcome extends Component {
     return room;
   }
 
+  validateUserName () {
+    return !!this.state.userName;
+  }
+
+  validateRoomName () {
+    return this.state.roomName.length === 4
+      && this.state.roomName.split('').every(c => alphabet.includes(c.toUpperCase()));
+  }
+
   clickCreate() {
-    socket.emit('join room', this.getRandomRoom());
+    if (!this.validateUserName()) {
+      console.log('INVALID USERNAME:', this.state.userName);
+    } else {
+      socket.emit('join room', this.getRandomRoom());
+    }
   }
 
   clickJoin() {
-    socket.emit('join room', this.state.roomName.toUpperCase());
+    if (!this.validateUserName()) {
+      console.log('INVALID USERNAME:', this.state.userName);
+    } else if (!this.validateRoomName()) {
+      console.log('INVALID ROOM NAME:', this.state.roomName);
+    } else {
+      socket.emit('join room', this.state.roomName.toUpperCase());
+    }
   }
 
   handleType(e) {

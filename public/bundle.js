@@ -270,6 +270,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
+var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 var Welcome =
 /*#__PURE__*/
@@ -283,9 +284,13 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Welcome).call(this));
     _this.state = {
-      userName: '',
-      roomName: ''
+      userName: 'asdf',
+      // restore to '' later 
+      roomName: 'asdf' // restore to '' later
+
     };
+    _this.validateUserName = _this.validateUserName.bind(_assertThisInitialized(_this));
+    _this.validateRoomName = _this.validateRoomName.bind(_assertThisInitialized(_this));
     _this.clickCreate = _this.clickCreate.bind(_assertThisInitialized(_this));
     _this.clickJoin = _this.clickJoin.bind(_assertThisInitialized(_this));
     _this.handleType = _this.handleType.bind(_assertThisInitialized(_this));
@@ -295,7 +300,6 @@ function (_Component) {
   _createClass(Welcome, [{
     key: "getRandomRoom",
     value: function getRandomRoom() {
-      var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
       var room = '';
 
       for (var i = 0; i < 4; i++) {
@@ -305,14 +309,36 @@ function (_Component) {
       return room;
     }
   }, {
+    key: "validateUserName",
+    value: function validateUserName() {
+      return !!this.state.userName;
+    }
+  }, {
+    key: "validateRoomName",
+    value: function validateRoomName() {
+      return this.state.roomName.length === 4 && this.state.roomName.split('').every(function (c) {
+        return alphabet.includes(c.toUpperCase());
+      });
+    }
+  }, {
     key: "clickCreate",
     value: function clickCreate() {
-      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', this.getRandomRoom());
+      if (!this.validateUserName()) {
+        console.log('INVALID USERNAME:', this.state.userName);
+      } else {
+        _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', this.getRandomRoom());
+      }
     }
   }, {
     key: "clickJoin",
     value: function clickJoin() {
-      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', this.state.roomName.toUpperCase());
+      if (!this.validateUserName()) {
+        console.log('INVALID USERNAME:', this.state.userName);
+      } else if (!this.validateRoomName()) {
+        console.log('INVALID ROOM NAME:', this.state.roomName);
+      } else {
+        _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', this.state.roomName.toUpperCase());
+      }
     }
   }, {
     key: "handleType",
