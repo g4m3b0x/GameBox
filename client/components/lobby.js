@@ -39,9 +39,16 @@ export default class Lobby extends Component {
   render() {
     return (
       <div id="lobby">
-        YOU ARE IN THE LOBBY OF ROOM {this.state.roomName}
-        <div>
-          <input
+        <div id="lobby-header">
+          YOU ARE IN THE LOBBY OF ROOM {this.state.roomName}
+        </div>
+        <div id="lobby-middle">
+          MIDDLE
+        </div>
+        <div id="lobby-bottom">
+          BOTTOM
+        </div>
+          {/* <input
             type="text"
             name="currentMessage"
             value={this.state.currentMessage}
@@ -59,7 +66,7 @@ export default class Lobby extends Component {
           {this.state.users.map((message, i) => (
             <li key={i}>{message}</li>
           ))}
-        </ul>
+        </ul> */}
       </div>
     );
   }

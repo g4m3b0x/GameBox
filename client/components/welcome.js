@@ -7,7 +7,7 @@ class Welcome extends Component {
   constructor() {
     super();
     this.state = {
-      userName: 'asdf',     // restore to '' later 
+      userName: 'Player',     // restore to '' later 
       roomName: 'asdf',     // restore to '' later
     };
     this.validateUserName = this.validateUserName.bind(this);

@@ -20,14 +20,16 @@ class Routes extends Component {
 
   render() {
     return (
-      <div id="dynamic-area">
-      {
-        this.state.roomData === null ? (
-          <Welcome />
-        ) : (
-          <Lobby roomData={this.state.roomData} />
-        )
-      }
+      <div id="middle">
+        <div id="dynamic-area">
+        {
+          this.state.roomData === null ? (
+            <Welcome />
+          ) : (
+            <Lobby roomData={this.state.roomData} />
+          )
+        }
+        </div>
       </div>
     )
   }
