@@ -58,8 +58,7 @@ class Welcome extends Component {
 
   render() {
     return (
-      <div>
-        THIS IS WELCOME.JS!
+      <div id="welcome">
         <div>
           <input
             type="text"

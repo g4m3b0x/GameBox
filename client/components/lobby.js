@@ -38,7 +38,7 @@ export default class Lobby extends Component {
 
   render() {
     return (
-      <div>
+      <div id="lobby">
         YOU ARE IN THE LOBBY OF ROOM {this.state.roomName}
         <div>
           <input

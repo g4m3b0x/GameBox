@@ -11,17 +11,25 @@ class Routes extends Component {
       roomData: null,
     };
   }
+
   componentDidMount() {
     socket.on('joined', data => {
       this.setState({roomData: data});    // object from server memory
     });
   }
+
   render() {
-    if (this.state.roomData === null) {
-      return <Welcome />;
-    } else {
-      return <Lobby roomData={this.state.roomData} />;
-    }
+    return (
+      <div id="dynamic-area">
+      {
+        this.state.roomData === null ? (
+          <Welcome />
+        ) : (
+          <Lobby roomData={this.state.roomData} />
+        )
+      }
+      </div>
+    )
   }
 }
 

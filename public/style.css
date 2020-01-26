@@ -1,0 +1,51 @@
+body {
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+  font-family: "Saira Extra Condensed", sans-serif;
+  background-color: white;
+  margin: 0 0 0 0;
+}
+
+img {
+  height: 100%;
+  /* width: 100%; */
+}
+
+#app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+#main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+#header {
+  display: flex;
+  justify-content: center;
+  height: 10%;
+  width: 100%;
+  /* background-color: red; */
+}
+
+#dynamic-area {
+  height: 90%;
+  width: 100%;
+  /* background-color: blue; */
+}
+
+#welcome {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
