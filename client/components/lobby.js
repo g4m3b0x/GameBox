@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import socket from '../index.js';
 
 export default class Lobby extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
-      messages: [],
-      message: '',
-      users: []
+      roomName: this.props.roomData.roomName,
+      messages: this.props.roomData.messages,
+      users: [],
+      currentMessage: '',
     };
     this.sendMessage = this.sendMessage.bind(this);
     this.handleType = this.handleType.bind(this);
@@ -23,11 +24,12 @@ export default class Lobby extends Component {
   }
 
   sendMessage() {
+    if (!this.state.currentMessage) return;
     socket.emit('sendMessage', {
-      room: this.props.roomName,
-      message: this.state.message
+      roomName: this.state.roomName,
+      message: this.state.currentMessage,
     });
-    this.setState({ message: '' });
+    this.setState({ currentMessage: '' });
   }
 
   handleType(e) {
@@ -37,12 +39,12 @@ export default class Lobby extends Component {
   render() {
     return (
       <div>
-        YOU ARE IN THE LOBBY OF ROOM {this.props.roomName}
+        YOU ARE IN THE LOBBY OF ROOM {this.state.roomName}
         <div>
           <input
             type="text"
-            name="message"
-            value={this.state.message}
+            name="currentMessage"
+            value={this.state.currentMessage}
             placeholder="message"
             onChange={this.handleType}
           />

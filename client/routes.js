@@ -8,19 +8,19 @@ class Routes extends Component {
   constructor() {
     super();
     this.state = {
-      room: null,
+      roomData: null,
     };
   }
   componentDidMount() {
     socket.on('joined', data => {
-      this.setState({ room: data });
+      this.setState({roomData: data});    // object from server memory
     });
   }
   render() {
-    if (this.state.room === null) {
+    if (this.state.roomData === null) {
       return <Welcome />;
     } else {
-      return <Lobby roomName={this.state.room} />;
+      return <Lobby roomData={this.state.roomData} />;
     }
   }
 }
