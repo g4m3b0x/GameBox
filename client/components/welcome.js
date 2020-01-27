@@ -60,7 +60,7 @@ class Welcome extends Component {
 
   handleType(e) {
     const charLimit = {
-      userName: 20,
+      userName: 15,
       roomName: 4,
     };
     if (e.target.value.length <= charLimit[e.target.name]) {
