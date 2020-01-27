@@ -52,7 +52,13 @@ class Welcome extends Component {
   }
 
   handleType(e) {
-    this.setState({ [e.target.name]: e.target.value });
+    const charLimit = {
+      userName: 20,
+      roomName: 4,
+    };
+    if (e.target.value.length <= charLimit[e.target.name]) {
+      this.setState({ [e.target.name]: e.target.value });
+    }
   }
 
   render() {
