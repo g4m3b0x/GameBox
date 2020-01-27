@@ -378,6 +378,14 @@ function (_Component) {
   }
 
   _createClass(Welcome, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      // EVENT LISTENERS
+      document.getElementById("welcome-joinRoom").addEventListener("keyup", function (e) {
+        if (e.keyCode === 13) document.getElementById("welcome-joinButton").click();
+      });
+    }
+  }, {
     key: "validateUserName",
     value: function validateUserName() {
       return !!this.state.userName;
@@ -439,14 +447,16 @@ function (_Component) {
         placeholder: "Enter username",
         onChange: this.handleType
       })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "welcome-joinRoom",
         type: "text",
         name: "roomName",
         value: this.state.roomName,
         placeholder: "Enter 4-digit room code",
         onChange: this.handleType
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        id: "welcome-joinButton",
         onClick: this.clickJoin
-      }, " Join Room")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      }, "Join Room")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         onClick: this.clickCreate
       }, "Create Room")));
     }
