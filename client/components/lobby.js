@@ -8,8 +8,8 @@ export default class Lobby extends Component {
       userName: this.props.userName,
       roomName: this.props.roomData.roomName,
       messages: this.props.roomData.messages,
-      // users: [],
       users: this.props.roomData.users,
+      currentHost: this.props.roomData.host,
       currentMessage: '',
     };
     this.sendMessage = this.sendMessage.bind(this);
@@ -31,13 +31,13 @@ export default class Lobby extends Component {
     });
     socket.on('newUser', data => {
       const [socketId, userName] = data;
-      // this.setState({ users: data });
       this.setState({users: {...this.state.users, [socketId]: userName}});
     });
-    socket.on('removeUser', socketId => {
+    socket.on('removeUser', data => {
+      const {socketId, currentHost} = data;
       const newUsersObj = {...this.state.users};
       delete newUsersObj[socketId];
-      this.setState({users: newUsersObj});
+      this.setState({users: newUsersObj, currentHost});
     });
 
     this.scrollDown();    // scrolls all the way down when you join the room
