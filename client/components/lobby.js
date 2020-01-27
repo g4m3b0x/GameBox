@@ -16,13 +16,28 @@ export default class Lobby extends Component {
   }
 
   componentDidMount() {
+
+    // EVENT LISTENERS
+    document.getElementById("lobby-typeMessage").addEventListener("keyup", e => {
+      if (e.keyCode === 13) document.getElementById("lobby-sendMessage").click();
+    });
+  
+    // SOCKET LISTENERS
     socket.on('receiveMessage', data => {
       const {sender, message} = data;
       this.setState({ messages: [...this.state.messages, [sender, message]] });
+      this.scrollDown();
     });
     socket.on('newUser', data => {
       this.setState({ users: data });
     });
+
+    this.scrollDown();    // scrolls all the way down when you join the room
+  }
+
+  scrollDown () {
+    const chat = document.getElementById("lobby-chat");
+    chat.scrollTop = chat.scrollHeight;
   }
 
   sendMessage() {
@@ -70,7 +85,12 @@ export default class Lobby extends Component {
             placeholder="Type a message..."
             onChange={this.handleType}
           />
-          <button onClick={this.sendMessage}>Send</button>
+          <button
+            id="lobby-sendMessage"
+            onClick={this.sendMessage}
+          >
+            Send
+          </button>
         </div>
       </div>
     );

@@ -195,6 +195,11 @@ function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
+      // EVENT LISTENERS
+      document.getElementById("lobby-typeMessage").addEventListener("keyup", function (e) {
+        if (e.keyCode === 13) document.getElementById("lobby-sendMessage").click();
+      }); // SOCKET LISTENERS
+
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('receiveMessage', function (data) {
         var sender = data.sender,
             message = data.message;
@@ -202,12 +207,21 @@ function (_Component) {
         _this2.setState({
           messages: [].concat(_toConsumableArray(_this2.state.messages), [[sender, message]])
         });
+
+        _this2.scrollDown();
       });
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('newUser', function (data) {
         _this2.setState({
           users: data
         });
       });
+      this.scrollDown(); // scrolls all the way down when you join the room
+    }
+  }, {
+    key: "scrollDown",
+    value: function scrollDown() {
+      var chat = document.getElementById("lobby-chat");
+      chat.scrollTop = chat.scrollHeight;
     }
   }, {
     key: "sendMessage",
@@ -262,6 +276,7 @@ function (_Component) {
         placeholder: "Type a message...",
         onChange: this.handleType
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        id: "lobby-sendMessage",
         onClick: this.sendMessage
       }, "Send")));
     }
@@ -323,8 +338,7 @@ function (_Component) {
     _this.state = {
       userName: 'Player',
       // restore to '' later 
-      roomName: '' // restore to '' later
-
+      roomName: ''
     };
     _this.validateUserName = _this.validateUserName.bind(_assertThisInitialized(_this));
     _this.validateRoomName = _this.validateRoomName.bind(_assertThisInitialized(_this));
@@ -354,8 +368,7 @@ function (_Component) {
       } else {
         _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', {
           userName: this.state.userName,
-          roomName: undefined // this.getRandomRoom(),
-
+          roomName: undefined
         });
       }
     }
