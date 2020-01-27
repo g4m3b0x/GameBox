@@ -287,7 +287,8 @@ function (_Component) {
         type: "button",
         disabled: this.state.currentHost !== this.state.userId,
         onClick: function onClick() {
-          return _this3.props.startGame({
+          return _this3.props.changeGameStatus({
+            gameStatus: 'in game',
             users: _this3.state.users,
             currentHost: _this3.state.currentHost
           });
@@ -613,11 +614,12 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Routes).call(this));
     _this.state = {
+      gameStatus: 'welcome screen',
       userId: null,
       userName: null,
       roomData: null
     };
-    _this.startGame = _this.startGame.bind(_assertThisInitialized(_this));
+    _this.changeGameStatus = _this.changeGameStatus.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -632,6 +634,7 @@ function (_Component) {
             roomData = data.roomData;
 
         _this2.setState({
+          gameStatus: 'in lobby',
           userId: userId,
           userName: userName,
           roomData: roomData
@@ -639,9 +642,10 @@ function (_Component) {
       });
     }
   }, {
-    key: "startGame",
-    value: function startGame(data) {
-      var users = data.users,
+    key: "changeGameStatus",
+    value: function changeGameStatus(data) {
+      var gameStatus = data.gameStatus,
+          users = data.users,
           currentHost = data.currentHost;
 
       var newRoomData = _objectSpread({}, this.roomData);
@@ -649,23 +653,23 @@ function (_Component) {
       newRoomData.users = users;
       newRoomData.currentHost = currentHost;
       this.setState({
+        gameStatus: gameStatus,
         roomData: newRoomData
       });
     }
   }, {
     key: "render",
     value: function render() {
-      console.log('THIS.STATE:', this.state);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "middle"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "dynamic-area"
-      }, this.state.roomData === null ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_welcome__WEBPACK_IMPORTED_MODULE_2__["default"], null) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_lobby__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      }, this.state.gameStatus === 'welcome screen' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_welcome__WEBPACK_IMPORTED_MODULE_2__["default"], null) : this.state.gameStatus === 'in lobby' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_lobby__WEBPACK_IMPORTED_MODULE_3__["default"], {
         userId: this.state.userId,
         userName: this.state.userName,
         roomData: this.state.roomData,
-        startGame: this.startGame
-      })));
+        changeGameStatus: this.changeGameStatus
+      }) : 'PLACEHOLDER FOR IN GAME'));
     }
   }]);
 

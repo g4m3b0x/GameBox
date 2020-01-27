@@ -85,7 +85,8 @@ export default class Lobby extends Component {
                 <button
                   type="button"
                   disabled={this.state.currentHost !== this.state.userId}
-                  onClick={() => this.props.startGame({
+                  onClick={() => this.props.changeGameStatus({
+                    gameStatus: 'in game',
                     users: this.state.users,
                     currentHost: this.state.currentHost,
                   })}
