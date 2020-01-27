@@ -74,26 +74,26 @@ export default class Lobby extends Component {
     return (
       <div id="lobby">
         <div id="lobby-header">
-          <div id="lobby-header-room">
-            ROOM CODE: {this.state.roomName}
-          </div>
+          <div id="lobby-header-room">ROOM CODE: {this.state.roomName}</div>
           <div id="lobby-header-game">
             GAME:
             {'<PLACEHOLDER>'}
-            {(this.state.currentHost === this.state.userId)
-              ? (
-                <button
-                  type="button"
-                  disabled={this.state.currentHost !== this.state.userId}
-                  onClick={() => this.props.startGame({
-                    users: this.state.users,
-                    currentHost: this.state.currentHost,
-                  })}
-                >
-                  Start game
-                </button>
-              ) : '(Waiting for host to start game...)'
-            }
+            {this.state.currentHost === this.state.userId ? (
+              <button
+                type="button"
+                disabled={this.state.currentHost !== this.state.userId}
+                onClick={() => {
+                  socket.emit('startingGame', {
+                    game: 'game',
+                    roomName: this.state.roomName
+                  });
+                }}
+              >
+                Start game
+              </button>
+            ) : (
+              '(Waiting for host to start game...)'
+            )}
           </div>
         </div>
         <div id="lobby-middle">
@@ -105,9 +105,8 @@ export default class Lobby extends Component {
           <div id="lobby-users">
             {Object.keys(this.state.users).map((user, i) => (
               <div key={i}>
-                {`${this.state.users[user]}` + (this.state.currentHost === user
-                  ? ' (host)'
-                  : '')}
+                {`${this.state.users[user]}` +
+                  (this.state.currentHost === user ? ' (host)' : '')}
               </div>
             ))}
           </div>

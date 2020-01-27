@@ -90,6 +90,13 @@ module.exports = (socket, io) => {
     //   delete rooms[roomName];
     // }
   });
+  socket.on('startingGame', data => {
+    const { roomName, game } = data;
+    io.in(roomName).emit('startGame', {
+      game,
+      roomData: rooms[roomName]
+    });
+  });
 
   socket.on('sendMessage', data => {
     // SOCKET CODE:

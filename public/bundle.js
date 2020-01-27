@@ -287,9 +287,9 @@ function (_Component) {
         type: "button",
         disabled: this.state.currentHost !== this.state.userId,
         onClick: function onClick() {
-          return _this3.props.startGame({
-            users: _this3.state.users,
-            currentHost: _this3.state.currentHost
+          _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('startingGame', {
+            game: 'game',
+            roomName: _this3.state.roomName
           });
         }
       }, "Start game") : '(Waiting for host to start game...)')), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -574,12 +574,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_lobby__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/lobby */ "./client/components/lobby.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -588,9 +582,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -613,11 +607,12 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Routes).call(this));
     _this.state = {
+      gameStatus: 'welcome screen',
       userId: null,
       userName: null,
       roomData: null
-    };
-    _this.startGame = _this.startGame.bind(_assertThisInitialized(_this));
+    }; // this.changeGameStatus = this.changeGameStatus.bind(this);
+
     return _this;
   }
 
@@ -632,40 +627,45 @@ function (_Component) {
             roomData = data.roomData;
 
         _this2.setState({
+          gameStatus: 'in lobby',
           userId: userId,
           userName: userName,
           roomData: roomData
         });
       });
-    }
-  }, {
-    key: "startGame",
-    value: function startGame(data) {
-      var users = data.users,
-          currentHost = data.currentHost;
+      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('startGame', function (data) {
+        var game = data.game,
+            roomData = data.roomData;
 
-      var newRoomData = _objectSpread({}, this.roomData);
-
-      newRoomData.users = users;
-      newRoomData.currentHost = currentHost;
-      this.setState({
-        roomData: newRoomData
+        _this2.setState({
+          gameStatus: game,
+          roomData: roomData
+        });
       });
-    }
+    } // changeGameStatus(data) {
+    //   const { gameStatus, users, currentHost } = data;
+    //   const newRoomData = { ...this.roomData };
+    //   newRoomData.users = users;
+    //   newRoomData.currentHost = currentHost;
+    //   this.setState({
+    //     gameStatus,
+    //     roomData: newRoomData
+    //   });
+    // }
+
   }, {
     key: "render",
     value: function render() {
-      console.log('THIS.STATE:', this.state);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "middle"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "dynamic-area"
-      }, this.state.roomData === null ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_welcome__WEBPACK_IMPORTED_MODULE_2__["default"], null) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_lobby__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      }, this.state.gameStatus === 'welcome screen' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_welcome__WEBPACK_IMPORTED_MODULE_2__["default"], null) : this.state.gameStatus === 'in lobby' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_lobby__WEBPACK_IMPORTED_MODULE_3__["default"], {
         userId: this.state.userId,
         userName: this.state.userName,
-        roomData: this.state.roomData,
-        startGame: this.startGame
-      })));
+        roomData: this.state.roomData // changeGameStatus={this.changeGameStatus}
+
+      }) : 'PLACEHOLDER FOR IN GAME'));
     }
   }]);
 

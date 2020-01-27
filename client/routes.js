@@ -8,46 +8,59 @@ class Routes extends Component {
   constructor() {
     super();
     this.state = {
+      gameStatus: 'welcome screen',
       userId: null,
       userName: null,
       roomData: null
     };
-    this.startGame = this.startGame.bind(this);
+    // this.changeGameStatus = this.changeGameStatus.bind(this);
   }
 
   componentDidMount() {
     socket.on('joined room', data => {
       const { userId, userName, roomData } = data;
       this.setState({
+        gameStatus: 'in lobby',
         userId,
         userName,
         roomData
       });
     });
+    socket.on('startGame', data => {
+      const { game, roomData } = data;
+      this.setState({
+        gameStatus: game,
+        roomData
+      });
+    });
   }
 
-  startGame(data) {
-    const {users, currentHost} = data;
-    const newRoomData = {...this.roomData};
-    newRoomData.users = users;
-    newRoomData.currentHost = currentHost;
-    this.setState({roomData: newRoomData});
-  }
+  // changeGameStatus(data) {
+  //   const { gameStatus, users, currentHost } = data;
+  //   const newRoomData = { ...this.roomData };
+  //   newRoomData.users = users;
+  //   newRoomData.currentHost = currentHost;
+  //   this.setState({
+  //     gameStatus,
+  //     roomData: newRoomData
+  //   });
+  // }
 
   render() {
-    console.log('THIS.STATE:', this.state);
     return (
       <div id="middle">
         <div id="dynamic-area">
-          {this.state.roomData === null ? (
+          {this.state.gameStatus === 'welcome screen' ? (
             <Welcome />
-          ) : (
+          ) : this.state.gameStatus === 'in lobby' ? (
             <Lobby
               userId={this.state.userId}
               userName={this.state.userName}
               roomData={this.state.roomData}
-              startGame={this.startGame}
+              // changeGameStatus={this.changeGameStatus}
             />
+          ) : (
+            'PLACEHOLDER FOR IN GAME'
           )}
         </div>
       </div>
