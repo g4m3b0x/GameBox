@@ -15,6 +15,13 @@ class Welcome extends Component {
     this.handleType = this.handleType.bind(this);
   }
 
+  componentDidMount () {
+    // EVENT LISTENERS
+    document.getElementById("welcome-joinRoom").addEventListener("keyup", e => {
+      if (e.keyCode === 13) document.getElementById("welcome-joinButton").click();
+    });
+  }
+
   validateUserName () {
     return !!this.state.userName;
   }
@@ -75,13 +82,19 @@ class Welcome extends Component {
         </div>
         <div>
           <input
+            id="welcome-joinRoom"
             type="text"
             name="roomName"
             value={this.state.roomName}
             placeholder="Enter 4-digit room code"
             onChange={this.handleType}
           />
-          <button onClick={this.clickJoin}> Join Room</button>
+          <button
+            id="welcome-joinButton"
+            onClick={this.clickJoin}
+          >
+            Join Room
+          </button>
         </div>
         <div>
           <button onClick={this.clickCreate}>Create Room</button>
