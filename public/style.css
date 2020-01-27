@@ -38,7 +38,7 @@ img {
 }
 
 #middle {
-  flex-grow: 1;
+  height: 80%;
   width: 100%;
   /* background-color: blue; */
   display: flex;
@@ -84,17 +84,24 @@ img {
 }
 
 #lobby-middle {
-  flex-grow: 1;
+  height: 75%;
   width: 100%;
   background-color: red;
   display: flex;
+  overflow: hidden;
 }
 
 #lobby-chat {
+  height: 95%;
   width: 75%;
-  background-color: green;
+  /* background-color: green; */
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
+  padding: 10px;
+  padding-bottom: 10px;
+  padding-right: 100vw;
+  margin-right: -100vw;
 }
 
 #lobby-users {
@@ -103,7 +110,7 @@ img {
 }
 
 #lobby-bottom {
-  height: 35px;
+  height: 5%;
   width: 100%;
   /* background-color: green; */
   display: flex;
