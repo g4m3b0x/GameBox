@@ -13,7 +13,7 @@ class Routes extends Component {
       userName: null,
       roomData: null
     };
-    this.changeGameStatus = this.changeGameStatus.bind(this);
+    // this.changeGameStatus = this.changeGameStatus.bind(this);
   }
 
   componentDidMount() {
@@ -26,18 +26,25 @@ class Routes extends Component {
         roomData
       });
     });
-  }
-
-  changeGameStatus(data) {
-    const {gameStatus, users, currentHost} = data;
-    const newRoomData = {...this.roomData};
-    newRoomData.users = users;
-    newRoomData.currentHost = currentHost;
-    this.setState({
-      gameStatus,
-      roomData: newRoomData
+    socket.on('startGame', data => {
+      const { game, roomData } = data;
+      this.setState({
+        gameStatus: game,
+        roomData
+      });
     });
   }
+
+  // changeGameStatus(data) {
+  //   const { gameStatus, users, currentHost } = data;
+  //   const newRoomData = { ...this.roomData };
+  //   newRoomData.users = users;
+  //   newRoomData.currentHost = currentHost;
+  //   this.setState({
+  //     gameStatus,
+  //     roomData: newRoomData
+  //   });
+  // }
 
   render() {
     return (
@@ -50,7 +57,7 @@ class Routes extends Component {
               userId={this.state.userId}
               userName={this.state.userName}
               roomData={this.state.roomData}
-              changeGameStatus={this.changeGameStatus}
+              // changeGameStatus={this.changeGameStatus}
             />
           ) : (
             'PLACEHOLDER FOR IN GAME'
