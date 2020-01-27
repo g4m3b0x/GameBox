@@ -183,6 +183,7 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Lobby).call(this, props));
     _this.state = {
+      userId: _this.props.userId,
       userName: _this.props.userName,
       roomName: _this.props.roomData.roomName,
       messages: _this.props.roomData.messages,
@@ -201,8 +202,8 @@ function (_Component) {
       var _this2 = this;
 
       // EVENT LISTENERS
-      document.getElementById("lobby-typeMessage").addEventListener("keyup", function (e) {
-        if (e.keyCode === 13) document.getElementById("lobby-sendMessage").click();
+      document.getElementById('lobby-typeMessage').addEventListener('keyup', function (e) {
+        if (e.keyCode === 13) document.getElementById('lobby-sendMessage').click();
       }); // SOCKET LISTENERS
 
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('receiveMessage', function (data) {
@@ -242,7 +243,7 @@ function (_Component) {
   }, {
     key: "scrollDown",
     value: function scrollDown() {
-      var chat = document.getElementById("lobby-chat");
+      var chat = document.getElementById('lobby-chat');
       chat.scrollTop = chat.scrollHeight;
     }
   }, {
@@ -280,7 +281,10 @@ function (_Component) {
         id: "lobby-header-room"
       }, "ROOM CODE: ", this.state.roomName), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "lobby-header-game"
-      }, "GAME:")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "GAME:")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        type: "button",
+        disabled: this.state.currentHost !== this.state.userId
+      }, ' ', "Start game"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "lobby-middle"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "lobby-chat"
@@ -595,6 +599,7 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Routes).call(this));
     _this.state = {
+      userId: null,
       userName: null,
       roomData: null
     };
@@ -608,9 +613,11 @@ function (_Component) {
 
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('joined room', function (data) {
         var userName = data.userName,
-            roomData = data.roomData;
+            roomData = data.roomData,
+            userId = data.userId;
 
         _this2.setState({
+          userId: userId,
           userName: userName,
           roomData: roomData // object from server memory
 
@@ -625,6 +632,7 @@ function (_Component) {
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "dynamic-area"
       }, this.state.roomData === null ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_welcome__WEBPACK_IMPORTED_MODULE_2__["default"], null) : react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_lobby__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        userId: this.state.userId,
         userName: this.state.userName,
         roomData: this.state.roomData
       })));

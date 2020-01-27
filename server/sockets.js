@@ -7,7 +7,7 @@ module.exports = (socket, io) => {
   console.log(`A new client ${socket.id} has connected to server!`);
 
   socket.on('join room', data => {
-    let {userName, roomName} = data;
+    let { userName, roomName } = data;
 
     // IF CREATING ROOM, GENERATE RANDOM UNUSED ROOM CODE:
     if (!roomName) {
@@ -25,9 +25,8 @@ module.exports = (socket, io) => {
         roomName,
         users: {},
         host: null,
-        messages: [],
+        messages: []
       };
-
     }
 
     // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, RETURN
@@ -41,8 +40,9 @@ module.exports = (socket, io) => {
     socket.join(roomName);
 
     socket.emit('joined room', {
+      userId: socket.id,
       userName: userName,
-      roomData: rooms[roomName],
+      roomData: rooms[roomName]
     });
 
     io.in(roomName).emit('newUser', [socket.id, userName]);
@@ -56,7 +56,6 @@ module.exports = (socket, io) => {
   });
 
   socket.on('disconnecting', reason => {
-
     const [socketId, roomName] = Object.keys(socket.rooms);
 
     // SERVER MEMORY CODE:
@@ -71,9 +70,8 @@ module.exports = (socket, io) => {
     // SOCKET CODE:
     io.in(roomName).emit('removeUser', {
       socketId,
-      currentHost: rooms[roomName] ? rooms[roomName].host : null,
+      currentHost: rooms[roomName] ? rooms[roomName].host : null
     });
-
 
     // DELETE THIS AFTER A WHILE IF THE CURRENT CODE IS WORKING FINE:
 
@@ -98,7 +96,7 @@ module.exports = (socket, io) => {
     const { roomName, sender, message } = data;
     io.in(roomName).emit('receiveMessage', {
       sender,
-      message,
+      message
     });
 
     // SERVER MEMORY CODE:
