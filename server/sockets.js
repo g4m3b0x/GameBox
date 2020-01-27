@@ -23,40 +23,61 @@ module.exports = (socket, io) => {
       // SERVER MEMORY CODE:
       rooms[roomName] = {
         roomName,
+        users: {},
         messages: [],
       };
+
     }
 
     // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, RETURN
     if (!(roomName in rooms)) return;
 
+    // SERVER MEMORY CODE:
+    rooms[roomName].users[socket.id] = userName;
+
     // SOCKET CODE:
     socket.join(roomName);
+
     socket.emit('joined room', {
       userName: userName,
       roomData: rooms[roomName],
     });
-    const room = io.sockets.adapter.rooms[roomName];
-    const users = Object.keys(room.sockets)
-      .map(key => io.sockets.connected[key].id);
-    io.in(roomName).emit('newUser', users);   
+
+    io.in(roomName).emit('newUser', [socket.id, userName]);
+
+    // const room = io.sockets.adapter.rooms[roomName];
+    // const users = Object.keys(room.sockets)
+    //   .map(key => io.sockets.connected[key].id);
+    // io.in(roomName).emit('newUser', users);
   });
 
   socket.on('disconnecting', reason => {
-    // SOCKET CODE:
+
     const [socketId, roomName] = Object.keys(socket.rooms);
-    const room = io.sockets.adapter.rooms[roomName];
-    if (room) {                                             // temporary fix. sometimes room is undefined.
-      const users = Object.keys(room.sockets)
-        .filter(key => socketId !== io.sockets.connected[key].id)
-        .map(key => io.sockets.connected[key].id);
-      io.in(roomName).emit('newUser', users);
-    }
 
     // SERVER MEMORY CODE:
-    if (room && Object.keys(room.sockets).length === 1) {   // last user leaves a room
-      delete rooms[roomName];
+    if (rooms[roomName]) {
+      delete rooms[roomName].users[socketId];
+      if (!Object.keys(rooms[roomName].users).length) delete rooms[roomName];
     }
+
+    // SOCKET CODE:
+    io.in(roomName).emit('removeUser', socketId);
+
+    // SOCKET CODE:
+    // const [socketId, roomName] = Object.keys(socket.rooms);
+    // const room = io.sockets.adapter.rooms[roomName];
+    // if (room) {     // temporary fix. sometimes room is undefined.
+    //   const users = Object.keys(room.sockets)
+    //     .filter(key => socketId !== io.sockets.connected[key].id)
+    //     .map(key => io.sockets.connected[key].id);
+    //   io.in(roomName).emit('newUser', users);
+    // }
+
+    // // SERVER MEMORY CODE:
+    // if (room && Object.keys(room.sockets).length === 1) {   // last user leaves a room
+    //   delete rooms[roomName];
+    // }
   });
 
   socket.on('sendMessage', data => {

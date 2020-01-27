@@ -8,7 +8,8 @@ export default class Lobby extends Component {
       userName: this.props.userName,
       roomName: this.props.roomData.roomName,
       messages: this.props.roomData.messages,
-      users: [],
+      // users: [],
+      users: this.props.roomData.users,
       currentMessage: '',
     };
     this.sendMessage = this.sendMessage.bind(this);
@@ -29,7 +30,14 @@ export default class Lobby extends Component {
       this.scrollDown();
     });
     socket.on('newUser', data => {
-      this.setState({ users: data });
+      const [socketId, userName] = data;
+      // this.setState({ users: data });
+      this.setState({users: {...this.state.users, [socketId]: userName}});
+    });
+    socket.on('removeUser', socketId => {
+      const newUsersObj = {...this.state.users};
+      delete newUsersObj[socketId];
+      this.setState({users: newUsersObj});
     });
 
     this.scrollDown();    // scrolls all the way down when you join the room
@@ -51,14 +59,24 @@ export default class Lobby extends Component {
   }
 
   handleType(e) {
-    this.setState({ [e.target.name]: e.target.value });
+    const charLimit = {
+      currentMessage: 100,
+    };
+    if (e.target.value.length <= charLimit[e.target.name]) {
+      this.setState({ [e.target.name]: e.target.value });
+    }
   }
 
   render() {
     return (
       <div id="lobby">
         <div id="lobby-header">
-          YOU ARE IN THE LOBBY OF ROOM {this.state.roomName}
+          <div id="lobby-header-room">
+            ROOM CODE: {this.state.roomName}
+          </div>
+          <div id="lobby-header-game">
+            GAME:
+          </div>
         </div>
         <div id="lobby-middle">
           <div id="lobby-chat">
@@ -70,7 +88,7 @@ export default class Lobby extends Component {
           </div>
           <div id="lobby-users">
           {
-            this.state.users.map((user, i) => (
+            Object.values(this.state.users).map((user, i) => (
               <div key={i}>{`${user}`}</div>
             ))
           }
