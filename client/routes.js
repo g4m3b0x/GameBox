@@ -12,20 +12,30 @@ class Routes extends Component {
       userName: null,
       roomData: null
     };
+    this.startGame = this.startGame.bind(this);
   }
 
   componentDidMount() {
     socket.on('joined room', data => {
-      const { userName, roomData, userId } = data;
+      const { userId, userName, roomData } = data;
       this.setState({
         userId,
         userName,
-        roomData // object from server memory
+        roomData
       });
     });
   }
 
+  startGame(data) {
+    const {users, currentHost} = data;
+    const newRoomData = {...this.roomData};
+    newRoomData.users = users;
+    newRoomData.currentHost = currentHost;
+    this.setState({roomData: newRoomData});
+  }
+
   render() {
+    console.log('THIS.STATE:', this.state);
     return (
       <div id="middle">
         <div id="dynamic-area">
@@ -36,6 +46,7 @@ class Routes extends Component {
               userId={this.state.userId}
               userName={this.state.userName}
               roomData={this.state.roomData}
+              startGame={this.startGame}
             />
           )}
         </div>

@@ -74,16 +74,28 @@ export default class Lobby extends Component {
     return (
       <div id="lobby">
         <div id="lobby-header">
-          <div id="lobby-header-room">ROOM CODE: {this.state.roomName}</div>
-          <div id="lobby-header-game">GAME:</div>
+          <div id="lobby-header-room">
+            ROOM CODE: {this.state.roomName}
+          </div>
+          <div id="lobby-header-game">
+            GAME:
+            {'<PLACEHOLDER>'}
+            {(this.state.currentHost === this.state.userId)
+              ? (
+                <button
+                  type="button"
+                  disabled={this.state.currentHost !== this.state.userId}
+                  onClick={() => this.props.startGame({
+                    users: this.state.users,
+                    currentHost: this.state.currentHost,
+                  })}
+                >
+                  Start game
+                </button>
+              ) : '(Waiting for host to start game...)'
+            }
+          </div>
         </div>
-        <button
-          type="button"
-          disabled={this.state.currentHost !== this.state.userId}
-        >
-          {' '}
-          Start game
-        </button>
         <div id="lobby-middle">
           <div id="lobby-chat">
             {this.state.messages.map(([sender, message], i) => (
@@ -91,8 +103,12 @@ export default class Lobby extends Component {
             ))}
           </div>
           <div id="lobby-users">
-            {Object.values(this.state.users).map((user, i) => (
-              <div key={i}>{`${user}`}</div>
+            {Object.keys(this.state.users).map((user, i) => (
+              <div key={i}>
+                {`${this.state.users[user]}` + (this.state.currentHost === user
+                  ? ' (host)'
+                  : '')}
+              </div>
             ))}
           </div>
         </div>

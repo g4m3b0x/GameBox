@@ -106,7 +106,7 @@ module.exports = (socket, io) => {
   socket.on('disconnect', () => {
     // we will have to make this remove the user from whatever room he/she was in
     // if that room no longer has any users in it, delete the room as well
-    console.log('A client has disconnected from DEFAULT!');
+    console.log('A client has disconnected from the server!');
     // console.log('ROOMS:', rooms)   // to check status of rooms object for testing
   });
 };
