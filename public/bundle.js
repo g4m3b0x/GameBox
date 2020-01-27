@@ -186,8 +186,8 @@ function (_Component) {
       userName: _this.props.userName,
       roomName: _this.props.roomData.roomName,
       messages: _this.props.roomData.messages,
-      // users: [],
       users: _this.props.roomData.users,
+      currentHost: _this.props.roomData.host,
       currentMessage: ''
     };
     _this.sendMessage = _this.sendMessage.bind(_assertThisInitialized(_this));
@@ -218,20 +218,23 @@ function (_Component) {
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('newUser', function (data) {
         var _data = _slicedToArray(data, 2),
             socketId = _data[0],
-            userName = _data[1]; // this.setState({ users: data });
-
+            userName = _data[1];
 
         _this2.setState({
           users: _objectSpread({}, _this2.state.users, _defineProperty({}, socketId, userName))
         });
       });
-      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('removeUser', function (socketId) {
+      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('removeUser', function (data) {
+        var socketId = data.socketId,
+            currentHost = data.currentHost;
+
         var newUsersObj = _objectSpread({}, _this2.state.users);
 
         delete newUsersObj[socketId];
 
         _this2.setState({
-          users: newUsersObj
+          users: newUsersObj,
+          currentHost: currentHost
         });
       });
       this.scrollDown(); // scrolls all the way down when you join the room

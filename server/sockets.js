@@ -24,6 +24,7 @@ module.exports = (socket, io) => {
       rooms[roomName] = {
         roomName,
         users: {},
+        host: null,
         messages: [],
       };
 
@@ -34,6 +35,7 @@ module.exports = (socket, io) => {
 
     // SERVER MEMORY CODE:
     rooms[roomName].users[socket.id] = userName;
+    if (!rooms[roomName].host) rooms[roomName].host = socket.id;
 
     // SOCKET CODE:
     socket.join(roomName);
@@ -44,6 +46,8 @@ module.exports = (socket, io) => {
     });
 
     io.in(roomName).emit('newUser', [socket.id, userName]);
+
+    // DELETE THIS AFTER A WHILE IF THE CURRENT CODE IS WORKING FINE:
 
     // const room = io.sockets.adapter.rooms[roomName];
     // const users = Object.keys(room.sockets)
@@ -59,10 +63,19 @@ module.exports = (socket, io) => {
     if (rooms[roomName]) {
       delete rooms[roomName].users[socketId];
       if (!Object.keys(rooms[roomName].users).length) delete rooms[roomName];
+      else if (rooms[roomName].host === socketId) {
+        rooms[roomName].host = Object.keys(rooms[roomName].users)[0];
+      }
     }
 
     // SOCKET CODE:
-    io.in(roomName).emit('removeUser', socketId);
+    io.in(roomName).emit('removeUser', {
+      socketId,
+      currentHost: rooms[roomName] ? rooms[roomName].host : null,
+    });
+
+
+    // DELETE THIS AFTER A WHILE IF THE CURRENT CODE IS WORKING FINE:
 
     // SOCKET CODE:
     // const [socketId, roomName] = Object.keys(socket.rooms);
@@ -96,5 +109,6 @@ module.exports = (socket, io) => {
     // we will have to make this remove the user from whatever room he/she was in
     // if that room no longer has any users in it, delete the room as well
     console.log('A client has disconnected from DEFAULT!');
+    // console.log('ROOMS:', rooms)   // to check status of rooms object for testing
   });
 };
