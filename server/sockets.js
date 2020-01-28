@@ -3,27 +3,9 @@
 // for now, each inner room object will hold its name and message history. see socket.on('join room')
 const rooms = {};
 const users = {};
-class TicTac {
-  constructor(users) {
-    this.users = users;
-    this.winner = null;
-    this.gameState = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
-    this.turn = 0;
-    this.char = ['X', '0'];
-  }
-  getGameState() {
-    return this.gameState;
-  }
-  move(id, x, y) {
-    if (id !== this.users[this.turn]) return this.gameState;
-    if (this.gameState[x][y] === ' ') {
-      this.gameState[x][y] = this.char[this.turn];
-      if (this.turn === 0) this.turn = 1;
-      else this.turn = 0;
-    }
-    return this.gameState;
-  }
-}
+
+// const games = require('./games');
+const TicTac = require('./tic-tac-toe-class');
 
 module.exports = (socket, io) => {
   console.log(`A new client ${socket.id} has connected to server!`);
