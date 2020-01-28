@@ -1,16 +1,21 @@
 body {
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
   font-family: 'Darker Grotesque';
   font-size: 22px;
   background-color: white;
   margin: 0 0 0 0;
 }
 
-img {
-  height: 100%;
-  /* width: 100%; */
+input {
+  width: 100%;
+  font-family: 'Darker Grotesque';
+  font-size: 22px;
+  border-width: 0px 0px 2px 0px;
+  outline: none;
+}
+
+button {
+  font-family: 'Darker Grotesque';
+  font-size: 22px;
 }
 
 #app {
@@ -36,6 +41,10 @@ img {
   justify-content: center;
 }
 
+#header-logo {
+  height: 100%;
+}
+
 #middle {
   height: 85%;
   width: 100%;
@@ -47,7 +56,6 @@ img {
 #footer {
   height: 5%;
   width: 100%;
-  /* background-color: gray; */
 }
 
 #dynamic-area {
@@ -56,25 +64,46 @@ img {
   width: 100%;
   border-radius: 10px;
   box-shadow: 0px 0px 10px #888888;
-  /* border-style: solid; */
-  /* border-width: 0px 1px 3px 1px; */
-  /* border-color: #888888; */
   padding: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #welcome {
-  height: 100%;
-  width: 100%;
+  height: 75%;
+  width: 50%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#welcome div {
+  width: 100%;
+}
+
+.welcomeIcon {
+  height: 5%;
+  width: 5%;
+}
+
+#welcome-create {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#welcome-join {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
   align-items: center;
 }
 
 #lobby {
   height: 100%;
   width: 100%;
-  /* background-color: yellow; */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -83,7 +112,6 @@ img {
 #lobby-header {
   height: 20%;
   width: 100%;
-  /* background-color: blue; */
   display: flex;
   flex-direction: column;
   justify-content: space-evenly
@@ -96,7 +124,6 @@ img {
 #lobby-middle {
   height: 75%;
   width: 100%;
-  /* background-color: red; */
   display: flex;
   overflow: hidden;
 }
@@ -104,7 +131,6 @@ img {
 #lobby-chat {
   height: 95%;
   width: 75%;
-  /* background-color: green; */
   display: flex;
   flex-direction: column;
   overflow-y: scroll;
@@ -120,13 +146,11 @@ img {
 
 #lobby-users {
   flex-grow: 1;
-  /* background-color: yellow; */
 }
 
 #lobby-bottom {
   height: 5%;
   width: 100%;
-  /* background-color: green; */
   display: flex;
 }
 

@@ -176,12 +176,12 @@ var Lobby =
 function (_Component) {
   _inherits(Lobby, _Component);
 
-  function Lobby(props) {
+  function Lobby() {
     var _this;
 
     _classCallCheck(this, Lobby);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Lobby).call(this, props));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Lobby).call(this));
     _this.state = {
       messages: [],
       users: {},
@@ -381,7 +381,7 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Welcome).call(this));
     _this.state = {
-      userName: 'Player',
+      userName: '',
       // restore to '' later 
       roomName: ''
     };
@@ -394,8 +394,15 @@ function (_Component) {
   _createClass(Welcome, [{
     key: "componentDidMount",
     value: function componentDidMount() {
+      var _this2 = this;
+
       // EVENT LISTENERS
-      document.getElementById("welcome-joinRoom").addEventListener("keyup", function (e) {
+      document.getElementById("welcome-nameInput").addEventListener("keyup", function (e) {
+        if (e.keyCode === 13) {
+          document.getElementById(_this2.state.roomName ? "welcome-joinButton" : "welcome-createButton").click();
+        }
+      });
+      document.getElementById("welcome-joinInput").addEventListener("keyup", function (e) {
         if (e.keyCode === 13) document.getElementById("welcome-joinButton").click();
       }); // SOCKET LISTENERS
 
@@ -451,25 +458,39 @@ function (_Component) {
     value: function render() {
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "welcome"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "welcome-name"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "welcome-nameInput",
         type: "text",
         name: "userName",
         value: this.state.userName,
         placeholder: "Enter username",
         onChange: this.handleType
-      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-        id: "welcome-joinRoom",
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "welcome-create"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        id: "welcome-createButton",
+        onClick: this.clickCreate
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        className: "welcomeIcon",
+        src: "/monitor-icon.png"
+      }), "Create Room")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "- or -"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        id: "welcome-join"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "welcome-joinInput",
         type: "text",
         name: "roomName",
         value: this.state.roomName,
         placeholder: "Enter 4-digit room code",
         onChange: this.handleType
-      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      })), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         id: "welcome-joinButton",
         onClick: this.clickJoin
-      }, "Join Room")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.clickCreate
-      }, "Create Room")));
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+        className: "welcomeIcon",
+        src: "/phone-icon.png"
+      }), "Join Room"));
     }
   }]);
 
@@ -520,6 +541,7 @@ var Header = function Header() {
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     id: "header"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+    id: "header-logo",
     src: "/logo.jpg"
   }));
 };
