@@ -6,12 +6,12 @@ export default class Lobby extends Component {
     super(props);
     this.state = {
       userId: socket.id,
-      userName: this.props.userName,
-      roomName: this.props.roomData.roomName,
-      messages: this.props.roomData.messages,
-      users: this.props.roomData.users,
-      currentHost: this.props.roomData.host,
-      currentMessage: ''
+      userName: '',
+      roomName: '',
+      messages: [],
+      users: {},
+      currentHost: '',
+      currentMessage: '',
     };
     this.sendMessage = this.sendMessage.bind(this);
     this.handleType = this.handleType.bind(this);
@@ -19,20 +19,27 @@ export default class Lobby extends Component {
 
   componentDidMount() {
 
-    // // GET DATA
-    // socket.emit('request data', {
-    //   request: 'joined room',
-    //   userId: socket.id,
-    // });
-    // socket.on('receive data', data => {
-    //   this.setState({
-    //     userName: '',
-    //     roomName: '',
-    //     messages: '',
-    //     users: '',
-    //     currentHost: '',
-    //   });
-    // });
+    // GET DATA
+    socket.emit('request data', {
+      request: 'joined room',
+      userId: socket.id,
+    });
+    socket.on('receive data', data => {
+      const {
+        userName,
+        roomName,
+        messages,
+        users,
+        currentHost,
+      } = data;
+      this.setState({
+        userName,
+        roomName,
+        messages,
+        users,
+        currentHost,
+      });
+    });
 
     // EVENT LISTENERS
     document
@@ -59,7 +66,7 @@ export default class Lobby extends Component {
       this.setState({ users: newUsersObj, currentHost });
     });
 
-    this.scrollDown(); // scrolls all the way down when you join the room
+    setTimeout(this.scrollDown, 100);   // scrolls all the way down when you join the room
   }
 
   scrollDown() {

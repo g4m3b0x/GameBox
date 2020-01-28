@@ -2,22 +2,26 @@
 
 // for now, each inner room object will hold its name and message history. see socket.on('join room')
 const rooms = {};
+const users = {};
 
 module.exports = (socket, io) => {
   console.log(`A new client ${socket.id} has connected to server!`);
+  users[socket.id] = null;
 
-  // socket.on('request data', data => {
-  //   const {request, userId} = data;
-  //   switch (request) {
-  //     case 'joined room':
-  //       socket.emit('receive data', {
-  //         userName: ,
-  //         roomName: ,
-  //         messages: ,
-
-  //       });
-  //   }
-  // });
+  socket.on('request data', data => {
+    const {request, userId} = data;
+    const roomName = users[userId];
+    switch (request) {
+      case 'joined room':
+        socket.emit('receive data', {
+          userName: rooms[roomName].users[socket.id],
+          roomName: users[userId],
+          messages: rooms[roomName].messages,
+          users: rooms[roomName].users,
+          currentHost: rooms[roomName].host,
+        });
+    }
+  });
 
   socket.on('join room', data => {
     let { userName, roomName } = data;
@@ -50,6 +54,7 @@ module.exports = (socket, io) => {
     }
 
     // SERVER MEMORY CODE:
+    users[socket.id] = roomName;
     rooms[roomName].users[socket.id] = userName;
     if (!rooms[roomName].host) rooms[roomName].host = socket.id;
 
@@ -97,6 +102,7 @@ module.exports = (socket, io) => {
         rooms[roomName].host = Object.keys(rooms[roomName].users)[0];
       }
     }
+    delete users[socketId];
 
     // SOCKET CODE:
     io.in(roomName).emit('remove user', {
