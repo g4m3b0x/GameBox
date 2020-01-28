@@ -4,7 +4,7 @@ import socket from '../index.js';
 export default class TicTac extends Component {
   constructor(props) {
     super(props);
-    this.state = { gameBoard: [[]] };
+    this.state = { gameBoard: [[]], winner: null };
     this.move = this.move.bind(this);
   }
 
@@ -13,8 +13,7 @@ export default class TicTac extends Component {
       socket.emit('initalState');
     }
     socket.on('sendState', data => {
-      console.log(data);
-      this.setState({ gameBoard: data });
+      this.setState(data);
     });
   }
   move(x, y) {
@@ -25,13 +24,17 @@ export default class TicTac extends Component {
   render() {
     return (
       <div>
-        {this.state.gameBoard.map((grid, x) => (
-          <ol>
-            {grid.map((elm, y) => (
-              <button onClick={() => this.move(x, y)}> {elm}</button>
-            ))}
-          </ol>
-        ))}
+        {this.state.winner ? (
+          <p>{this.state.winner} wins</p>
+        ) : (
+          this.state.gameBoard.map((grid, x) => (
+            <ol>
+              {grid.map((elm, y) => (
+                <button onClick={() => this.move(x, y)}> {elm}</button>
+              ))}
+            </ol>
+          ))
+        )}
       </div>
     );
   }
