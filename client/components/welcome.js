@@ -5,7 +5,7 @@ class Welcome extends Component {
   constructor() {
     super();
     this.state = {
-      userName: 'Player',     // restore to '' later 
+      userName: '',     // restore to '' later 
       roomName: '',
     };
     this.clickCreate = this.clickCreate.bind(this);
@@ -16,7 +16,12 @@ class Welcome extends Component {
   componentDidMount () {
 
     // EVENT LISTENERS
-    document.getElementById("welcome-joinRoom").addEventListener("keyup", e => {
+    document.getElementById("welcome-nameInput").addEventListener("keyup", e => {
+      if (e.keyCode === 13) {
+        document.getElementById(this.state.roomName ? "welcome-joinButton" : "welcome-createButton").click();
+      }
+    });
+    document.getElementById("welcome-joinInput").addEventListener("keyup", e => {
       if (e.keyCode === 13) document.getElementById("welcome-joinButton").click();
     });
 
@@ -74,8 +79,9 @@ class Welcome extends Component {
   render() {
     return (
       <div id="welcome">
-        <div>
+        <div id="welcome-name">
           <input
+            id="welcome-nameInput"
             type="text"
             name="userName"
             value={this.state.userName}
@@ -83,25 +89,33 @@ class Welcome extends Component {
             onChange={this.handleType}
           />
         </div>
-        <div>
+        <div id="welcome-create">
+          <button
+            id="welcome-createButton"
+            onClick={this.clickCreate}
+          >
+            <img className="welcomeIcon" src="/monitor-icon.png"></img>
+            Create Room
+          </button>
+        </div>
+        <p>- or -</p>
+        <div id="welcome-join">
           <input
-            id="welcome-joinRoom"
+            id="welcome-joinInput"
             type="text"
             name="roomName"
             value={this.state.roomName}
             placeholder="Enter 4-digit room code"
             onChange={this.handleType}
           />
-          <button
+        </div>
+        <button
             id="welcome-joinButton"
             onClick={this.clickJoin}
-          >
-            Join Room
-          </button>
-        </div>
-        <div>
-          <button onClick={this.clickCreate}>Create Room</button>
-        </div>
+        >
+          <img className="welcomeIcon" src="/phone-icon.png"></img>
+          Join Room
+        </button>
       </div>
     );
   }
