@@ -3,19 +3,40 @@
 // for now, each inner room object will hold its name and message history. see socket.on('join room')
 const rooms = {};
 const users = {};
+class TicTac {
+  constructor(users) {
+    this.users = users;
+    this.winner = null;
+    this.gameState = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
+    this.turn = 0;
+    this.char = ['X', '0'];
+  }
+  getGameState() {
+    return this.gameState;
+  }
+  move(id, x, y) {
+    if (id !== this.users[this.turn]) return this.gameState;
+    if (this.gameState[x][y] === ' ') {
+      this.gameState[x][y] = this.char[this.turn];
+      if (this.turn === 0) this.turn = 1;
+      else this.turn = 0;
+    }
+    return this.gameState;
+  }
+}
 
 module.exports = (socket, io) => {
   console.log(`A new client ${socket.id} has connected to server!`);
   users[socket.id] = null;
 
   socket.on('request data', data => {
-    const {request} = data;
+    const { request } = data;
     switch (request) {
       case 'joined room':
         socket.emit('receive data', {
           messages: rooms[socket.roomName].messages,
           users: rooms[socket.roomName].users,
-          currentHost: rooms[socket.roomName].host,
+          currentHost: rooms[socket.roomName].host
         });
     }
   });
@@ -45,7 +66,7 @@ module.exports = (socket, io) => {
     if (!(roomName in rooms) || rooms[roomName].gameStarted) {
       socket.emit('error: room not open', {
         roomName,
-        roomExists: roomName in rooms,
+        roomExists: roomName in rooms
       });
       return;
     }
@@ -53,7 +74,12 @@ module.exports = (socket, io) => {
     // SERVER MEMORY CODE:
     users[socket.id] = roomName;
     rooms[roomName].users[socket.id] = userName;
-    if (!rooms[roomName].host) rooms[roomName].host = socket.id;
+    if (!rooms[roomName].host) {
+      rooms[roomName].host = socket.id;
+      socket.hostBool = true;
+    } else {
+      socket.hostBool = false;
+    }
 
     // SOCKET CODE:
     socket.userName = userName;
@@ -63,6 +89,7 @@ module.exports = (socket, io) => {
     socket.emit('joined room', {
       userName,
       roomName,
+      hostBool: socket.hostBool
     });
 
     io.in(roomName).emit('new user', [socket.id, userName]);
@@ -79,7 +106,7 @@ module.exports = (socket, io) => {
     const { message } = data;
     io.in(socket.roomName).emit('receive message', {
       sender: socket.userName,
-      message,
+      message
     });
 
     // SERVER MEMORY CODE:
@@ -105,7 +132,17 @@ module.exports = (socket, io) => {
       currentHost: rooms[roomName] ? rooms[roomName].host : null
     });
   });
-
+  socket.on('initalState', () => {
+    const userss = Object.keys(rooms[socket.roomName].users);
+    console.log(userss);
+    let game = (rooms[socket.roomName].game = new TicTac(userss));
+    io.in(socket.roomName).emit('sendState', game.getGameState());
+  });
+  socket.on('move', coord => {
+    let game = rooms[socket.roomName].game;
+    game.move(socket.id, coord.x, coord.y);
+    io.in(socket.roomName).emit('sendState', game.getGameState());
+  });
   socket.on('disconnect', () => {
     console.log('A client has disconnected from the server!');
     // console.log('ROOMS:', rooms) // to check status of rooms object for testing
