@@ -9,16 +9,13 @@ module.exports = (socket, io) => {
   users[socket.id] = null;
 
   socket.on('request data', data => {
-    const {request, userId} = data;
-    const roomName = users[userId];
+    const {request} = data;
     switch (request) {
       case 'joined room':
         socket.emit('receive data', {
-          userName: rooms[roomName].users[socket.id],
-          roomName: users[userId],
-          messages: rooms[roomName].messages,
-          users: rooms[roomName].users,
-          currentHost: rooms[roomName].host,
+          messages: rooms[socket.roomName].messages,
+          users: rooms[socket.roomName].users,
+          currentHost: rooms[socket.roomName].host,
         });
     }
   });
@@ -59,36 +56,34 @@ module.exports = (socket, io) => {
     if (!rooms[roomName].host) rooms[roomName].host = socket.id;
 
     // SOCKET CODE:
+    socket.userName = userName;
+    socket.roomName = roomName;
     socket.join(roomName);
 
     socket.emit('joined room', {
-      userId: socket.id,
-      userName: userName,
-      roomData: rooms[roomName]
+      userName,
+      roomName,
     });
 
     io.in(roomName).emit('new user', [socket.id, userName]);
   });
 
   socket.on('start game', data => {
-    const { roomName, game } = data;
+    const { game, roomName } = data;
     rooms[roomName].gameStarted = true;
-    io.in(roomName).emit('started game', {
-      game,
-      roomData: rooms[roomName]
-    });
+    io.in(roomName).emit('started game', { game });
   });
 
   socket.on('send message', data => {
     // SOCKET CODE:
-    const { roomName, sender, message } = data;
-    io.in(roomName).emit('receive message', {
-      sender,
-      message
+    const { message } = data;
+    io.in(socket.roomName).emit('receive message', {
+      sender: socket.userName,
+      message,
     });
 
     // SERVER MEMORY CODE:
-    rooms[roomName].messages.push([sender, message]);
+    rooms[socket.roomName].messages.push([socket.userName, message]);
   });
 
   socket.on('disconnecting', reason => {

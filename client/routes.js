@@ -7,27 +7,19 @@ import Lobby from './components/lobby';
 class Routes extends Component {
   constructor() {
     super();
-    this.state = {
-      gameStatus: 'welcome screen',
-    };
+    this.state = {gameStatus: 'welcome screen'};
   }
 
   componentDidMount() {
     socket.on('joined room', data => {
-      const { userId, userName, roomData } = data;
-      this.setState({
-        gameStatus: 'in lobby',
-        userId,
-        userName,
-        roomData
-      });
+      const { userName, roomName } = data;
+      socket.userName = userName;
+      socket.roomName = roomName;
+      this.setState({gameStatus: 'in lobby'});
     });
     socket.on('started game', data => {
-      const { game, roomData } = data;
-      this.setState({
-        gameStatus: game,
-        roomData
-      });
+      const { game } = data;
+      this.setState({gameStatus: game});
     });
   }
 
