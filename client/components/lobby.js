@@ -5,9 +5,6 @@ export default class Lobby extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: socket.id,
-      userName: '',
-      roomName: '',
       messages: [],
       users: {},
       currentHost: '',
@@ -22,23 +19,9 @@ export default class Lobby extends Component {
     // GET DATA
     socket.emit('request data', {
       request: 'joined room',
-      userId: socket.id,
     });
     socket.on('receive data', data => {
-      const {
-        userName,
-        roomName,
-        messages,
-        users,
-        currentHost,
-      } = data;
-      this.setState({
-        userName,
-        roomName,
-        messages,
-        users,
-        currentHost,
-      });
+      this.setState(data);
     });
 
     // EVENT LISTENERS
@@ -53,7 +36,7 @@ export default class Lobby extends Component {
     socket.on('receive message', data => {
       const { sender, message } = data;
       this.setState({ messages: [...this.state.messages, [sender, message]] });
-      this.scrollDown();
+      setTimeout(this.scrollDown, 100);
     });
     socket.on('new user', data => {
       const [socketId, userName] = data;
@@ -77,8 +60,6 @@ export default class Lobby extends Component {
   sendMessage() {
     if (!this.state.currentMessage) return;
     socket.emit('send message', {
-      roomName: this.state.roomName,
-      sender: this.state.userName,
       message: this.state.currentMessage
     });
     this.setState({ currentMessage: '' });
@@ -97,18 +78,17 @@ export default class Lobby extends Component {
     return (
       <div id="lobby">
         <div id="lobby-header">
-          <div id="lobby-header-room">ROOM CODE: {this.state.roomName}</div>
+          <div id="lobby-header-room">ROOM CODE: {socket.roomName}</div>
           <div id="lobby-header-game">
             GAME:
             {'<PLACEHOLDER>'}
-            {this.state.currentHost === this.state.userId ? (
+            {this.state.currentHost === socket.id ? (
               <button
                 type="button"
-                disabled={this.state.currentHost !== this.state.userId}
                 onClick={() => {
                   socket.emit('start game', {
                     game: 'game',
-                    roomName: this.state.roomName
+                    roomName: socket.roomName,
                   });
                 }}
               >

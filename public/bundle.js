@@ -183,9 +183,6 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Lobby).call(this, props));
     _this.state = {
-      userId: _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].id,
-      userName: '',
-      roomName: '',
       messages: [],
       users: {},
       currentHost: '',
@@ -203,23 +200,10 @@ function (_Component) {
 
       // GET DATA
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('request data', {
-        request: 'joined room',
-        userId: _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].id
+        request: 'joined room'
       });
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('receive data', function (data) {
-        var userName = data.userName,
-            roomName = data.roomName,
-            messages = data.messages,
-            users = data.users,
-            currentHost = data.currentHost;
-
-        _this2.setState({
-          userName: userName,
-          roomName: roomName,
-          messages: messages,
-          users: users,
-          currentHost: currentHost
-        });
+        _this2.setState(data);
       }); // EVENT LISTENERS
 
       document.getElementById('lobby-typeMessage').addEventListener('keyup', function (e) {
@@ -234,7 +218,7 @@ function (_Component) {
           messages: [].concat(_toConsumableArray(_this2.state.messages), [[sender, message]])
         });
 
-        _this2.scrollDown();
+        setTimeout(_this2.scrollDown, 100);
       });
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('new user', function (data) {
         var _data = _slicedToArray(data, 2),
@@ -271,8 +255,6 @@ function (_Component) {
     value: function sendMessage() {
       if (!this.state.currentMessage) return;
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('send message', {
-        roomName: this.state.roomName,
-        sender: this.state.userName,
         message: this.state.currentMessage
       });
       this.setState({
@@ -301,15 +283,14 @@ function (_Component) {
         id: "lobby-header"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "lobby-header-room"
-      }, "ROOM CODE: ", this.state.roomName), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+      }, "ROOM CODE: ", _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].roomName), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "lobby-header-game"
-      }, "GAME:", '<PLACEHOLDER>', this.state.currentHost === this.state.userId ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+      }, "GAME:", '<PLACEHOLDER>', this.state.currentHost === _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].id ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
         type: "button",
-        disabled: this.state.currentHost !== this.state.userId,
         onClick: function onClick() {
           _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('start game', {
             game: 'game',
-            roomName: _this3.state.roomName
+            roomName: _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].roomName
           });
         }
       }, "Start game") : '(Waiting for host to start game...)')), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -633,24 +614,20 @@ function (_Component) {
       var _this2 = this;
 
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('joined room', function (data) {
-        var userId = data.userId,
-            userName = data.userName,
-            roomData = data.roomData;
+        var userName = data.userName,
+            roomName = data.roomName;
+        _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].userName = userName;
+        _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].roomName = roomName;
 
         _this2.setState({
-          gameStatus: 'in lobby',
-          userId: userId,
-          userName: userName,
-          roomData: roomData
+          gameStatus: 'in lobby'
         });
       });
       _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('started game', function (data) {
-        var game = data.game,
-            roomData = data.roomData;
+        var game = data.game;
 
         _this2.setState({
-          gameStatus: game,
-          roomData: roomData
+          gameStatus: game
         });
       });
     }
