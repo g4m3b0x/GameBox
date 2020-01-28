@@ -1,4 +1,4 @@
-export default class TicTac {
+module.exports = class TicTac {
   constructor(users) {
     this.users = users;
     this.winner = null;
@@ -18,4 +18,4 @@ export default class TicTac {
     }
     return this.gameState;
   }
-}
+};

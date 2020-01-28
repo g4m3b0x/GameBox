@@ -87,7 +87,7 @@ export default class Lobby extends Component {
                 type="button"
                 onClick={() => {
                   socket.emit('start game', {
-                    game: 'game',
+                    game: 'TIC TAC TOE',
                     roomName: socket.roomName,
                   });
                 }}
