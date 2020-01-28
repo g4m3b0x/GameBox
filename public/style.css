@@ -15,7 +15,14 @@ input {
 
 button {
   font-family: 'Darker Grotesque';
-  font-size: 22px;
+  font-size: 20px;
+  border-radius: 5px;
+  border: 2px solid gray;
+  outline: none;
+  background-color: lightgray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #app {
@@ -83,9 +90,17 @@ button {
   width: 100%;
 }
 
-.welcomeIcon {
-  height: 5%;
-  width: 5%;
+#welcome-name {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.welcome-icon {
+  height: 8%;
+  width: 8%;
+  margin: 5px;
 }
 
 #welcome-create {
@@ -97,8 +112,8 @@ button {
 #welcome-join {
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 #lobby {
