@@ -8,35 +8,32 @@ class Welcome extends Component {
       userName: 'Player',     // restore to '' later 
       roomName: '',
     };
-    this.validateUserName = this.validateUserName.bind(this);
-    this.validateRoomName = this.validateRoomName.bind(this);
     this.clickCreate = this.clickCreate.bind(this);
     this.clickJoin = this.clickJoin.bind(this);
     this.handleType = this.handleType.bind(this);
   }
 
   componentDidMount () {
+
     // EVENT LISTENERS
     document.getElementById("welcome-joinRoom").addEventListener("keyup", e => {
       if (e.keyCode === 13) document.getElementById("welcome-joinButton").click();
     });
-  }
 
-  validateUserName () {
-    return !!this.state.userName;
-  }
+    // SOCKET LISTENERS
+    socket.on('error: room not open', data => {
+      const {roomName, roomExists} = data;
+      console.log(roomExists    // for now, just console.log the error
+        ? `Room ${roomName} has already started a game!`
+        : `Room ${roomName} does not exist!`
+      );
+    });
 
-  validateRoomName () {
-    return this.state.roomName.length === 4
-      && this.state.roomName
-        .toUpperCase()
-        .split('')
-        .every(c => c >= 'A' && c <= 'Z');
   }
 
   clickCreate() {
-    if (!this.validateUserName()) {
-      console.log('INVALID USERNAME:', this.state.userName);
+    if (!this.state.userName) {
+      console.log('ENTER A USERNAME');
     } else {
       socket.emit('join room', {
         userName: this.state.userName,
@@ -46,10 +43,16 @@ class Welcome extends Component {
   }
 
   clickJoin() {
-    if (!this.validateUserName()) {
-      console.log('INVALID USERNAME:', this.state.userName);
-    } else if (!this.validateRoomName()) {
-      console.log('INVALID ROOM NAME:', this.state.roomName);
+    if (!this.state.userName) {
+      console.log('ENTER A USERNAME');
+    } else if (
+      this.state.roomName.length !== 4
+      || !this.state.roomName
+        .toUpperCase()
+        .split('')
+        .every(c => c >= 'A' && c <= 'Z')
+    ) {
+      console.log(`INVALID ROOM NAME: ${this.state.roomName}`);
     } else {
       socket.emit('join room', {
         userName: this.state.userName,

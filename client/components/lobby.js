@@ -5,7 +5,7 @@ export default class Lobby extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: this.props.userId,
+      userId: socket.id,
       userName: this.props.userName,
       roomName: this.props.roomData.roomName,
       messages: this.props.roomData.messages,
@@ -18,6 +18,22 @@ export default class Lobby extends Component {
   }
 
   componentDidMount() {
+
+    // // GET DATA
+    // socket.emit('request data', {
+    //   request: 'joined room',
+    //   userId: socket.id,
+    // });
+    // socket.on('receive data', data => {
+    //   this.setState({
+    //     userName: '',
+    //     roomName: '',
+    //     messages: '',
+    //     users: '',
+    //     currentHost: '',
+    //   });
+    // });
+
     // EVENT LISTENERS
     document
       .getElementById('lobby-typeMessage')
@@ -27,16 +43,16 @@ export default class Lobby extends Component {
       });
 
     // SOCKET LISTENERS
-    socket.on('receiveMessage', data => {
+    socket.on('receive message', data => {
       const { sender, message } = data;
       this.setState({ messages: [...this.state.messages, [sender, message]] });
       this.scrollDown();
     });
-    socket.on('newUser', data => {
+    socket.on('new user', data => {
       const [socketId, userName] = data;
       this.setState({ users: { ...this.state.users, [socketId]: userName } });
     });
-    socket.on('removeUser', data => {
+    socket.on('remove user', data => {
       const { socketId, currentHost } = data;
       const newUsersObj = { ...this.state.users };
       delete newUsersObj[socketId];
@@ -53,7 +69,7 @@ export default class Lobby extends Component {
 
   sendMessage() {
     if (!this.state.currentMessage) return;
-    socket.emit('sendMessage', {
+    socket.emit('send message', {
       roomName: this.state.roomName,
       sender: this.state.userName,
       message: this.state.currentMessage
@@ -83,7 +99,7 @@ export default class Lobby extends Component {
                 type="button"
                 disabled={this.state.currentHost !== this.state.userId}
                 onClick={() => {
-                  socket.emit('startingGame', {
+                  socket.emit('start game', {
                     game: 'game',
                     roomName: this.state.roomName
                   });
