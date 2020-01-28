@@ -5,12 +5,16 @@ class Welcome extends Component {
   constructor() {
     super();
     this.state = {
-      userName: '',     // restore to '' later 
+      userName: '',
       roomName: '',
+      userNameErrorMsg: ' ‏‏‎ ‏‏‎',   // unicode 32
+      roomNameErrorMsg: ' ‏‏‎ ',   // unicode 32
     };
     this.clickCreate = this.clickCreate.bind(this);
     this.clickJoin = this.clickJoin.bind(this);
     this.handleType = this.handleType.bind(this);
+    this.userNameError = this.userNameError.bind(this);
+    this.roomNameError = this.roomNameError.bind(this);
   }
 
   componentDidMount () {
@@ -28,7 +32,7 @@ class Welcome extends Component {
     // SOCKET LISTENERS
     socket.on('error: room not open', data => {
       const {roomName, roomExists} = data;
-      console.log(roomExists    // for now, just console.log the error
+      this.roomNameError(roomExists
         ? `Room ${roomName} has already started a game!`
         : `Room ${roomName} does not exist!`
       );
@@ -38,7 +42,7 @@ class Welcome extends Component {
 
   clickCreate() {
     if (!this.state.userName) {
-      console.log('ENTER A USERNAME');
+      this.userNameError('Enter a username!');
     } else {
       socket.emit('join room', {
         userName: this.state.userName,
@@ -49,7 +53,9 @@ class Welcome extends Component {
 
   clickJoin() {
     if (!this.state.userName) {
-      console.log('ENTER A USERNAME');
+      this.userNameError('Enter a username!');
+    } else if (!this.state.roomName.length) {
+      this.roomNameError('Enter a room name!');
     } else if (
       this.state.roomName.length !== 4
       || !this.state.roomName
@@ -57,7 +63,7 @@ class Welcome extends Component {
         .split('')
         .every(c => c >= 'A' && c <= 'Z')
     ) {
-      console.log(`INVALID ROOM NAME: ${this.state.roomName}`);
+      this.roomNameError(`Invalid room name: ${this.state.roomName}`);
     } else {
       socket.emit('join room', {
         userName: this.state.userName,
@@ -76,6 +82,24 @@ class Welcome extends Component {
     }
   }
 
+  userNameError(msg) {
+    this.setState({userNameErrorMsg: msg});
+    setTimeout(() => {
+      if (this.state.userNameErrorMsg === msg) {
+        this.setState({userNameErrorMsg: ' ‏‏‎ '});
+      }
+    }, 5000);
+  }
+
+  roomNameError(msg) {
+    this.setState({roomNameErrorMsg: msg});
+    setTimeout(() => {
+      if (this.state.roomNameErrorMsg === msg) {
+        this.setState({roomNameErrorMsg: ' ‏‏‎ '});
+      }
+    }, 5000);
+  }
+
   render() {
     return (
       <div id="welcome">
@@ -88,13 +112,15 @@ class Welcome extends Component {
             placeholder="Enter username"
             onChange={this.handleType}
           />
+          <p>{this.state.userNameErrorMsg}</p>
         </div>
+        <p>Host a game:</p>
         <div id="welcome-create">
           <button
             id="welcome-createButton"
             onClick={this.clickCreate}
           >
-            <img className="welcomeIcon" src="/monitor-icon.png"></img>
+            <img className="welcome-icon" src="/monitor-icon.png"></img>
             Create Room
           </button>
         </div>
@@ -108,12 +134,13 @@ class Welcome extends Component {
             placeholder="Enter 4-digit room code"
             onChange={this.handleType}
           />
+          <p>{this.state.roomNameErrorMsg}</p>
         </div>
         <button
             id="welcome-joinButton"
             onClick={this.clickJoin}
         >
-          <img className="welcomeIcon" src="/phone-icon.png"></img>
+          <img className="welcome-icon" src="/phone-icon.png"></img>
           Join Room
         </button>
       </div>
