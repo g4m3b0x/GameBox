@@ -183,7 +183,7 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Lobby).call(this, props));
     _this.state = {
-      userId: _this.props.userId,
+      userId: _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].id,
       userName: _this.props.userName,
       roomName: _this.props.roomData.roomName,
       messages: _this.props.roomData.messages,
@@ -201,12 +201,26 @@ function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
+      // // GET DATA
+      // socket.emit('request data', {
+      //   request: 'joined room',
+      //   userId: socket.id,
+      // });
+      // socket.on('receive data', data => {
+      //   this.setState({
+      //     userName: '',
+      //     roomName: '',
+      //     messages: '',
+      //     users: '',
+      //     currentHost: '',
+      //   });
+      // });
       // EVENT LISTENERS
       document.getElementById('lobby-typeMessage').addEventListener('keyup', function (e) {
         if (e.keyCode === 13) document.getElementById('lobby-sendMessage').click();
       }); // SOCKET LISTENERS
 
-      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('receiveMessage', function (data) {
+      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('receive message', function (data) {
         var sender = data.sender,
             message = data.message;
 
@@ -216,7 +230,7 @@ function (_Component) {
 
         _this2.scrollDown();
       });
-      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('newUser', function (data) {
+      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('new user', function (data) {
         var _data = _slicedToArray(data, 2),
             socketId = _data[0],
             userName = _data[1];
@@ -225,7 +239,7 @@ function (_Component) {
           users: _objectSpread({}, _this2.state.users, _defineProperty({}, socketId, userName))
         });
       });
-      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('removeUser', function (data) {
+      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('remove user', function (data) {
         var socketId = data.socketId,
             currentHost = data.currentHost;
 
@@ -250,7 +264,7 @@ function (_Component) {
     key: "sendMessage",
     value: function sendMessage() {
       if (!this.state.currentMessage) return;
-      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('sendMessage', {
+      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('send message', {
         roomName: this.state.roomName,
         sender: this.state.userName,
         message: this.state.currentMessage
@@ -287,7 +301,7 @@ function (_Component) {
         type: "button",
         disabled: this.state.currentHost !== this.state.userId,
         onClick: function onClick() {
-          _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('startingGame', {
+          _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('start game', {
             game: 'game',
             roomName: _this3.state.roomName
           });
@@ -384,8 +398,6 @@ function (_Component) {
       // restore to '' later 
       roomName: ''
     };
-    _this.validateUserName = _this.validateUserName.bind(_assertThisInitialized(_this));
-    _this.validateRoomName = _this.validateRoomName.bind(_assertThisInitialized(_this));
     _this.clickCreate = _this.clickCreate.bind(_assertThisInitialized(_this));
     _this.clickJoin = _this.clickJoin.bind(_assertThisInitialized(_this));
     _this.handleType = _this.handleType.bind(_assertThisInitialized(_this));
@@ -398,25 +410,20 @@ function (_Component) {
       // EVENT LISTENERS
       document.getElementById("welcome-joinRoom").addEventListener("keyup", function (e) {
         if (e.keyCode === 13) document.getElementById("welcome-joinButton").click();
-      });
-    }
-  }, {
-    key: "validateUserName",
-    value: function validateUserName() {
-      return !!this.state.userName;
-    }
-  }, {
-    key: "validateRoomName",
-    value: function validateRoomName() {
-      return this.state.roomName.length === 4 && this.state.roomName.toUpperCase().split('').every(function (c) {
-        return c >= 'A' && c <= 'Z';
+      }); // SOCKET LISTENERS
+
+      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('error: room not open', function (data) {
+        var roomName = data.roomName,
+            roomExists = data.roomExists;
+        console.log(roomExists // for now, just console.log the error
+        ? "Room ".concat(roomName, " has already started a game!") : "Room ".concat(roomName, " does not exist!"));
       });
     }
   }, {
     key: "clickCreate",
     value: function clickCreate() {
-      if (!this.validateUserName()) {
-        console.log('INVALID USERNAME:', this.state.userName);
+      if (!this.state.userName) {
+        console.log('ENTER A USERNAME');
       } else {
         _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', {
           userName: this.state.userName,
@@ -427,10 +434,12 @@ function (_Component) {
   }, {
     key: "clickJoin",
     value: function clickJoin() {
-      if (!this.validateUserName()) {
-        console.log('INVALID USERNAME:', this.state.userName);
-      } else if (!this.validateRoomName()) {
-        console.log('INVALID ROOM NAME:', this.state.roomName);
+      if (!this.state.userName) {
+        console.log('ENTER A USERNAME');
+      } else if (this.state.roomName.length !== 4 || !this.state.roomName.toUpperCase().split('').every(function (c) {
+        return c >= 'A' && c <= 'Z';
+      })) {
+        console.log("INVALID ROOM NAME: ".concat(this.state.roomName));
       } else {
         _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('join room', {
           userName: this.state.userName,
@@ -611,8 +620,7 @@ function (_Component) {
       userId: null,
       userName: null,
       roomData: null
-    }; // this.changeGameStatus = this.changeGameStatus.bind(this);
-
+    };
     return _this;
   }
 
@@ -633,7 +641,7 @@ function (_Component) {
           roomData: roomData
         });
       });
-      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('startGame', function (data) {
+      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('started game', function (data) {
         var game = data.game,
             roomData = data.roomData;
 
@@ -642,17 +650,7 @@ function (_Component) {
           roomData: roomData
         });
       });
-    } // changeGameStatus(data) {
-    //   const { gameStatus, users, currentHost } = data;
-    //   const newRoomData = { ...this.roomData };
-    //   newRoomData.users = users;
-    //   newRoomData.currentHost = currentHost;
-    //   this.setState({
-    //     gameStatus,
-    //     roomData: newRoomData
-    //   });
-    // }
-
+    }
   }, {
     key: "render",
     value: function render() {
@@ -663,8 +661,7 @@ function (_Component) {
       }, this.state.gameStatus === 'welcome screen' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_welcome__WEBPACK_IMPORTED_MODULE_2__["default"], null) : this.state.gameStatus === 'in lobby' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_lobby__WEBPACK_IMPORTED_MODULE_3__["default"], {
         userId: this.state.userId,
         userName: this.state.userName,
-        roomData: this.state.roomData // changeGameStatus={this.changeGameStatus}
-
+        roomData: this.state.roomData
       }) : 'PLACEHOLDER FOR IN GAME'));
     }
   }]);

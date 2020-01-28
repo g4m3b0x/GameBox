@@ -6,31 +6,48 @@ const rooms = {};
 module.exports = (socket, io) => {
   console.log(`A new client ${socket.id} has connected to server!`);
 
+  // socket.on('request data', data => {
+  //   const {request, userId} = data;
+  //   switch (request) {
+  //     case 'joined room':
+  //       socket.emit('receive data', {
+  //         userName: ,
+  //         roomName: ,
+  //         messages: ,
+
+  //       });
+  //   }
+  // });
+
   socket.on('join room', data => {
     let { userName, roomName } = data;
 
     // IF CREATING ROOM, GENERATE RANDOM UNUSED ROOM CODE:
     if (!roomName) {
       const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-
       do {
         roomName = '';
         for (let i = 0; i < 4; i++) {
           roomName += alphabet[Math.floor(Math.random() * 26)];
         }
       } while (roomName in rooms);
-
-      // SERVER MEMORY CODE:
       rooms[roomName] = {
         roomName,
+        gameStarted: false,
         users: {},
         host: null,
         messages: []
       };
     }
 
-    // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, RETURN
-    if (!(roomName in rooms)) return;
+    // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, OR GAME ALREADY STARTED, RETURN
+    if (!(roomName in rooms) || rooms[roomName].gameStarted) {
+      socket.emit('error: room not open', {
+        roomName,
+        roomExists: roomName in rooms,
+      });
+      return;
+    }
 
     // SERVER MEMORY CODE:
     rooms[roomName].users[socket.id] = userName;
@@ -45,14 +62,28 @@ module.exports = (socket, io) => {
       roomData: rooms[roomName]
     });
 
-    io.in(roomName).emit('newUser', [socket.id, userName]);
+    io.in(roomName).emit('new user', [socket.id, userName]);
+  });
 
-    // DELETE THIS AFTER A WHILE IF THE CURRENT CODE IS WORKING FINE:
+  socket.on('start game', data => {
+    const { roomName, game } = data;
+    rooms[roomName].gameStarted = true;
+    io.in(roomName).emit('started game', {
+      game,
+      roomData: rooms[roomName]
+    });
+  });
 
-    // const room = io.sockets.adapter.rooms[roomName];
-    // const users = Object.keys(room.sockets)
-    //   .map(key => io.sockets.connected[key].id);
-    // io.in(roomName).emit('newUser', users);
+  socket.on('send message', data => {
+    // SOCKET CODE:
+    const { roomName, sender, message } = data;
+    io.in(roomName).emit('receive message', {
+      sender,
+      message
+    });
+
+    // SERVER MEMORY CODE:
+    rooms[roomName].messages.push([sender, message]);
   });
 
   socket.on('disconnecting', reason => {
@@ -68,52 +99,14 @@ module.exports = (socket, io) => {
     }
 
     // SOCKET CODE:
-    io.in(roomName).emit('removeUser', {
+    io.in(roomName).emit('remove user', {
       socketId,
       currentHost: rooms[roomName] ? rooms[roomName].host : null
     });
-
-    // DELETE THIS AFTER A WHILE IF THE CURRENT CODE IS WORKING FINE:
-
-    // SOCKET CODE:
-    // const [socketId, roomName] = Object.keys(socket.rooms);
-    // const room = io.sockets.adapter.rooms[roomName];
-    // if (room) {     // temporary fix. sometimes room is undefined.
-    //   const users = Object.keys(room.sockets)
-    //     .filter(key => socketId !== io.sockets.connected[key].id)
-    //     .map(key => io.sockets.connected[key].id);
-    //   io.in(roomName).emit('newUser', users);
-    // }
-
-    // // SERVER MEMORY CODE:
-    // if (room && Object.keys(room.sockets).length === 1) {   // last user leaves a room
-    //   delete rooms[roomName];
-    // }
-  });
-  socket.on('startingGame', data => {
-    const { roomName, game } = data;
-    io.in(roomName).emit('startGame', {
-      game,
-      roomData: rooms[roomName]
-    });
-  });
-
-  socket.on('sendMessage', data => {
-    // SOCKET CODE:
-    const { roomName, sender, message } = data;
-    io.in(roomName).emit('receiveMessage', {
-      sender,
-      message
-    });
-
-    // SERVER MEMORY CODE:
-    rooms[roomName].messages.push([sender, message]);
   });
 
   socket.on('disconnect', () => {
-    // we will have to make this remove the user from whatever room he/she was in
-    // if that room no longer has any users in it, delete the room as well
     console.log('A client has disconnected from the server!');
-    // console.log('ROOMS:', rooms)   // to check status of rooms object for testing
+    // console.log('ROOMS:', rooms) // to check status of rooms object for testing
   });
 };

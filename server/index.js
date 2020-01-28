@@ -15,8 +15,7 @@ const server = app.listen(PORT, () => {
 // SOCKET.IO CODE
 
 const socketio = require('socket.io');
-const io = socketio(server);  // creates a connection server for web sockets...
-                              // ...and places a socket.io/socket.io.js route onto server
+const io = socketio(server);  // places a socket.io/socket.io.js route onto server
 io.on('connection', socket => socketRoutes(socket, io));
 
 // EXPRESS ROUTES
