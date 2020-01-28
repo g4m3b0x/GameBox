@@ -9,9 +9,6 @@ class Routes extends Component {
     super();
     this.state = {
       gameStatus: 'welcome screen',
-      userId: null,
-      userName: null,
-      roomData: null
     };
   }
 
@@ -41,11 +38,7 @@ class Routes extends Component {
           {this.state.gameStatus === 'welcome screen' ? (
             <Welcome />
           ) : this.state.gameStatus === 'in lobby' ? (
-            <Lobby
-              userId={this.state.userId}
-              userName={this.state.userName}
-              roomData={this.state.roomData}
-            />
+            <Lobby />
           ) : (
             'PLACEHOLDER FOR IN GAME'
           )}

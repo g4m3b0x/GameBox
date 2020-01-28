@@ -184,11 +184,11 @@ function (_Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Lobby).call(this, props));
     _this.state = {
       userId: _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].id,
-      userName: _this.props.userName,
-      roomName: _this.props.roomData.roomName,
-      messages: _this.props.roomData.messages,
-      users: _this.props.roomData.users,
-      currentHost: _this.props.roomData.host,
+      userName: '',
+      roomName: '',
+      messages: [],
+      users: {},
+      currentHost: '',
       currentMessage: ''
     };
     _this.sendMessage = _this.sendMessage.bind(_assertThisInitialized(_this));
@@ -201,21 +201,27 @@ function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      // // GET DATA
-      // socket.emit('request data', {
-      //   request: 'joined room',
-      //   userId: socket.id,
-      // });
-      // socket.on('receive data', data => {
-      //   this.setState({
-      //     userName: '',
-      //     roomName: '',
-      //     messages: '',
-      //     users: '',
-      //     currentHost: '',
-      //   });
-      // });
-      // EVENT LISTENERS
+      // GET DATA
+      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].emit('request data', {
+        request: 'joined room',
+        userId: _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].id
+      });
+      _index_js__WEBPACK_IMPORTED_MODULE_1__["default"].on('receive data', function (data) {
+        var userName = data.userName,
+            roomName = data.roomName,
+            messages = data.messages,
+            users = data.users,
+            currentHost = data.currentHost;
+
+        _this2.setState({
+          userName: userName,
+          roomName: roomName,
+          messages: messages,
+          users: users,
+          currentHost: currentHost
+        });
+      }); // EVENT LISTENERS
+
       document.getElementById('lobby-typeMessage').addEventListener('keyup', function (e) {
         if (e.keyCode === 13) document.getElementById('lobby-sendMessage').click();
       }); // SOCKET LISTENERS
@@ -252,7 +258,7 @@ function (_Component) {
           currentHost: currentHost
         });
       });
-      this.scrollDown(); // scrolls all the way down when you join the room
+      setTimeout(this.scrollDown, 100); // scrolls all the way down when you join the room
     }
   }, {
     key: "scrollDown",
@@ -616,10 +622,7 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Routes).call(this));
     _this.state = {
-      gameStatus: 'welcome screen',
-      userId: null,
-      userName: null,
-      roomData: null
+      gameStatus: 'welcome screen'
     };
     return _this;
   }
@@ -658,11 +661,7 @@ function (_Component) {
         id: "middle"
       }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         id: "dynamic-area"
-      }, this.state.gameStatus === 'welcome screen' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_welcome__WEBPACK_IMPORTED_MODULE_2__["default"], null) : this.state.gameStatus === 'in lobby' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_lobby__WEBPACK_IMPORTED_MODULE_3__["default"], {
-        userId: this.state.userId,
-        userName: this.state.userName,
-        roomData: this.state.roomData
-      }) : 'PLACEHOLDER FOR IN GAME'));
+      }, this.state.gameStatus === 'welcome screen' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_welcome__WEBPACK_IMPORTED_MODULE_2__["default"], null) : this.state.gameStatus === 'in lobby' ? react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_components_lobby__WEBPACK_IMPORTED_MODULE_3__["default"], null) : 'PLACEHOLDER FOR IN GAME'));
     }
   }]);
 
