@@ -26,7 +26,6 @@ class Routes extends Component {
   }
 
   render() {
-    console.log(this.state.status)
     return (
       <div id="middle">
         <div id="dynamic-area">

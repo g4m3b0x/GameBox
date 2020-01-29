@@ -26,7 +26,7 @@ module.exports = (socket, io) => {
   });
 
   socket.on('join room', data => {
-    let { userName, roomName } = data;
+    let { userName, roomName, dedicatedScreen } = data;
 
     // IF CREATING ROOM, GENERATE RANDOM UNUSED ROOM CODE:
     if (!roomName) {
@@ -42,7 +42,7 @@ module.exports = (socket, io) => {
         game: null,
         users: {},
         host: null,
-        hostIsPlayer: true,
+        dedicatedScreen,
         messages: []
       };
     }
@@ -58,32 +58,35 @@ module.exports = (socket, io) => {
 
     // SERVER MEMORY CODE:
     users[socket.id] = roomName;
-    rooms[roomName].users[socket.id] = userName;
-    if (!rooms[roomName].host) {
-      rooms[roomName].host = socket.id;
-      socket.hostBool = true;
-    } else {
-      socket.hostBool = false;
-    }
+    if (socket.id !== dedicatedScreen) rooms[roomName].users[socket.id] = userName;
 
     // SOCKET CODE:
     socket.userName = userName;
     socket.roomName = roomName;
-    socket.join(roomName);
+    if (socket.id === dedicatedScreen || rooms[roomName].host) {
+      socket.hostBool = false;
+    } else {
+      rooms[roomName].host = socket.id;
+      socket.hostBool = true;
+    }
 
+    socket.join(roomName);
     socket.emit('joined room', {
       userName,
       roomName,
       hostBool: socket.hostBool
     });
 
-    io.in(roomName).emit('new user', [socket.id, userName]);
+    io.in(roomName).emit('new user', {
+      socketId: socket.id,
+      userName,
+      currentHost: rooms[roomName].host,
+    });
   });
 
   socket.on('start game', data => {
-    const { roomName, game, hostIsPlayer } = data;
+    const { roomName, game } = data;
     rooms[roomName].game = game;
-    rooms[roomName].hostIsPlayer = hostIsPlayer;
     io.in(roomName).emit('started game', { game });
   });
 
@@ -105,9 +108,11 @@ module.exports = (socket, io) => {
     // SERVER MEMORY CODE:
     if (rooms[roomName]) {
       delete rooms[roomName].users[socketId];
-      if (!Object.keys(rooms[roomName].users).length) delete rooms[roomName];
+      if (rooms[roomName].dedicatedScreen === socketId) rooms[roomName].dedicatedScreen = null;
+      if (!rooms[roomName].dedicatedScreen && !Object.keys(rooms[roomName].users).length) delete rooms[roomName];
       else if (rooms[roomName].host === socketId) {
-        rooms[roomName].host = Object.keys(rooms[roomName].users)[0];
+        const otherUsers = Object.keys(rooms[roomName].users).filter(user => user !== rooms[roomName].dedicatedScreen);
+        rooms[roomName].host = otherUsers.length ? otherUsers[0] : null;
       }
     }
     delete users[socketId];
@@ -122,13 +127,14 @@ module.exports = (socket, io) => {
   socket.on('disconnect', () => {
     console.log('A client has disconnected from the server!');
     // console.log('ROOMS:', rooms) // to check status of rooms object for testing
+    // console.log('USERS:', users) // to check status of users object for testing
   });
 
   // GAMES
 
   socket.on('initialState', () => {
-    const { users, host, hostIsPlayer } = rooms[socket.roomName];
-    let game = (rooms[socket.roomName].game = new TicTac(Object.keys(users), host, hostIsPlayer));
+    const {users, dedicatedScreen} = rooms[socket.roomName];
+    let game = (rooms[socket.roomName].game = new TicTac(Object.keys(users), dedicatedScreen));
     io.in(socket.roomName).emit('sendState', game.getGameState());
   });
 
