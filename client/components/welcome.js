@@ -7,14 +7,16 @@ class Welcome extends Component {
     this.state = {
       userName: '',
       roomName: '',
-      userNameErrorMsg: ' ‏‏‎ ‏‏‎',   // unicode 32
-      roomNameErrorMsg: ' ‏‏‎ ',   // unicode 32
+      userNameErrorMsg: '‏‏‎ ‎',    // special character
+      roomNameErrorMsg: '‏‏‎ ‎',    // special character
     };
     this.clickCreate = this.clickCreate.bind(this);
     this.clickJoin = this.clickJoin.bind(this);
     this.handleType = this.handleType.bind(this);
     this.userNameError = this.userNameError.bind(this);
     this.roomNameError = this.roomNameError.bind(this);
+    this.clearUserNameError = this.clearUserNameError.bind(this);
+    this.clearRoomNameError = this.clearRoomNameError.bind(this);
   }
 
   componentDidMount () {
@@ -33,7 +35,7 @@ class Welcome extends Component {
     socket.on('error: room not open', data => {
       const {roomName, roomExists} = data;
       this.roomNameError(roomExists
-        ? `Room ${roomName} has already started a game!`
+        ? `Room ${roomName} has already started!`
         : `Room ${roomName} does not exist!`
       );
     });
@@ -80,24 +82,28 @@ class Welcome extends Component {
     if (e.target.value.length <= charLimit[e.target.name]) {
       this.setState({ [e.target.name]: e.target.value });
     }
+    if (e.target.name === 'userName' && e.target.value) {
+      this.clearUserNameError();
+    }
+    if (e.target.name === 'roomName' && e.target.value) {
+      this.clearRoomNameError();
+    }
   }
 
   userNameError(msg) {
     this.setState({userNameErrorMsg: msg});
-    setTimeout(() => {
-      if (this.state.userNameErrorMsg === msg) {
-        this.setState({userNameErrorMsg: ' ‏‏‎ '});
-      }
-    }, 5000);
   }
 
   roomNameError(msg) {
     this.setState({roomNameErrorMsg: msg});
-    setTimeout(() => {
-      if (this.state.roomNameErrorMsg === msg) {
-        this.setState({roomNameErrorMsg: ' ‏‏‎ '});
-      }
-    }, 5000);
+  }
+
+  clearUserNameError() {
+    this.setState({userNameErrorMsg: '‏‏‎ ‎'});   // special character
+  }
+
+  clearRoomNameError() {
+    this.setState({roomNameErrorMsg: '‏‏‎ ‎'});   // special character
   }
 
   render() {
@@ -112,19 +118,23 @@ class Welcome extends Component {
             placeholder="Enter username"
             onChange={this.handleType}
           />
-          <p>{this.state.userNameErrorMsg}</p>
+          <div className="welcome-error">{this.state.userNameErrorMsg}</div>
         </div>
-        <p>Host a game:</p>
+        <div className="welcome-text">
+          <p>Host a game:</p>
+        </div>
         <div id="welcome-create">
           <button
             id="welcome-createButton"
             onClick={this.clickCreate}
           >
-            <img className="welcome-icon" src="/monitor-icon.png"></img>
+            <img src="/monitor-icon.png"></img>
             Create Room
           </button>
         </div>
-        <p>- or -</p>
+        <div className="welcome-text">
+          <p>- or -</p>
+        </div>
         <div id="welcome-join">
           <input
             id="welcome-joinInput"
@@ -134,13 +144,13 @@ class Welcome extends Component {
             placeholder="Enter 4-digit room code"
             onChange={this.handleType}
           />
-          <p>{this.state.roomNameErrorMsg}</p>
+          <div className="welcome-error">{this.state.roomNameErrorMsg}</div>
         </div>
         <button
             id="welcome-joinButton"
             onClick={this.clickJoin}
         >
-          <img className="welcome-icon" src="/phone-icon.png"></img>
+          <img src="/phone-icon.png"></img>
           Join Room
         </button>
       </div>

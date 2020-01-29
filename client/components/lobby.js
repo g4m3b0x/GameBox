@@ -59,9 +59,17 @@ export default class Lobby extends Component {
 
   sendMessage() {
     if (!this.state.currentMessage) return;
-    socket.emit('send message', {
-      message: this.state.currentMessage
-    });
+    let message = this.state.currentMessage;
+    const noSpacesLimit = 20;
+
+    // IMPROVE THIS LATER
+    if (!message.slice(0, noSpacesLimit).includes(' ')) {
+      message = message.slice(0, noSpacesLimit)
+        + ' '
+        + message.slice(noSpacesLimit);
+    }
+
+    socket.emit('send message', { message });
     this.setState({ currentMessage: '' });
   }
 
@@ -87,7 +95,7 @@ export default class Lobby extends Component {
                 type="button"
                 onClick={() => {
                   socket.emit('start game', {
-                    game: 'TIC TAC TOE',
+                    game: 'TicTac',       // MAKE DYNAMIC
                     roomName: socket.roomName,
                   });
                 }}
@@ -102,7 +110,7 @@ export default class Lobby extends Component {
         <div id="lobby-middle">
           <div id="lobby-chat">
             {this.state.messages.map(([sender, message], i) => (
-              <div key={i}>{`${sender}: ${message}`}</div>
+              <div key={i}><div className="chat-msg">{`${sender}: ${message}`}</div></div>
             ))}
           </div>
           <div id="lobby-users">

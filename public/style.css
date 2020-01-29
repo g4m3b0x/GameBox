@@ -1,21 +1,25 @@
 body {
   font-family: 'Darker Grotesque';
-  font-size: 22px;
+  font-size: 3vh;
   background-color: white;
   margin: 0 0 0 0;
+}
+
+p {
+  font-size: 1.25em;
 }
 
 input {
   width: 100%;
   font-family: 'Darker Grotesque';
-  font-size: 22px;
+  font-size: 1em;
   border-width: 0px 0px 2px 0px;
   outline: none;
 }
 
 button {
   font-family: 'Darker Grotesque';
-  font-size: 20px;
+  font-size: 1em;
   border-radius: 5px;
   border: 2px solid gray;
   outline: none;
@@ -26,7 +30,7 @@ button {
 }
 
 #app {
-  height: 100vh;
+  height: 90vh;
   width: 100vw;
   display: flex;
   justify-content: center;
@@ -82,7 +86,7 @@ button {
   width: 50%;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -90,30 +94,47 @@ button {
   width: 100%;
 }
 
-#welcome-name {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-
-.welcome-icon {
+#welcome img {
   height: 8%;
   width: 8%;
   margin: 5px;
 }
 
-#welcome-create {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
-#welcome-join {
+#welcome-name {
+  height: 20%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
+  /* background-color: red; */
+}
+
+.welcome-error {
+  color: red;
+  font-size: 0.75em;
+}
+
+.welcome-text {
+  display: flex;
+  justify-content: center;
+  /* background-color: blue; */
+}
+
+#welcome-create {
+  height: 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#welcome-join {
+  height: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  /* background-color: green; */
 }
 
 #lobby {
@@ -141,22 +162,32 @@ button {
   width: 100%;
   display: flex;
   overflow: hidden;
+  /* background-color: yellow; */
 }
 
 #lobby-chat {
-  height: 95%;
+  height: 90%;
   width: 75%;
   display: flex;
   flex-direction: column;
-  overflow-y: scroll;
   padding: 10px;
   padding-bottom: 10px;
   padding-right: 100vw;
   margin-right: -100vw;
+  overflow-y: scroll;
 }
 
 #lobby-chat div {
+  width: 100%;
   padding: 3px;
+  /* overflow-wrap: break-word;
+  word-wrap: break-word; */
+  /* background-color: red; */
+}
+
+.chat-msg {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
 }
 
 #lobby-users {
@@ -164,7 +195,7 @@ button {
 }
 
 #lobby-bottom {
-  height: 5%;
+  height: 10%;
   width: 100%;
   display: flex;
 }
