@@ -141,7 +141,7 @@ class Welcome extends Component {
             type="text"
             name="roomName"
             value={this.state.roomName}
-            placeholder="Enter 4-digit room code"
+            placeholder="Enter 4-letter room code"
             onChange={this.handleType}
           />
           <div className="welcome-error">{this.state.roomNameErrorMsg}</div>
