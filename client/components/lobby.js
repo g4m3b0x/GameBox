@@ -59,9 +59,17 @@ export default class Lobby extends Component {
 
   sendMessage() {
     if (!this.state.currentMessage) return;
-    socket.emit('send message', {
-      message: this.state.currentMessage
-    });
+    let message = this.state.currentMessage;
+    const noSpacesLimit = 20;
+
+    // IMPROVE THIS LATER
+    if (!message.slice(0, noSpacesLimit).includes(' ')) {
+      message = message.slice(0, noSpacesLimit)
+        + ' '
+        + message.slice(noSpacesLimit);
+    }
+
+    socket.emit('send message', { message });
     this.setState({ currentMessage: '' });
   }
 

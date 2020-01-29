@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import socket from './index.js';
 import Welcome from './components/welcome';
 import Lobby from './components/lobby';
-// import TicTac from './components/tic-tac-toe';
 import Games from './components/games';
 
 // function or class component? decide later...

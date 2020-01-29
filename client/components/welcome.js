@@ -7,14 +7,16 @@ class Welcome extends Component {
     this.state = {
       userName: '',
       roomName: '',
-      userNameErrorMsg: '',
-      roomNameErrorMsg: '',
+      userNameErrorMsg: '‏‏‎ ‎',    // special character
+      roomNameErrorMsg: '‏‏‎ ‎',    // special character
     };
     this.clickCreate = this.clickCreate.bind(this);
     this.clickJoin = this.clickJoin.bind(this);
     this.handleType = this.handleType.bind(this);
     this.userNameError = this.userNameError.bind(this);
     this.roomNameError = this.roomNameError.bind(this);
+    this.clearUserNameError = this.clearUserNameError.bind(this);
+    this.clearRoomNameError = this.clearRoomNameError.bind(this);
   }
 
   componentDidMount () {
@@ -80,24 +82,28 @@ class Welcome extends Component {
     if (e.target.value.length <= charLimit[e.target.name]) {
       this.setState({ [e.target.name]: e.target.value });
     }
+    if (e.target.name === 'userName' && e.target.value) {
+      this.clearUserNameError();
+    }
+    if (e.target.name === 'roomName' && e.target.value) {
+      this.clearRoomNameError();
+    }
   }
 
   userNameError(msg) {
     this.setState({userNameErrorMsg: msg});
-    setTimeout(() => {
-      if (this.state.userNameErrorMsg === msg) {
-        this.setState({userNameErrorMsg: ''});
-      }
-    }, 5000);
   }
 
   roomNameError(msg) {
     this.setState({roomNameErrorMsg: msg});
-    setTimeout(() => {
-      if (this.state.roomNameErrorMsg === msg) {
-        this.setState({roomNameErrorMsg: ''});
-      }
-    }, 5000);
+  }
+
+  clearUserNameError() {
+    this.setState({userNameErrorMsg: '‏‏‎ ‎'});   // special character
+  }
+
+  clearRoomNameError() {
+    this.setState({roomNameErrorMsg: '‏‏‎ ‎'});   // special character
   }
 
   render() {
