@@ -7,6 +7,7 @@ body {
 
 p {
   font-size: 1.25em;
+  margin: 0 0 0 0;
 }
 
 input {
@@ -75,7 +76,7 @@ button {
   width: 100%;
   border-radius: 10px;
   box-shadow: 0px 0px 10px #888888;
-  padding: 8px;
+  padding: 0.7em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -83,7 +84,7 @@ button {
 
 #welcome {
   height: 75%;
-  width: 50%;
+  width: 50vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -97,11 +98,15 @@ button {
 #welcome img {
   height: 8%;
   width: 8%;
-  margin: 5px;
+  margin: 0.5em;
+}
+
+#welcome button {
+  width: 70%;
 }
 
 #welcome-name {
-  height: 20%;
+  height: 10%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -117,7 +122,6 @@ button {
 .welcome-text {
   display: flex;
   justify-content: center;
-  /* background-color: blue; */
 }
 
 #welcome-create {
@@ -127,6 +131,19 @@ button {
   justify-content: center;
   align-items: center;
 }
+
+#welcome-dedicatedScreen {
+  height: 50%;
+  font-size: 0.7em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#welcome-dedicatedScreen input {
+  width: 5%;
+}
+
 
 #welcome-join {
   height: 20%;
@@ -153,8 +170,12 @@ button {
   justify-content: space-evenly
 }
 
+#lobby-header-game {
+  display: flex;
+}
+
 #lobby-header div {
-  padding: 10px;
+  padding: 0.5em;
 }
 
 #lobby-middle {
@@ -170,8 +191,8 @@ button {
   width: 75%;
   display: flex;
   flex-direction: column;
-  padding: 10px;
-  padding-bottom: 10px;
+  padding: 0.5em;
+  padding-bottom: 0.5em;
   padding-right: 100vw;
   margin-right: -100vw;
   overflow-y: scroll;
@@ -179,7 +200,7 @@ button {
 
 #lobby-chat div {
   width: 100%;
-  padding: 3px;
+  padding: 0.1em;
   /* overflow-wrap: break-word;
   word-wrap: break-word; */
   /* background-color: red; */
@@ -202,7 +223,7 @@ button {
 
 #lobby-typeMessage {
   width: 90%;
-  padding: 10px;
+  padding: 0.5em;
 }
 
 #lobby-bottom button {

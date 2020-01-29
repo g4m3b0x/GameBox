@@ -1,7 +1,6 @@
 module.exports = class TicTac {
-  constructor(users, host, hostIsPlayer) {
-    // hostIsPlayer = false;        // test code for now: force hostIsPlayer to false
-    this.players = hostIsPlayer ? users : users.filter(user => user !== host);
+  constructor(users, dedicatedScreen) {
+    this.users = users;
     this.winner = null;
     this.gameBoard = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
     this.turn = 0;
@@ -11,11 +10,11 @@ module.exports = class TicTac {
     return { gameBoard: this.gameBoard, winner: this.winner };
   }
   move(id, x, y) {
-    if (id !== this.players[this.turn]) return;
+    if (id !== this.users[this.turn]) return;
     if (this.gameBoard[x][y] === ' ') {
       this.gameBoard[x][y] = this.char[this.turn];
       let res = this.checkWinner(this.char[this.turn]);
-      if (res) this.winner = this.players[this.turn];
+      if (res) this.winner = this.users[this.turn];
       if (this.turn === 0) this.turn = 1;
       else this.turn = 0;
     }

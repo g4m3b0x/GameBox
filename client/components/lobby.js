@@ -8,7 +8,7 @@ export default class Lobby extends Component {
       messages: [],
       users: {},
       currentHost: null,
-      hostIsPlayer: true,
+      dedicatedScreen: null,
       currentMessage: '',
     };
     this.sendMessage = this.sendMessage.bind(this);
@@ -40,8 +40,8 @@ export default class Lobby extends Component {
       setTimeout(this.scrollDown, 100);
     });
     socket.on('new user', data => {
-      const [socketId, userName] = data;
-      this.setState({ users: { ...this.state.users, [socketId]: userName } });
+      const { socketId, userName, currentHost } = data;
+      this.setState({ users: { ...this.state.users, [socketId]: userName }, currentHost });
     });
     socket.on('remove user', data => {
       const { socketId, currentHost } = data;
@@ -98,7 +98,6 @@ export default class Lobby extends Component {
                   socket.emit('start game', {
                     roomName: socket.roomName,
                     game: 'TicTac',                         // MAKE DYNAMIC
-                    hostIsPlayer: this.state.hostIsPlayer,  // MAKE OPTIONAL LATER
                   });
                 }}
               >

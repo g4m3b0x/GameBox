@@ -9,6 +9,7 @@ class Welcome extends Component {
       roomName: '',
       userNameErrorMsg: '‏‏‎ ‎',    // special character
       roomNameErrorMsg: '‏‏‎ ‎',    // special character
+      dedicatedScreen: false,
     };
     this.clickCreate = this.clickCreate.bind(this);
     this.clickJoin = this.clickJoin.bind(this);
@@ -17,6 +18,7 @@ class Welcome extends Component {
     this.roomNameError = this.roomNameError.bind(this);
     this.clearUserNameError = this.clearUserNameError.bind(this);
     this.clearRoomNameError = this.clearRoomNameError.bind(this);
+    this.toggleDedicatedScreen = this.toggleDedicatedScreen.bind(this);
   }
 
   componentDidMount () {
@@ -49,6 +51,7 @@ class Welcome extends Component {
       socket.emit('join room', {
         userName: this.state.userName,
         roomName: undefined,
+        dedicatedScreen: this.state.dedicatedScreen ? socket.id : null,
       });
     }
   }
@@ -70,6 +73,7 @@ class Welcome extends Component {
       socket.emit('join room', {
         userName: this.state.userName,
         roomName: this.state.roomName.toUpperCase(),
+        dedicatedScreen: null,
       });
     }
   }
@@ -106,6 +110,13 @@ class Welcome extends Component {
     this.setState({roomNameErrorMsg: '‏‏‎ ‎'});   // special character
   }
 
+  toggleDedicatedScreen(e) {
+    this.setState({
+      userName: this.state.dedicatedScreen ? '' : 'Screen',
+      dedicatedScreen: !this.state.dedicatedScreen,
+    });
+  }
+
   render() {
     return (
       <div id="welcome">
@@ -131,6 +142,13 @@ class Welcome extends Component {
             <img src="/monitor-icon.png"></img>
             Create Room
           </button>
+          <div id="welcome-dedicatedScreen">
+            <input
+              type="checkbox"
+              onClick={this.toggleDedicatedScreen}
+            />
+            <p>This device is a dedicated screen</p>
+          </div>
         </div>
         <div className="welcome-text">
           <p>- or -</p>
