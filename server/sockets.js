@@ -5,7 +5,9 @@ const rooms = {};
 const users = {};
 
 // const games = require('./games');
-const TicTac = require('./tic-tac-toe-class');
+const {
+  TicTac,
+} = require('./games');
 
 module.exports = (socket, io) => {
   console.log(`A new client ${socket.id} has connected to server!`);
@@ -37,7 +39,7 @@ module.exports = (socket, io) => {
       } while (roomName in rooms);
       rooms[roomName] = {
         roomName,
-        gameStarted: false,
+        game: null,
         users: {},
         host: null,
         messages: []
@@ -45,7 +47,7 @@ module.exports = (socket, io) => {
     }
 
     // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, OR GAME ALREADY STARTED, RETURN
-    if (!(roomName in rooms) || rooms[roomName].gameStarted) {
+    if (!(roomName in rooms) || rooms[roomName].game) {
       socket.emit('error: room not open', {
         roomName,
         roomExists: roomName in rooms
@@ -79,7 +81,7 @@ module.exports = (socket, io) => {
 
   socket.on('start game', data => {
     const { game, roomName } = data;
-    rooms[roomName].gameStarted = true;
+    rooms[roomName].game = game;
     io.in(roomName).emit('started game', { game });
   });
 
@@ -114,19 +116,25 @@ module.exports = (socket, io) => {
       currentHost: rooms[roomName] ? rooms[roomName].host : null
     });
   });
-  socket.on('initalState', () => {
-    const userss = Object.keys(rooms[socket.roomName].users);
-    console.log(userss);
-    let game = (rooms[socket.roomName].game = new TicTac(userss));
+
+  socket.on('disconnect', () => {
+    console.log('A client has disconnected from the server!');
+    // console.log('ROOMS:', rooms) // to check status of rooms object for testing
+  });
+
+  // GAMES
+
+  socket.on('initialState', () => {
+    const users = Object.keys(rooms[socket.roomName].users);
+    console.log(users);
+    let game = (rooms[socket.roomName].game = new TicTac(users));
     io.in(socket.roomName).emit('sendState', game.getGameState());
   });
+
   socket.on('move', coord => {
     let game = rooms[socket.roomName].game;
     game.move(socket.id, coord.x, coord.y);
     io.in(socket.roomName).emit('sendState', game.getGameState());
   });
-  socket.on('disconnect', () => {
-    console.log('A client has disconnected from the server!');
-    // console.log('ROOMS:', rooms) // to check status of rooms object for testing
-  });
+
 };

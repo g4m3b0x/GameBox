@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import socket from './index.js';
 import Welcome from './components/welcome';
 import Lobby from './components/lobby';
-import TicTac from './components/tic-tac-toe';
+// import TicTac from './components/tic-tac-toe';
+import Games from './components/games';
+
 // function or class component? decide later...
 class Routes extends Component {
   constructor() {
     super();
-    this.state = { gameStatus: 'welcome screen' };
+    this.state = { status: 'welcome screen' };
   }
 
   componentDidMount() {
@@ -16,24 +18,25 @@ class Routes extends Component {
       socket.userName = userName;
       socket.roomName = roomName;
       socket.hostBool = hostBool;
-      this.setState({ gameStatus: 'in lobby' });
+      this.setState({ status: 'in lobby' });
     });
     socket.on('started game', data => {
       const { game } = data;
-      this.setState({ gameStatus: game });
+      this.setState({ status: game });
     });
   }
 
   render() {
+    console.log(this.state.status)
     return (
       <div id="middle">
         <div id="dynamic-area">
-          {this.state.gameStatus === 'welcome screen' ? (
+          {this.state.status === 'welcome screen' ? (
             <Welcome />
-          ) : this.state.gameStatus === 'in lobby' ? (
+          ) : this.state.status === 'in lobby' ? (
             <Lobby />
           ) : (
-            <TicTac />
+            Games[this.state.status]
           )}
         </div>
       </div>

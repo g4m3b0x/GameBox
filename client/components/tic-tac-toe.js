@@ -10,7 +10,7 @@ export default class TicTac extends Component {
 
   componentDidMount() {
     if (socket.hostBool) {
-      socket.emit('initalState');
+      socket.emit('initialState');
     }
     socket.on('sendState', data => {
       this.setState(data);
