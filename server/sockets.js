@@ -42,6 +42,7 @@ module.exports = (socket, io) => {
         game: null,
         users: {},
         host: null,
+        hostIsPlayer: true,
         messages: []
       };
     }
@@ -80,8 +81,9 @@ module.exports = (socket, io) => {
   });
 
   socket.on('start game', data => {
-    const { game, roomName } = data;
+    const { roomName, game, hostIsPlayer } = data;
     rooms[roomName].game = game;
+    rooms[roomName].hostIsPlayer = hostIsPlayer;
     io.in(roomName).emit('started game', { game });
   });
 
@@ -125,9 +127,8 @@ module.exports = (socket, io) => {
   // GAMES
 
   socket.on('initialState', () => {
-    const users = Object.keys(rooms[socket.roomName].users);
-    console.log(users);
-    let game = (rooms[socket.roomName].game = new TicTac(users));
+    const { users, host, hostIsPlayer } = rooms[socket.roomName];
+    let game = (rooms[socket.roomName].game = new TicTac(Object.keys(users), host, hostIsPlayer));
     io.in(socket.roomName).emit('sendState', game.getGameState());
   });
 

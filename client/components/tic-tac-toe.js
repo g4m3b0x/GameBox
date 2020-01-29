@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import socket from '../index.js';
 
 export default class TicTac extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = { gameBoard: [[]], winner: null };
     this.move = this.move.bind(this);
   }

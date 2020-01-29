@@ -7,7 +7,8 @@ export default class Lobby extends Component {
     this.state = {
       messages: [],
       users: {},
-      currentHost: '',
+      currentHost: null,
+      hostIsPlayer: true,
       currentMessage: '',
     };
     this.sendMessage = this.sendMessage.bind(this);
@@ -95,8 +96,9 @@ export default class Lobby extends Component {
                 type="button"
                 onClick={() => {
                   socket.emit('start game', {
-                    game: 'TicTac',       // MAKE DYNAMIC
                     roomName: socket.roomName,
+                    game: 'TicTac',                         // MAKE DYNAMIC
+                    hostIsPlayer: this.state.hostIsPlayer,  // MAKE OPTIONAL LATER
                   });
                 }}
               >
