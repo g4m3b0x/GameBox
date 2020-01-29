@@ -30,7 +30,7 @@ button {
 }
 
 #app {
-  height: 95vh;
+  height: 90vh;
   width: 100vw;
   display: flex;
   justify-content: center;
@@ -111,6 +111,7 @@ button {
 
 .welcome-error {
   color: red;
+  font-size: 0.75em;
 }
 
 .welcome-text {
