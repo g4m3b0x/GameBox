@@ -6,6 +6,7 @@ export default class TicTac extends Component {
     super();
     this.state = { gameBoard: [[]], winner: null };
     this.move = this.move.bind(this);
+    this.lobby = this.lobby.bind(this);
   }
 
   componentDidMount() {
@@ -20,17 +21,22 @@ export default class TicTac extends Component {
     const coord = { x, y };
     socket.emit('move', coord);
   }
-
+  lobby() {
+    socket.emit('setStatus', 'in lobby');
+  }
   render() {
     return (
       <div>
         {this.state.winner ? (
-          <p>{this.state.winner} wins</p>
+          <div>
+            <p>{this.state.winner} wins</p>
+            <button onClick={this.lobby}> Back to Lobby</button>
+          </div>
         ) : (
           this.state.gameBoard.map((grid, x) => (
             <ol>
               {grid.map((elm, y) => (
-                <button onClick={() => this.move(x, y)}> {elm}</button>
+                <button onClick={() => this.move(x, y)}>{elm}</button>
               ))}
             </ol>
           ))

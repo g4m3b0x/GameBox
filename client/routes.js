@@ -23,9 +23,11 @@ class Routes extends Component {
       const { game } = data;
       this.setState({ status: game });
     });
+    socket.on('status', data => this.setState({ status: data }));
   }
 
   render() {
+    console.log(this.state.status);
     return (
       <div id="middle">
         <div id="dynamic-area">
