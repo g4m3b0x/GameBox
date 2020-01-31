@@ -5,9 +5,7 @@ const rooms = {};
 const users = {};
 
 // const games = require('./games');
-const {
-  TicTac,
-} = require('./games');
+const { TicTac } = require('./games');
 
 module.exports = (socket, io) => {
   console.log(`A new client ${socket.id} has connected to server!`);
@@ -21,6 +19,10 @@ module.exports = (socket, io) => {
           messages: rooms[socket.roomName].messages,
           users: rooms[socket.roomName].users,
           currentHost: rooms[socket.roomName].host
+        });
+      case 'getUsers':
+        socket.emit('receive data', {
+          users: rooms[socket.roomName].users
         });
     }
   });
@@ -128,7 +130,11 @@ module.exports = (socket, io) => {
 
   socket.on('initialState', () => {
     const { users, host, hostIsPlayer } = rooms[socket.roomName];
-    let game = (rooms[socket.roomName].game = new TicTac(Object.keys(users), host, hostIsPlayer));
+    let game = (rooms[socket.roomName].game = new TicTac(
+      Object.keys(users),
+      host,
+      hostIsPlayer
+    ));
     io.in(socket.roomName).emit('sendState', game.getGameState());
   });
 
@@ -138,4 +144,7 @@ module.exports = (socket, io) => {
     io.in(socket.roomName).emit('sendState', game.getGameState());
   });
 
+  socket.on('setStatus', () =>
+    io.in(socket.roomName).emit('status', 'in lobby')
+  );
 };
