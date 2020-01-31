@@ -90,7 +90,7 @@ export default class Lobby extends Component {
           <div id="lobby-header-room">ROOM CODE: {socket.roomName}</div>
           <div id="lobby-header-game">
             GAME:
-            {'<PLACEHOLDER>'}
+            {'TIC TAC TOE'}
             {this.state.currentHost === socket.id ? (
               <button
                 type="button"

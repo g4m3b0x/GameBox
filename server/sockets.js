@@ -136,7 +136,7 @@ module.exports = (socket, io) => {
 
   socket.on('initialState', () => {
     const {users, dedicatedScreen} = rooms[socket.roomName];
-    const game = (rooms[socket.roomName].game = new TicTac(Object.keys(users), dedicatedScreen));
+    const game = (rooms[socket.roomName].game = new TicTac(users, dedicatedScreen));
     io.in(socket.roomName).emit('sendState', game.getGameState());
   });
 

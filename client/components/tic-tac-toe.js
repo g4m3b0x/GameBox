@@ -17,29 +17,40 @@ export default class TicTac extends Component {
       this.setState(data);
     });
   }
+
+  // NEED TO LOOK INTO HOW TO UNSUBSCRIBE EVENT LISTENERS
+  // TO PREVENT MEMORY LEAK.
+  // componentWillUnmount() {
+  //   socket.removeAllListeners();
+  // }
+
   move(x, y) {
     const coord = { x, y };
     socket.emit('move', coord);
   }
+
   lobby() {
     socket.emit('setStatus', 'in lobby');
   }
+
   render() {
     return (
       <div>
-        {this.state.winner ? (
+        {!this.state.winner ? (
+          this.state.gameBoard.map((row, y) => (
+            <div key={y} className="gridRow">
+              {row.map((elm, x) => (
+                <button key={x} onClick={() => {
+                  this.move(x, y);
+                }}>{elm}</button>
+              ))}
+            </div>
+          ))
+        ) : (
           <div>
-            <p>{this.state.winner} wins</p>
+            <p>{this.state.winner} wins!</p>
             <button onClick={this.lobby}> Back to Lobby</button>
           </div>
-        ) : (
-          this.state.gameBoard.map((grid, x) => (
-            <ol>
-              {grid.map((elm, y) => (
-                <button onClick={() => this.move(x, y)}>{elm}</button>
-              ))}
-            </ol>
-          ))
         )}
       </div>
     );

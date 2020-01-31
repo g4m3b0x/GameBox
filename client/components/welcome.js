@@ -111,8 +111,13 @@ class Welcome extends Component {
   }
 
   toggleDedicatedScreen(e) {
+    if (this.state.dedicatedScreen) {
+      document.getElementById('welcome-nameInput').removeAttribute('disabled');
+    } else {
+      document.getElementById('welcome-nameInput').setAttribute('disabled', 'true');
+    }
     this.setState({
-      userName: this.state.dedicatedScreen ? '' : 'Screen',
+      userName: this.state.dedicatedScreen ? '' : '(Screen)',   // NOT SURE IF NEEDED YET
       dedicatedScreen: !this.state.dedicatedScreen,
     });
   }
