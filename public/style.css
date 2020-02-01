@@ -28,6 +28,7 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 0 0 0 0;
 }
 
 #app {
@@ -171,7 +172,35 @@ button {
 }
 
 #lobby-header-game {
+  width: 100%;
   display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+#lobby-header-game > p {
+  width: 15%;
+}
+
+#lobby-header-game-selection {
+  width: 35%;
+}
+
+#lobby-header-game-selection select {
+  width: 100%;
+}
+
+#lobby-header-game button {
+  height: 2.0em;
+  font-size: 0.8em;
+}
+
+#lobbyheader-game-start-game {
+  width: 50%;
+}
+
+#lobbyheader-game-start-game > p {
+  font-size: 1.0em;
 }
 
 #lobby-header div {

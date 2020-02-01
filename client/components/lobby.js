@@ -92,24 +92,36 @@ export default class Lobby extends Component {
     return (
       <div id="lobby">
         <div id="lobby-header">
-          <div id="lobby-header-room">ROOM CODE: {socket.roomName}</div>
+          <div id="lobby-header-room">
+            <p>ROOM CODE: {socket.roomName}</p>
+          </div>
           <div id="lobby-header-game">
-            GAME:
-            {'TIC TAC TOE'}
-            {this.state.currentHost === socket.id ? (
-              <button
-                type="button"
-                onClick={() => {
-                  socket.emit('start game', {
-                    game: 'TicTac',                         // MAKE DYNAMIC
-                  });
-                }}
-              >
-                Start game
-              </button>
-            ) : (
-              '(Waiting for host to start game...)'
-            )}
+            <p>GAME:</p>
+            <div id="lobby-header-game-selection">
+              {this.state.currentHost === socket.id ? (
+                <select>
+                  <option value="TicTac">Tic Tac Toe</option>
+                </select>
+              ) : (
+                <p>PLACEHOLDER</p>
+              )}
+            </div>
+            <div id="lobbyheader-game-start-game">
+              {this.state.currentHost === socket.id ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    socket.emit('start game', {
+                      game: 'TicTac',                         // MAKE DYNAMIC
+                    });
+                  }}
+                >
+                  Start game
+                </button>
+              ) : (
+                <p>(Waiting for host to start game...)</p>
+              )}
+            </div>
           </div>
         </div>
         <div id="lobby-middle">
@@ -119,6 +131,7 @@ export default class Lobby extends Component {
             ))}
           </div>
           <div id="lobby-users">
+            <div>Players:</div>
             {Object.keys(this.state.users).map((user, i) => (
               <div key={i}>
                 {`${this.state.users[user]}` +
