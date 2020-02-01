@@ -15,7 +15,8 @@ module.exports = class TicTac {
   getGameState() {
     return { gameBoard: this.gameBoard, winner: this.winner };
   }
-  move(socketId, x, y) {
+  move(socketId, payload) {
+    const {x, y} = payload;
     if (socketId !== Object.keys(this.users)[this.turn]) return;
     if (!chars.includes(this.gameBoard[y][x])) {
       this.gameBoard[y][x] = chars[this.turn];

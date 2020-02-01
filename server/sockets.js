@@ -4,31 +4,45 @@
 const rooms = {};
 const users = {};
 
-// const games = require('./games');
-const { TicTac } = require('./games');
+const games = require('./games');
 
 module.exports = (socket, io) => {
   console.log(`A new client ${socket.id} has connected to server!`);
-  users[socket.id] = null;
+  // users[socket.id] = null;
 
-  socket.on('request data', data => {
-    const { request } = data;
+  socket.on('request data from server', data => {
+    const { request, payload } = data;
+    const game = rooms[socket.roomName].game;
     switch (request) {
       case 'joined room':
-        socket.emit('receive data', {
+        socket.emit('send room data', {
           messages: rooms[socket.roomName].messages,
           users: rooms[socket.roomName].users,
-          currentHost: rooms[socket.roomName].host
+          currentHost: rooms[socket.roomName].host,
+          dedicatedScreen: rooms[socket.roomName].dedicatedScreen,
         });
-      case 'getUsers':
-        socket.emit('receive data', {
-          users: rooms[socket.roomName].users
-        });
+        return;
+      case 'get initial game state':
+        io.in(socket.roomName).emit('send game state', game.getGameState());
+        return;
+      case 'send move':
+        game.move(socket.id, payload);
+        io.in(socket.roomName).emit('send game state', game.getGameState());
+        return;
     }
   });
 
   socket.on('join room', data => {
     let { userName, roomName, dedicatedScreen } = data;
+
+    // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, OR GAME ALREADY STARTED, RETURN
+    if (roomName && (!(roomName in rooms) || rooms[roomName].game)) {
+      socket.emit('error: room not open', {
+        roomName,
+        roomExists: roomName in rooms
+      });
+      return;
+    }
 
     // IF CREATING ROOM, GENERATE RANDOM UNUSED ROOM CODE:
     if (!roomName) {
@@ -47,15 +61,6 @@ module.exports = (socket, io) => {
         dedicatedScreen,
         messages: []
       };
-    }
-
-    // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, OR GAME ALREADY STARTED, RETURN
-    if (!(roomName in rooms) || rooms[roomName].game) {
-      socket.emit('error: room not open', {
-        roomName,
-        roomExists: roomName in rooms
-      });
-      return;
     }
 
     // SERVER MEMORY CODE:
@@ -87,41 +92,45 @@ module.exports = (socket, io) => {
   });
 
   socket.on('start game', data => {
-    const { roomName, game } = data;
-    rooms[roomName].game = game;
-    io.in(roomName).emit('started game', { game });
+    const { game } = data;
+    rooms[socket.roomName].game = new (games[game])(    // this launches the actual game
+      rooms[socket.roomName].users,
+      rooms[socket.roomName].dedicatedScreen
+    );
+    io.in(socket.roomName).emit('started game', { game });
   });
 
+  socket.on('return to lobby', () =>
+    io.in(socket.roomName).emit('status', 'lobby')
+  );
+  
   socket.on('send message', data => {
-    // SOCKET CODE:
     const { message } = data;
+    rooms[socket.roomName].messages.push([socket.userName, message]);
     io.in(socket.roomName).emit('receive message', {
       sender: socket.userName,
       message
     });
-
-    // SERVER MEMORY CODE:
-    rooms[socket.roomName].messages.push([socket.userName, message]);
   });
 
   socket.on('disconnecting', reason => {
-    const [socketId, roomName] = Object.keys(socket.rooms);
+    const roomName = socket.roomName;
 
     // SERVER MEMORY CODE:
     if (rooms[roomName]) {
-      delete rooms[roomName].users[socketId];
-      if (rooms[roomName].dedicatedScreen === socketId) rooms[roomName].dedicatedScreen = null;
+      delete rooms[roomName].users[socket.id];
+      if (rooms[roomName].dedicatedScreen === socket.id) rooms[roomName].dedicatedScreen = null;
       if (!rooms[roomName].dedicatedScreen && !Object.keys(rooms[roomName].users).length) delete rooms[roomName];
-      else if (rooms[roomName].host === socketId) {
+      else if (rooms[roomName].host === socket.id) {
         const otherUsers = Object.keys(rooms[roomName].users).filter(user => user !== rooms[roomName].dedicatedScreen);
         rooms[roomName].host = otherUsers.length ? otherUsers[0] : null;
       }
     }
-    delete users[socketId];
+    delete users[socket.id];
 
     // SOCKET CODE:
     io.in(roomName).emit('remove user', {
-      socketId,
+      socketId: socket.id,
       currentHost: rooms[roomName] ? rooms[roomName].host : null
     });
   });
@@ -131,22 +140,4 @@ module.exports = (socket, io) => {
     // console.log('ROOMS:', rooms) // to check status of rooms object for testing
     // console.log('USERS:', users) // to check status of users object for testing
   });
-
-  // GAMES
-
-  socket.on('initialState', () => {
-    const {users, dedicatedScreen} = rooms[socket.roomName];
-    const game = (rooms[socket.roomName].game = new TicTac(users, dedicatedScreen));
-    io.in(socket.roomName).emit('sendState', game.getGameState());
-  });
-
-  socket.on('move', coord => {
-    const game = rooms[socket.roomName].game;
-    game.move(socket.id, coord.x, coord.y);
-    io.in(socket.roomName).emit('sendState', game.getGameState());
-  });
-
-  socket.on('setStatus', () =>
-    io.in(socket.roomName).emit('status', 'in lobby')
-  );
 };

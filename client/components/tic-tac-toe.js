@@ -6,14 +6,17 @@ export default class TicTac extends Component {
     super();
     this.state = { gameBoard: [[]], winner: null };
     this.move = this.move.bind(this);
-    this.lobby = this.lobby.bind(this);
+    this.returnToLobby = this.returnToLobby.bind(this);
   }
 
   componentDidMount() {
-    if (socket.hostBool) {
-      socket.emit('initialState');
+    if (socket.hostBool) {    // this should only be done once, so we make the host do it
+      // socket.emit('set initial game state');
+      socket.emit('request data from server', {
+        request: 'get initial game state'
+      });
     }
-    socket.on('sendState', data => {
+    socket.on('send game state', data => {
       this.setState(data);
     });
   }
@@ -25,12 +28,16 @@ export default class TicTac extends Component {
   // }
 
   move(x, y) {
-    const coord = { x, y };
-    socket.emit('move', coord);
+    // const coord = { x, y };
+    // socket.emit('move', coord);
+    socket.emit('request data from server', {
+      request: 'send move',
+      payload: {x, y},
+    })
   }
 
-  lobby() {
-    socket.emit('setStatus', 'in lobby');
+  returnToLobby() {
+    socket.emit('return to lobby');
   }
 
   render() {
@@ -49,7 +56,7 @@ export default class TicTac extends Component {
         ) : (
           <div>
             <p>{this.state.winner} wins!</p>
-            <button onClick={this.lobby}> Back to Lobby</button>
+            <button onClick={this.returnToLobby}> Back to Lobby</button>
           </div>
         )}
       </div>
