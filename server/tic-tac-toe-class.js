@@ -1,45 +1,61 @@
+const chars = ['X', 'O'];
+
 module.exports = class TicTac {
   constructor(users, dedicatedScreen) {
     this.users = users;
     this.winner = null;
-    this.gameBoard = [[' ', ' ', ' '], [' ', ' ', ' '], [' ', ' ', ' ']];
+    this.gameBoard = [
+      ['‏‏‎ ‎', '‏‏‎ ‎', '‏‏‎ ‎'],
+      ['‏‏‎ ‎', '‏‏‎ ‎', '‏‏‎ ‎'],
+      ['‏‏‎ ‎', '‏‏‎ ‎', '‏‏‎ ‎'],
+    ];
+    this.freeSquares = 9;
     this.turn = 0;
-    this.char = ['X', '0'];
   }
   getGameState() {
     return { gameBoard: this.gameBoard, winner: this.winner };
   }
-  move(id, x, y) {
-    if (id !== this.users[this.turn]) return;
-    if (this.gameBoard[x][y] === ' ') {
-      this.gameBoard[x][y] = this.char[this.turn];
-      let res = this.checkWinner(this.char[this.turn]);
-      if (res) this.winner = this.users[this.turn];
-      if (this.turn === 0) this.turn = 1;
-      else this.turn = 0;
+  move(socketId, payload) {
+    const {x, y} = payload;
+    if (socketId !== Object.keys(this.users)[this.turn]) return;
+    if (!chars.includes(this.gameBoard[y][x])) {
+      this.gameBoard[y][x] = chars[this.turn];
+      this.freeSquares--;
+      if (this.checkWinner()) this.winner = Object.values(this.users)[this.turn];
+      else if (!this.freeSquares) this.winner = 'Nobody';
+      else this.turn = +!this.turn;
     }
-    return;
-    // return { gameBoard: this.gameBoard, winner: this.winner };
   }
-  checkWinner(char) {
-    let game = this.gameBoard;
-    for (let i = 0; i < game.length; i++) {
-      for (let j = 0; j < game[i].length; j++) {
-        if (game[i][j] !== char) break;
-        else if (game[i][j] === char && j === 2) return true;
+  checkWinner() {
+    const char = chars[this.turn];
+    const checkRows = () => {
+      for (let row = 0; row < 3; row++) {
+        if (this.gameBoard[row].every(c => c === char)) return true;
       }
+      return false;
     }
-    for (let i = 0; i < game.length; i++) {
-      for (let j = 0; j < game[i].length; j++) {
-        if (game[j][i] !== char) break;
-        else if (game[i][j] === char && j === 2) return true;
+    const checkCols = () => {
+      for (let col = 0; col < 3; col++) {
+        if (
+          this.gameBoard[0][col] === char
+          && this.gameBoard[1][col] === char
+          && this.gameBoard[2][col] === char
+        ) return true;
       }
+      return false;
     }
-    let diag =
-      game[1][1] === char && game[0][0] === char && char === game[2][2];
-
-    let diag2 =
-      game[2][0] === char && game[0][0] === char && char === game[0][2];
-    return diag || diag2;
+    const checkFwDiag = () => {
+      for (let i = 0; i < 3; i++) {
+        if (this.gameBoard[i][2 - i] !== char) return false;
+      }
+      return true;
+    }
+    const checkBkDiag = () => {
+      for (let i = 0; i < 3; i++) {
+        if (this.gameBoard[i][i] !== char) return false;
+      }
+      return true;
+    }
+    return checkRows() || checkCols() || checkFwDiag() || checkBkDiag();
   }
 };

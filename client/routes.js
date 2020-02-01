@@ -17,7 +17,7 @@ class Routes extends Component {
       socket.userName = userName;
       socket.roomName = roomName;
       socket.hostBool = hostBool;
-      this.setState({ status: 'in lobby' });
+      this.setState({ status: 'lobby' });
     });
     socket.on('started game', data => {
       const { game } = data;
@@ -27,13 +27,12 @@ class Routes extends Component {
   }
 
   render() {
-    console.log(this.state.status);
     return (
       <div id="middle">
         <div id="dynamic-area">
           {this.state.status === 'welcome screen' ? (
             <Welcome />
-          ) : this.state.status === 'in lobby' ? (
+          ) : this.state.status === 'lobby' ? (
             <Lobby />
           ) : (
             Games[this.state.status]

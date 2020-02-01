@@ -18,10 +18,10 @@ export default class Lobby extends Component {
   componentDidMount() {
 
     // GET DATA
-    socket.emit('request data', {
+    socket.emit('request data from server', {
       request: 'joined room',
     });
-    socket.on('receive data', data => {
+    socket.on('send room data', data => {
       this.setState(data);
     });
 
@@ -60,16 +60,21 @@ export default class Lobby extends Component {
 
   sendMessage() {
     if (!this.state.currentMessage) return;
-    let message = this.state.currentMessage;
     const noSpacesLimit = 20;
-
-    // IMPROVE THIS LATER
-    if (!message.slice(0, noSpacesLimit).includes(' ')) {
-      message = message.slice(0, noSpacesLimit)
-        + ' '
-        + message.slice(noSpacesLimit);
-    }
-
+    const message = this.state.currentMessage
+      .split(' ')
+      .map(word => {
+        if (word.length <= noSpacesLimit) return word;
+        const numBreaks = Math.floor(word.length / noSpacesLimit);
+        const newWordArr = [];
+        for (let i = 0; i < numBreaks; i++) {
+          newWordArr.push(
+            word.slice(i * noSpacesLimit, (i + 1) * noSpacesLimit)
+          );
+        }
+        return newWordArr.join(' ');
+      })
+      .join(' ');
     socket.emit('send message', { message });
     this.setState({ currentMessage: '' });
   }
@@ -90,13 +95,12 @@ export default class Lobby extends Component {
           <div id="lobby-header-room">ROOM CODE: {socket.roomName}</div>
           <div id="lobby-header-game">
             GAME:
-            {'<PLACEHOLDER>'}
+            {'TIC TAC TOE'}
             {this.state.currentHost === socket.id ? (
               <button
                 type="button"
                 onClick={() => {
                   socket.emit('start game', {
-                    roomName: socket.roomName,
                     game: 'TicTac',                         // MAKE DYNAMIC
                   });
                 }}

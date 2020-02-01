@@ -229,3 +229,7 @@ button {
 #lobby-bottom button {
   flex-grow: 1;
 }
+
+.gridRow {
+  display: flex;
+}
