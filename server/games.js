@@ -1,5 +1,5 @@
 const TicTac = require('./tic-tac-toe-class');
 
 module.exports = {
-  TicTac,
+  'Tic Tac Toe': TicTac,
 };

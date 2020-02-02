@@ -4,7 +4,7 @@ import React from 'react';
 import TicTac from './tic-tac-toe';
 
 const Games = {
-  TicTac: <TicTac />,
+  'Tic Tac Toe': <TicTac />,
 };
 
 export default Games;
