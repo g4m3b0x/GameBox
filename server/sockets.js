@@ -91,6 +91,11 @@ module.exports = (socket, io) => {
     });
   });
 
+  socket.on('change selected game', data => {
+    const { game } = data;
+    io.in(socket.roomName).emit('changed selected game', game);
+  });
+
   socket.on('start game', data => {
     const { game } = data;
     rooms[socket.roomName].game = new (games[game])(    // this launches the actual game

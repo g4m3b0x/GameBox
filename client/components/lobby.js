@@ -9,10 +9,12 @@ export default class Lobby extends Component {
       users: {},
       currentHost: null,
       dedicatedScreen: null,
+      currentGame: 'No game selected',
       currentMessage: '',
     };
-    this.sendMessage = this.sendMessage.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
     this.handleType = this.handleType.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
   }
 
   componentDidMount() {
@@ -34,6 +36,9 @@ export default class Lobby extends Component {
       });
 
     // SOCKET LISTENERS
+    socket.on('changed selected game', game => {
+      this.setState({ currentGame: game });
+    });
     socket.on('receive message', data => {
       const { sender, message } = data;
       this.setState({ messages: [...this.state.messages, [sender, message]] });
@@ -58,6 +63,22 @@ export default class Lobby extends Component {
     chat.scrollTop = chat.scrollHeight;
   }
 
+  handleSelect(e) {
+    socket.emit('change selected game', {
+      game: e.target.value,
+    });
+    // this.setState({ currentGame: e.target.value });
+  }
+
+  handleType(e) {
+    const charLimit = {
+      currentMessage: 100
+    };
+    if (e.target.value.length <= charLimit[e.target.name]) {
+      this.setState({ [e.target.name]: e.target.value });
+    }
+  }
+
   sendMessage() {
     if (!this.state.currentMessage) return;
     const noSpacesLimit = 20;
@@ -79,37 +100,43 @@ export default class Lobby extends Component {
     this.setState({ currentMessage: '' });
   }
 
-  handleType(e) {
-    const charLimit = {
-      currentMessage: 100
-    };
-    if (e.target.value.length <= charLimit[e.target.name]) {
-      this.setState({ [e.target.name]: e.target.value });
-    }
-  }
-
   render() {
     return (
       <div id="lobby">
         <div id="lobby-header">
-          <div id="lobby-header-room">ROOM CODE: {socket.roomName}</div>
+          <div id="lobby-header-room">
+            <p>ROOM CODE: {socket.roomName}</p>
+          </div>
           <div id="lobby-header-game">
-            GAME:
-            {'TIC TAC TOE'}
-            {this.state.currentHost === socket.id ? (
-              <button
-                type="button"
-                onClick={() => {
-                  socket.emit('start game', {
-                    game: 'TicTac',                         // MAKE DYNAMIC
-                  });
-                }}
-              >
-                Start game
-              </button>
-            ) : (
-              '(Waiting for host to start game...)'
-            )}
+            <p>GAME:</p>
+            <div id="lobby-header-game-selection">
+              {this.state.currentHost === socket.id ? (
+                <select onChange={this.handleSelect}>
+                  <option value="No game selected">Select a game:</option>
+                  <option value="Tic Tac Toe">Tic Tac Toe</option>
+                </select>
+              ) : (
+                <p>{this.state.currentGame}</p>
+              )}
+            </div>
+            <div id="lobbyheader-game-start-game">
+              {this.state.currentHost === socket.id ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (this.state.currentGame !== 'No game selected') {
+                      socket.emit('start game', {
+                        game: this.state.currentGame,
+                      });
+                    }
+                  }}
+                >
+                  Start game
+                </button>
+              ) : (
+                <p>(Waiting for host to start game...)</p>
+              )}
+            </div>
           </div>
         </div>
         <div id="lobby-middle">
@@ -119,6 +146,7 @@ export default class Lobby extends Component {
             ))}
           </div>
           <div id="lobby-users">
+            <div>Players:</div>
             {Object.keys(this.state.users).map((user, i) => (
               <div key={i}>
                 {`${this.state.users[user]}` +
