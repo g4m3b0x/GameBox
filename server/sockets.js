@@ -105,9 +105,10 @@ module.exports = (socket, io) => {
     io.in(socket.roomName).emit('started game', { game });
   });
 
-  socket.on('return to lobby', () =>
-    io.in(socket.roomName).emit('status', 'lobby')
-  );
+  socket.on('return to lobby', () => {
+    rooms[socket.roomName].game = null;
+    io.in(socket.roomName).emit('status', 'lobby');
+  });
   
   socket.on('send message', data => {
     const { message } = data;
@@ -119,7 +120,7 @@ module.exports = (socket, io) => {
   });
 
   socket.on('disconnecting', reason => {
-    const roomName = socket.roomName;
+    const roomName = socket.roomName;     // for brevity
 
     // SERVER MEMORY CODE:
     if (rooms[roomName]) {
@@ -128,7 +129,12 @@ module.exports = (socket, io) => {
       if (!rooms[roomName].dedicatedScreen && !Object.keys(rooms[roomName].users).length) delete rooms[roomName];
       else if (rooms[roomName].host === socket.id) {
         const otherUsers = Object.keys(rooms[roomName].users).filter(user => user !== rooms[roomName].dedicatedScreen);
-        rooms[roomName].host = otherUsers.length ? otherUsers[0] : null;
+        if (otherUsers.length) {
+          rooms[roomName].host = otherUsers[0];
+          socket.broadcast.to(otherUsers[0]).emit('you are now host');
+        } else {
+          rooms[roomName].host = null;
+        }
       }
     }
     delete users[socket.id];

@@ -19,6 +19,9 @@ class Routes extends Component {
       socket.hostBool = hostBool;
       this.setState({ status: 'lobby' });
     });
+    socket.on('you are now host', () => {
+      socket.hostBool = true;
+    });
     socket.on('started game', data => {
       const { game } = data;
       this.setState({ status: game });

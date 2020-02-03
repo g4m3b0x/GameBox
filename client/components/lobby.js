@@ -12,19 +12,21 @@ export default class Lobby extends Component {
       currentGame: '--None--',
       currentMessage: '',
     };
+    this._isMounted = false;      // prevent memory leak
     this.handleSelect = this.handleSelect.bind(this);
     this.handleType = this.handleType.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
   }
 
   componentDidMount() {
+    this._isMounted = true;
 
     // GET DATA
     socket.emit('request data from server', {
       request: 'joined room',
     });
     socket.on('send room data', data => {
-      this.setState(data);
+      if (this._isMounted) this.setState(data);
     });
 
     // EVENT LISTENERS
@@ -37,25 +39,29 @@ export default class Lobby extends Component {
 
     // SOCKET LISTENERS
     socket.on('changed selected game', game => {
-      this.setState({ currentGame: game });
+      if (this._isMounted) this.setState({ currentGame: game });
     });
     socket.on('receive message', data => {
       const { sender, message } = data;
-      this.setState({ messages: [...this.state.messages, [sender, message]] });
+      if (this._isMounted) this.setState({ messages: [...this.state.messages, [sender, message]] });
       setTimeout(this.scrollDown, 100);
     });
     socket.on('new user', data => {
       const { socketId, userName, currentHost } = data;
-      this.setState({ users: { ...this.state.users, [socketId]: userName }, currentHost });
+      if (this._isMounted) this.setState({ users: { ...this.state.users, [socketId]: userName }, currentHost });
     });
     socket.on('remove user', data => {
       const { socketId, currentHost } = data;
       const newUsersObj = { ...this.state.users };
       delete newUsersObj[socketId];
-      this.setState({ users: newUsersObj, currentHost });
+      if (this._isMounted) this.setState({ users: newUsersObj, currentHost });
     });
 
     setTimeout(this.scrollDown, 100);   // scrolls all the way down when you join the room
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   scrollDown() {
@@ -113,7 +119,7 @@ export default class Lobby extends Component {
             <div id="lobby-header-game-selection">
               {this.state.currentHost === socket.id ? (
                 <select onChange={this.handleSelect}>
-                  <option value="No game selected">Select...</option>
+                  <option value="--None--">Select...</option>
                   <option value="Tic Tac Toe">Tic Tac Toe</option>
                 </select>
               ) : (
