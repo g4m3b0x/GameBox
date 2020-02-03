@@ -202,8 +202,7 @@ select {
 }
 
 #lobby-header-game button {
-  height: 2.0em;
-  font-size: 0.8em;
+  font-size: 1.0em;
 }
 
 #lobbyheader-game-start-game {

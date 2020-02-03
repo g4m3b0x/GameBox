@@ -13,20 +13,35 @@ module.exports = (socket, io) => {
     const { request, payload } = data;
     const game = rooms[socket.roomName].game;
     switch (request) {
-      case 'joined room':
-        socket.emit('send room data', {
-          messages: rooms[socket.roomName].messages,
-          users: rooms[socket.roomName].users,
-          currentHost: rooms[socket.roomName].host,
-          dedicatedScreen: rooms[socket.roomName].dedicatedScreen,
-        });
-        return;
+      // case 'joined room':
+      //   socket.emit('send room data', {
+      //     messages: rooms[socket.roomName].messages,
+      //     users: rooms[socket.roomName].users,
+      //     currentHost: rooms[socket.roomName].host,
+      //     dedicatedScreen: rooms[socket.roomName].dedicatedScreen,
+      //   });
+      //   return;
       case 'get initial game state':
         io.in(socket.roomName).emit('send game state', game.getGameState());
         return;
       case 'send move':
         game.move(socket.id, payload);
         io.in(socket.roomName).emit('send game state', game.getGameState());
+        return;
+    }
+  });
+
+  socket.on('change routes', data => {
+    const { request, payload } = data;
+    switch (request) {
+      case 'joined room':
+        socket.emit('send room data', {
+          messages: rooms[socket.roomName].messages,
+          selectedGame: rooms[socket.roomName].selectedGame,
+          users: rooms[socket.roomName].users,
+          currentHost: rooms[socket.roomName].host,
+          dedicatedScreen: rooms[socket.roomName].dedicatedScreen,
+        });
         return;
     }
   });
@@ -55,6 +70,7 @@ module.exports = (socket, io) => {
       rooms[roomName] = {
         roomName,
         game: null,
+        selectedGame: '--None--',
         users: {},
         host: null,
         dedicatedScreen,
@@ -92,6 +108,7 @@ module.exports = (socket, io) => {
 
   socket.on('change selected game', data => {
     const { game } = data;
+    rooms[socket.roomName].selectedGame = game;
     io.in(socket.roomName).emit('changed selected game', game);
   });
 
