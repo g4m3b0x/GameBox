@@ -6,7 +6,7 @@ body {
 }
 
 p {
-  font-size: 1.25em;
+  font-size: 1.0em;
   margin: 0 0 0 0;
 }
 
@@ -28,6 +28,15 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 0 0 0 0;
+}
+
+select {
+  font-family: 'Darker Grotesque';
+  font-size: 1em;
+  border-radius: 5px;
+  border: 2px solid gray;
+  outline: none;
   margin: 0 0 0 0;
 }
 
@@ -112,7 +121,6 @@ button {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  /* background-color: red; */
 }
 
 .welcome-error {
@@ -152,7 +160,6 @@ button {
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  /* background-color: green; */
 }
 
 #lobby {
@@ -171,19 +178,23 @@ button {
   justify-content: space-evenly
 }
 
+#lobby-header-room > p {
+  font-size: 1.25em;
+}
+
 #lobby-header-game {
-  width: 100%;
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
 
-#lobby-header-game > p {
-  width: 15%;
+#lobby-header-game-text {
+  width: 20%;
+  display: flex;
 }
 
 #lobby-header-game-selection {
-  width: 35%;
+  width: 30%;
 }
 
 #lobby-header-game-selection select {
@@ -197,13 +208,15 @@ button {
 
 #lobbyheader-game-start-game {
   width: 50%;
+  display: flex;
+  justify-content: flex-end;
 }
 
 #lobbyheader-game-start-game > p {
   font-size: 1.0em;
 }
 
-#lobby-header div {
+#lobby-header > div {
   padding: 0.5em;
 }
 
@@ -211,13 +224,13 @@ button {
   height: 75%;
   width: 100%;
   display: flex;
+  align-items: center;
   overflow: hidden;
-  /* background-color: yellow; */
 }
 
 #lobby-chat {
-  height: 90%;
-  width: 75%;
+  height: 85%;
+  width: 70%;
   display: flex;
   flex-direction: column;
   padding: 0.5em;
@@ -230,9 +243,6 @@ button {
 #lobby-chat div {
   width: 100%;
   padding: 0.1em;
-  /* overflow-wrap: break-word;
-  word-wrap: break-word; */
-  /* background-color: red; */
 }
 
 .chat-msg {
@@ -241,7 +251,8 @@ button {
 }
 
 #lobby-users {
-  flex-grow: 1;
+  height: 85%;
+  width: 25%;
 }
 
 #lobby-bottom {

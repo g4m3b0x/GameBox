@@ -9,7 +9,7 @@ export default class Lobby extends Component {
       users: {},
       currentHost: null,
       dedicatedScreen: null,
-      currentGame: 'No game selected',
+      currentGame: '--None--',
       currentMessage: '',
     };
     this.handleSelect = this.handleSelect.bind(this);
@@ -67,7 +67,6 @@ export default class Lobby extends Component {
     socket.emit('change selected game', {
       game: e.target.value,
     });
-    // this.setState({ currentGame: e.target.value });
   }
 
   handleType(e) {
@@ -108,11 +107,13 @@ export default class Lobby extends Component {
             <p>ROOM CODE: {socket.roomName}</p>
           </div>
           <div id="lobby-header-game">
-            <p>GAME:</p>
+            <div id="lobby-header-game-text">
+              <p>GAME:</p>
+            </div>
             <div id="lobby-header-game-selection">
               {this.state.currentHost === socket.id ? (
                 <select onChange={this.handleSelect}>
-                  <option value="No game selected">Select a game:</option>
+                  <option value="No game selected">Select...</option>
                   <option value="Tic Tac Toe">Tic Tac Toe</option>
                 </select>
               ) : (
@@ -124,7 +125,7 @@ export default class Lobby extends Component {
                 <button
                   type="button"
                   onClick={() => {
-                    if (this.state.currentGame !== 'No game selected') {
+                    if (this.state.currentGame !== '--None--') {
                       socket.emit('start game', {
                         game: this.state.currentGame,
                       });
@@ -134,7 +135,7 @@ export default class Lobby extends Component {
                   Start game
                 </button>
               ) : (
-                <p>(Waiting for host to start game...)</p>
+                <p>(Waiting for host...)</p>
               )}
             </div>
           </div>
