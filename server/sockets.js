@@ -8,7 +8,6 @@ const games = require('./games');
 
 module.exports = (socket, io) => {
   console.log(`A new client ${socket.id} has connected to server!`);
-  // users[socket.id] = null;
 
   socket.on('request data from server', data => {
     const { request, payload } = data;

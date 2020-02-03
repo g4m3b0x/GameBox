@@ -27,8 +27,6 @@ export default class TicTac extends Component {
   }
 
   move(x, y) {
-    // const coord = { x, y };
-    // socket.emit('move', coord);
     socket.emit('request data from server', {
       request: 'send move',
       payload: {x, y},
