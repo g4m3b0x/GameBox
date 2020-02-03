@@ -5,27 +5,26 @@ export default class TicTac extends Component {
   constructor() {
     super();
     this.state = { gameBoard: [[]], winner: null };
+    this._isMounted = false;      // prevent memory leak
     this.move = this.move.bind(this);
     this.returnToLobby = this.returnToLobby.bind(this);
   }
 
   componentDidMount() {
+    this._isMounted = true;
     if (socket.hostBool) {    // this should only be done once, so we make the host do it
-      // socket.emit('set initial game state');
       socket.emit('request data from server', {
         request: 'get initial game state'
       });
     }
     socket.on('send game state', data => {
-      this.setState(data);
+      if (this._isMounted) this.setState(data);
     });
   }
 
-  // NEED TO LOOK INTO HOW TO UNSUBSCRIBE EVENT LISTENERS
-  // TO PREVENT MEMORY LEAK.
-  // componentWillUnmount() {
-  //   socket.removeAllListeners();
-  // }
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
   move(x, y) {
     // const coord = { x, y };
