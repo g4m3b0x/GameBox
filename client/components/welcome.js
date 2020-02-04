@@ -7,53 +7,70 @@ class Welcome extends Component {
     this.state = {
       userName: '',
       roomName: '',
-      userNameErrorMsg: '‏‏‎ ‎',    // special character 8207
-      roomNameErrorMsg: '‏‏‎ ‎',    // special character 8207
+      // userNameErrorMsg: false, // special character 8207
+      // roomNameErrorMsg: '‏‏‎ ‎', // special character 8207
       dedicatedScreen: false,
+      userNameErr: false,
+      roomNameErr: ''
     };
     this.clickCreate = this.clickCreate.bind(this);
     this.clickJoin = this.clickJoin.bind(this);
     this.handleType = this.handleType.bind(this);
-    this.userNameError = this.userNameError.bind(this);
-    this.roomNameError = this.roomNameError.bind(this);
-    this.clearUserNameError = this.clearUserNameError.bind(this);
-    this.clearRoomNameError = this.clearRoomNameError.bind(this);
+    // this.userNameError = this.userNameError.bind(this);
+    // this.roomNameError = this.roomNameError.bind(this);
+    // this.clearUserNameError = this.clearUserNameError.bind(this);
+    // this.clearRoomNameError = this.clearRoomNameError.bind(this);
     this.toggleDedicatedScreen = this.toggleDedicatedScreen.bind(this);
+    this.handleError = this.handleError.bind(this);
   }
 
-  componentDidMount () {
-
+  componentDidMount() {
     // EVENT LISTENERS
-    document.getElementById("welcome-nameInput").addEventListener("keyup", e => {
-      if (e.keyCode === 13) {
-        document.getElementById(this.state.roomName ? "welcome-joinButton" : "welcome-createButton").click();
-      }
-    });
-    document.getElementById("welcome-joinInput").addEventListener("keyup", e => {
-      if (e.keyCode === 13) document.getElementById("welcome-joinButton").click();
-    });
+    document
+      .getElementById('welcome-nameInput')
+      .addEventListener('keyup', e => {
+        if (e.keyCode === 13) {
+          document
+            .getElementById(
+              this.state.roomName
+                ? 'welcome-joinButton'
+                : 'welcome-createButton'
+            )
+            .click();
+        }
+      });
+    document
+      .getElementById('welcome-joinInput')
+      .addEventListener('keyup', e => {
+        if (e.keyCode === 13)
+          document.getElementById('welcome-joinButton').click();
+      });
 
     // SOCKET LISTENERS
     socket.on('error: room not open', data => {
-      const {roomName, roomExists} = data;
-      this.roomNameError(roomExists
+      const { roomName, roomExists } = data;
+      let message = roomExists
         ? `Room ${roomName} has already started!`
-        : `Room ${roomName} does not exist!`
-      );
+        : `Room ${roomName} does not exist!`;
+      this.handleError(message);
+      // this.roomNameError(
+      //   roomExists
+      //     ? `Room ${roomName} has already started!`
+      //     : `Room ${roomName} does not exist!`
+      // );
     });
-
   }
 
   clickCreate() {
     if (!this.state.userName) {
-      this.userNameError('Enter a username!');
+      this.handleError('user');
     } else {
       socket.emit('routes reducer', {
         request: 'join room',
         payload: {
           userName: this.state.userName,
           roomName: undefined,
-          dedicatedScreen: this.state.dedicatedScreen ? socket.id : null,
+          dedicatedScreen: this.state.dedicatedScreen ? socket.id : null
         }
       });
     }
@@ -61,24 +78,26 @@ class Welcome extends Component {
 
   clickJoin() {
     if (!this.state.userName) {
-      this.userNameError('Enter a username!');
+      this.handleError('user');
     } else if (!this.state.roomName.length) {
-      this.roomNameError('Enter a room name!');
+      this.handleError('Enter a room name!');
+      // this.roomNameError('Enter a room name!');
     } else if (
-      this.state.roomName.length !== 4
-      || !this.state.roomName
+      this.state.roomName.length !== 4 ||
+      !this.state.roomName
         .toUpperCase()
         .split('')
         .every(c => c >= 'A' && c <= 'Z')
     ) {
-      this.roomNameError(`Invalid room name: ${this.state.roomName}`);
+      // this.roomNameError(`Invalid room name: ${this.state.roomName}`);
+      this.handleError(`Invalid room name: ${this.state.roomName}`);
     } else {
       socket.emit('routes reducer', {
         request: 'join room',
         payload: {
           userName: this.state.userName,
           roomName: this.state.roomName.toUpperCase(),
-          dedicatedScreen: null,
+          dedicatedScreen: null
         }
       });
     }
@@ -87,44 +106,52 @@ class Welcome extends Component {
   handleType(e) {
     const charLimit = {
       userName: 15,
-      roomName: 4,
+      roomName: 4
     };
     if (e.target.value.length <= charLimit[e.target.name]) {
-      this.setState({ [e.target.name]: e.target.value });
+      let newState = { [e.target.name]: e.target.value };
+      if (e.target.name === 'userName') newState.userNameErr = false;
+      else newState.roomNameErr = '';
+      this.setState(newState);
     }
-    if (e.target.name === 'userName' && e.target.value) {
-      this.clearUserNameError();
-    }
-    if (e.target.name === 'roomName' && e.target.value) {
-      this.clearRoomNameError();
-    }
+    // if (e.target.name === 'userName' && e.target.value) {
+    //   this.clearUserNameError();
+    // }
+    // if (e.target.name === 'roomName' && e.target.value) {
+    //   this.clearRoomNameError();
+    // }
   }
+  handleError(error) {
+    if (error === 'user') this.setState({ userNameErr: true });
+    else this.setState({ roomNameErr: error });
+  }
+  // userNameError(msg) {
+  //   this.setState({ userNameErrorMsg: msg });
+  // }
 
-  userNameError(msg) {
-    this.setState({userNameErrorMsg: msg});
-  }
+  // roomNameError(msg) {
+  //   this.setState({ roomNameErrorMsg: msg });
+  // }
 
-  roomNameError(msg) {
-    this.setState({roomNameErrorMsg: msg});
-  }
+  // clearUserNameError() {
+  //   this.setState({ userNameErrorMsg: '‏‏‎ ‎' }); // special character
+  // }
 
-  clearUserNameError() {
-    this.setState({userNameErrorMsg: '‏‏‎ ‎'});   // special character
-  }
-
-  clearRoomNameError() {
-    this.setState({roomNameErrorMsg: '‏‏‎ ‎'});   // special character
-  }
+  // clearRoomNameError() {
+  //   this.setState({ roomNameErrorMsg: '‏‏‎ ‎' }); // special character
+  // }
 
   toggleDedicatedScreen(e) {
     if (this.state.dedicatedScreen) {
       document.getElementById('welcome-nameInput').removeAttribute('disabled');
     } else {
-      document.getElementById('welcome-nameInput').setAttribute('disabled', 'true');
+      document
+        .getElementById('welcome-nameInput')
+        .setAttribute('disabled', 'true');
     }
     this.setState({
-      userName: this.state.dedicatedScreen ? '' : '(Screen)',   // NOT SURE IF NEEDED YET
-      dedicatedScreen: !this.state.dedicatedScreen,
+      userName: this.state.dedicatedScreen ? '' : '(Screen)', // NOT SURE IF NEEDED YET
+      dedicatedScreen: !this.state.dedicatedScreen
     });
   }
 
@@ -140,24 +167,21 @@ class Welcome extends Component {
             placeholder="Enter username"
             onChange={this.handleType}
           />
-          <div className="welcome-error">{this.state.userNameErrorMsg}</div>
+          {/* <div className="welcome-error">{this.state.userNameErrorMsg}</div> */}
+          <div className="welcome-error">
+            <p>{this.state.userNameErr && 'Enter a Username!'}</p>
+          </div>
         </div>
         <div className="welcome-text">
           <p>Host a game:</p>
         </div>
         <div id="welcome-create">
-          <button
-            id="welcome-createButton"
-            onClick={this.clickCreate}
-          >
+          <button id="welcome-createButton" onClick={this.clickCreate}>
             <img src="/monitor-icon.png"></img>
             Create Room
           </button>
           <div id="welcome-dedicatedScreen">
-            <input
-              type="checkbox"
-              onClick={this.toggleDedicatedScreen}
-            />
+            <input type="checkbox" onClick={this.toggleDedicatedScreen} />
             <p>This device is a dedicated screen</p>
           </div>
         </div>
@@ -173,12 +197,11 @@ class Welcome extends Component {
             placeholder="Enter 4-letter room code"
             onChange={this.handleType}
           />
-          <div className="welcome-error">{this.state.roomNameErrorMsg}</div>
+          <div className="welcome-error">
+            <p>{this.state.roomNameErr && `${this.state.roomNameErr}`}</p>
+          </div>
         </div>
-        <button
-            id="welcome-joinButton"
-            onClick={this.clickJoin}
-        >
+        <button id="welcome-joinButton" onClick={this.clickJoin}>
           <img src="/phone-icon.png"></img>
           Join Room
         </button>
