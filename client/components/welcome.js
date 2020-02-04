@@ -41,11 +41,8 @@ class Welcome extends Component {
       });
 
     // SOCKET LISTENERS
-    socket.on('error: room not open', data => {
-      const { roomName, message } = data;
-      // let message = roomExists
-      //   ? `Room ${roomName} has already started!`
-      //   : `Room ${roomName} does not exist!`;
+    socket.on('error: cannot join room', data => {
+      const { message } = data;
       this.handleError(message);
     });
   }
@@ -96,7 +93,7 @@ class Welcome extends Component {
       roomName: 4
     };
     if (e.target.value.length <= charLimit[e.target.name]) {
-      let newState = { [e.target.name]: e.target.value };
+      const newState = { [e.target.name]: e.target.value };
       if (e.target.name === 'userName') newState.userNameErr = false;
       else newState.roomNameErr = '';
       this.setState(newState);
