@@ -133,7 +133,7 @@ export default class Lobby extends Component {
                 <p>{this.state.selectedGame}</p>
               )}
             </div>
-            <div id="lobbyheader-game-start-game">
+            <div id="lobby-header-game-start-game">
               {this.state.currentHost === socket.id ? (
                 <button
                   type="button"
