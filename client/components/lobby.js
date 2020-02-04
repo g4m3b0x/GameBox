@@ -89,7 +89,7 @@ export default class Lobby extends Component {
 
   sendMessage() {
     if (!this.state.currentMessage) return;
-    const noSpacesLimit = 25;
+    const noSpacesLimit = 50;
     const message = this.state.currentMessage
       .split(' ')
       .map(word => {
