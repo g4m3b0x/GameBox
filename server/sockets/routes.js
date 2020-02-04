@@ -16,8 +16,12 @@ module.exports = (socket, io, rooms, users) => {
       case 'join room':
         let { userName, roomName, dedicatedScreen } = payload;   // roomName will be modified
 
-        // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, OR GAME ALREADY STARTED, RETURN
-        if (roomName && (!(roomName in rooms) || rooms[roomName].game)) {
+        // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, OR ROOM IS FULL, OR GAME ALREADY STARTED, RETURN
+        if (
+          roomName && (!(roomName in rooms)
+          || rooms[roomName].users.length === 10
+          || rooms[roomName].game)
+        ) {
           socket.emit('error: room not open', {
             roomName,
             roomExists: roomName in rooms
