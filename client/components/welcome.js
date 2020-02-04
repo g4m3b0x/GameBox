@@ -7,8 +7,8 @@ class Welcome extends Component {
     this.state = {
       userName: '',
       roomName: '',
-      userNameErrorMsg: '‏‏‎ ‎',    // special character
-      roomNameErrorMsg: '‏‏‎ ‎',    // special character
+      userNameErrorMsg: '‏‏‎ ‎',    // special character 8207
+      roomNameErrorMsg: '‏‏‎ ‎',    // special character 8207
       dedicatedScreen: false,
     };
     this.clickCreate = this.clickCreate.bind(this);
@@ -48,10 +48,13 @@ class Welcome extends Component {
     if (!this.state.userName) {
       this.userNameError('Enter a username!');
     } else {
-      socket.emit('join room', {
-        userName: this.state.userName,
-        roomName: undefined,
-        dedicatedScreen: this.state.dedicatedScreen ? socket.id : null,
+      socket.emit('routes reducer', {
+        request: 'join room',
+        payload: {
+          userName: this.state.userName,
+          roomName: undefined,
+          dedicatedScreen: this.state.dedicatedScreen ? socket.id : null,
+        }
       });
     }
   }
@@ -70,10 +73,13 @@ class Welcome extends Component {
     ) {
       this.roomNameError(`Invalid room name: ${this.state.roomName}`);
     } else {
-      socket.emit('join room', {
-        userName: this.state.userName,
-        roomName: this.state.roomName.toUpperCase(),
-        dedicatedScreen: null,
+      socket.emit('routes reducer', {
+        request: 'join room',
+        payload: {
+          userName: this.state.userName,
+          roomName: this.state.roomName.toUpperCase(),
+          dedicatedScreen: null,
+        }
       });
     }
   }

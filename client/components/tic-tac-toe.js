@@ -13,7 +13,8 @@ export default class TicTac extends Component {
   componentDidMount() {
     this._isMounted = true;
     if (socket.hostBool) {    // this should only be done once, so we make the host do it
-      socket.emit('request data from server', {
+      // socket.emit('request data from server', {
+      socket.emit('game data reducer', {
         request: 'get initial game state'
       });
     }
@@ -27,14 +28,18 @@ export default class TicTac extends Component {
   }
 
   move(x, y) {
-    socket.emit('request data from server', {
+    // socket.emit('request data from server', {
+    socket.emit('game data reducer', {
       request: 'send move',
       payload: {x, y},
     })
   }
 
   returnToLobby() {
-    socket.emit('return to lobby');
+    // socket.emit('return to lobby');
+    socket.emit('routes reducer', {
+      request: 'return to lobby'
+    });
   }
 
   render() {

@@ -9,7 +9,7 @@ export default class Lobby extends Component {
       users: {},
       currentHost: null,
       dedicatedScreen: null,
-      currentGame: '--None--',
+      selectedGame: '--None--',
       currentMessage: '',
     };
     this._isMounted = false;      // prevent memory leak
@@ -22,7 +22,10 @@ export default class Lobby extends Component {
     this._isMounted = true;
 
     // GET DATA
-    socket.emit('request data from server', {
+    // socket.emit('request data from server', {
+    //   request: 'joined room',
+    // });
+    socket.emit('routes reducer', {
       request: 'joined room',
     });
     socket.on('send room data', data => {
@@ -39,7 +42,7 @@ export default class Lobby extends Component {
 
     // SOCKET LISTENERS
     socket.on('changed selected game', game => {
-      if (this._isMounted) this.setState({ currentGame: game });
+      if (this._isMounted) this.setState({ selectedGame: game });
     });
     socket.on('receive message', data => {
       const { sender, message } = data;
@@ -70,9 +73,12 @@ export default class Lobby extends Component {
   }
 
   handleSelect(e) {
-    socket.emit('change selected game', {
-      game: e.target.value,
-    });
+    socket.emit('lobby reducer', {
+      request: 'change selected game',
+      payload: {
+        game: e.target.value,
+      }
+    })
   }
 
   handleType(e) {
@@ -101,7 +107,10 @@ export default class Lobby extends Component {
         return newWordArr.join(' ');
       })
       .join(' ');
-    socket.emit('send message', { message });
+    socket.emit('lobby reducer', {
+      request: 'send message',
+      payload: { message },
+    })
     this.setState({ currentMessage: '' });
   }
 
@@ -123,7 +132,7 @@ export default class Lobby extends Component {
                   <option value="Tic Tac Toe">Tic Tac Toe</option>
                 </select>
               ) : (
-                <p>{this.state.currentGame}</p>
+                <p>{this.state.selectedGame}</p>
               )}
             </div>
             <div id="lobbyheader-game-start-game">
@@ -131,9 +140,12 @@ export default class Lobby extends Component {
                 <button
                   type="button"
                   onClick={() => {
-                    if (this.state.currentGame !== '--None--') {
-                      socket.emit('start game', {
-                        game: this.state.currentGame,
+                    if (this.state.selectedGame !== '--None--') {
+                      socket.emit('routes reducer', {
+                        request: 'start game',
+                        payload: {
+                          game: this.state.selectedGame,
+                        }
                       });
                     }
                   }}
