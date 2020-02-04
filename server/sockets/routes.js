@@ -19,41 +19,27 @@ module.exports = (socket, io, rooms, users) => {
         let { userName, roomName, dedicatedScreen } = payload; // roomName will be modified
 
         // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, OR ROOM IS FULL, OR GAME ALREADY STARTED, RETURN
-        let errorObj = {};
-        // if (
-        //   roomName &&
-        //   (!(roomName in rooms) ||
-        //     Object.keys(rooms[roomName].users).length ===
-        //       rooms[roomName].maxPlayers ||
-        //     rooms[roomName].game)
-        // ) {
-        //   socket.emit('error: room not open', {
-        //     roomName,
-        //     roomExists: roomName in rooms
-        //   });
-        //   return;
-        // }
         if (roomName) {
-          if (!(roomName in rooms))
+          const errorObj = {};
+          if (!(roomName in rooms)) {
             errorObj.message = `Invalid room name ${roomName}`;
-          if (
+          } else if (rooms[roomName].game) {
+            errorObj.message = `Game ${roomName} has already started`;
+          } else if (
             Object.keys(rooms[roomName].users).length ===
             rooms[roomName].maxPlayers
-          )
-            errorObj.message = 'Room at max capacity';
-          if (rooms[roomName].game)
-            errorObj.message = 'Game has already started';
+          ) {
+            errorObj.message = `Room ${roomName} at max capacity`;
+          }
           if (errorObj.message) {
-            socket.emit('error: room not open', {
-              roomName,
+            socket.emit('error: cannot join room', {
               message: errorObj.message
             });
             return;
           }
         }
-
         // IF CREATING ROOM, GENERATE RANDOM UNUSED ROOM CODE:
-        if (!roomName) {
+        else {
           const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
           do {
             roomName = '';
