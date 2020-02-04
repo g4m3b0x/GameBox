@@ -20,19 +20,6 @@ module.exports = (socket, io, rooms, users) => {
 
         // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, OR ROOM IS FULL, OR GAME ALREADY STARTED, RETURN
         let errorObj = {};
-        // if (
-        //   roomName &&
-        //   (!(roomName in rooms) ||
-        //     Object.keys(rooms[roomName].users).length ===
-        //       rooms[roomName].maxPlayers ||
-        //     rooms[roomName].game)
-        // ) {
-        //   socket.emit('error: room not open', {
-        //     roomName,
-        //     roomExists: roomName in rooms
-        //   });
-        //   return;
-        // }
         if (roomName) {
           if (!(roomName in rooms))
             errorObj.message = `Invalid room name ${roomName}`;
