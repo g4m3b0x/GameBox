@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import socket from '../../index.js';
 
-export default class TicTac extends Component {
+export default class TicTacToe extends Component {
   constructor() {
     super();
     this.state = {
