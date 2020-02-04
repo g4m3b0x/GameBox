@@ -3,7 +3,6 @@
 const path = require('path');
 const express = require('express');
 const app = express();
-const socketRoutes = require('./sockets');
 
 // START EXPRESS SERVER
 
@@ -16,7 +15,7 @@ const server = app.listen(PORT, () => {
 
 const socketio = require('socket.io');
 const io = socketio(server);  // places a socket.io/socket.io.js route onto server
-io.on('connection', socket => socketRoutes(socket, io));
+io.on('connection', socket => require('./sockets/')(socket, io));
 
 // EXPRESS ROUTES
 

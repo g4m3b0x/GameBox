@@ -199,10 +199,11 @@ select {
 
 #lobby-header-game-selection select {
   width: 100%;
+  font-size: 0.8em;
 }
 
 #lobby-header-game button {
-  font-size: 1.0em;
+  font-size: 0.8em;
 }
 
 #lobbyheader-game-start-game {

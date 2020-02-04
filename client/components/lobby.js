@@ -25,7 +25,7 @@ export default class Lobby extends Component {
     // socket.emit('request data from server', {
     //   request: 'joined room',
     // });
-    socket.emit('change routes', {
+    socket.emit('routes reducer', {
       request: 'joined room',
     });
     socket.on('send room data', data => {
@@ -73,9 +73,12 @@ export default class Lobby extends Component {
   }
 
   handleSelect(e) {
-    socket.emit('change selected game', {
-      game: e.target.value,
-    });
+    socket.emit('lobby reducer', {
+      request: 'change selected game',
+      payload: {
+        game: e.target.value,
+      }
+    })
   }
 
   handleType(e) {
@@ -104,7 +107,10 @@ export default class Lobby extends Component {
         return newWordArr.join(' ');
       })
       .join(' ');
-    socket.emit('send message', { message });
+    socket.emit('lobby reducer', {
+      request: 'send message',
+      payload: { message },
+    })
     this.setState({ currentMessage: '' });
   }
 
@@ -135,8 +141,11 @@ export default class Lobby extends Component {
                   type="button"
                   onClick={() => {
                     if (this.state.selectedGame !== '--None--') {
-                      socket.emit('start game', {
-                        game: this.state.selectedGame,
+                      socket.emit('routes reducer', {
+                        request: 'start game',
+                        payload: {
+                          game: this.state.selectedGame,
+                        }
                       });
                     }
                   }}
