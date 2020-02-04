@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import socket from './index.js';
 import Welcome from './components/welcome';
 import Lobby from './components/lobby';
-import Games from './components/games';
+import Games from './components/games/';
 
 // function or class component? decide later...
 class Routes extends Component {
