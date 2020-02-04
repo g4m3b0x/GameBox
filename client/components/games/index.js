@@ -1,10 +1,12 @@
 import React from 'react';
 
 // import all games here:
-import TicTac from './tic-tac-toe';
+import TicTacToe from './tic-tac-toe';
+import Resistance from './resistance';
 
 const Games = {
-  'Tic Tac Toe': <TicTac />,
+  'Tic Tac Toe': <TicTacToe />,
+  'The Resistance': <Resistance />,
 };
 
 export default Games;

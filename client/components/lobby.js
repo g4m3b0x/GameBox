@@ -127,6 +127,7 @@ export default class Lobby extends Component {
                 <select onChange={this.handleSelect}>
                   <option value="--None--">Select...</option>
                   <option value="Tic Tac Toe">Tic Tac Toe</option>
+                  <option value="The Resistance">The Resistance</option>
                 </select>
               ) : (
                 <p>{this.state.selectedGame}</p>

@@ -1,6 +1,6 @@
 const chars = ['X', 'O'];
 
-module.exports = class TicTac {
+module.exports = class TicTacToe {
   constructor(users, dedicatedScreen) {
     this.users = users;
     this.winner = null;
