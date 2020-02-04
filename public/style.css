@@ -15,6 +15,7 @@ input {
   font-family: 'Darker Grotesque';
   font-size: 1em;
   border-width: 0px 0px 2px 0px;
+  border-color: #eeeeee;
   outline: none;
 }
 
@@ -243,6 +244,7 @@ select {
 #lobby-chat div {
   width: 100%;
   padding: 0.1em;
+  font-size: 0.8em;
 }
 
 .chat-msg {
@@ -253,10 +255,24 @@ select {
 #lobby-users {
   height: 85%;
   width: 25%;
+  padding: 0.5em;
+  border-left: 1px solid;
+  border-color: lightgray;
 }
 
 #lobby-users div {
+  height: 1em;
+  display: flex;
+  align-items: center;
+}
+
+#lobby-users p {
   font-size: 0.8em;
+}
+
+#lobby-users img {
+  height: 100%;
+  margin: 0.1em;
 }
 
 #lobby-bottom {
