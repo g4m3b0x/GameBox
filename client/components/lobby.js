@@ -80,7 +80,7 @@ export default class Lobby extends Component {
 
   handleType(e) {
     const charLimit = {
-      currentMessage: 100
+      currentMessage: 1000
     };
     if (e.target.value.length <= charLimit[e.target.name]) {
       this.setState({ [e.target.name]: e.target.value });
@@ -89,7 +89,7 @@ export default class Lobby extends Component {
 
   sendMessage() {
     if (!this.state.currentMessage) return;
-    const noSpacesLimit = 20;
+    const noSpacesLimit = 25;
     const message = this.state.currentMessage
       .split(' ')
       .map(word => {
@@ -163,11 +163,13 @@ export default class Lobby extends Component {
             ))}
           </div>
           <div id="lobby-users">
-            <div>Players:</div>
+            <p>Players:</p>
             {Object.keys(this.state.users).map((user, i) => (
               <div key={i}>
-                {`${this.state.users[user]}` +
-                  (this.state.currentHost === user ? ' (host)' : '')}
+                <p>{`${this.state.users[user]}`}</p>
+                {this.state.currentHost === user && (
+                  <img src="/crown.png"></img>
+                )}
               </div>
             ))}
           </div>
