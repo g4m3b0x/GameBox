@@ -48,9 +48,9 @@ export default class TicTacToe extends Component {
         {!this.state.winner ? (
           <div style={styleTable}>
             {this.state.gameBoard.map((row, y) => 
-              <div style={styleRow}>
+              <div key={y} style={styleRow}>
                 {this.state.gameBoard[y].map((col, x) => 
-                  <div style={styleCell}>
+                  <div key={x} style={styleCell}>
                     <div
                       style={styleCellDiv}
                       onClick={() => {
