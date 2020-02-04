@@ -1,3 +1,5 @@
+/* eslint-disable default-case */
+/* eslint-disable complexity */
 const games = require('../games/');
 
 module.exports = (socket, io, rooms, users) => {
@@ -10,23 +12,44 @@ module.exports = (socket, io, rooms, users) => {
           selectedGame: rooms[socket.roomName].selectedGame,
           users: rooms[socket.roomName].users,
           currentHost: rooms[socket.roomName].host,
-          dedicatedScreen: rooms[socket.roomName].dedicatedScreen,
+          dedicatedScreen: rooms[socket.roomName].dedicatedScreen
         });
         return;
       case 'join room':
-        let { userName, roomName, dedicatedScreen } = payload;   // roomName will be modified
+        let { userName, roomName, dedicatedScreen } = payload; // roomName will be modified
 
         // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, OR ROOM IS FULL, OR GAME ALREADY STARTED, RETURN
-        if (
-          roomName && (!(roomName in rooms)
-          || rooms[roomName].users.length === 10
-          || rooms[roomName].game)
-        ) {
-          socket.emit('error: room not open', {
-            roomName,
-            roomExists: roomName in rooms
-          });
-          return;
+        let errorObj = {};
+        // if (
+        //   roomName &&
+        //   (!(roomName in rooms) ||
+        //     Object.keys(rooms[roomName].users).length ===
+        //       rooms[roomName].maxPlayers ||
+        //     rooms[roomName].game)
+        // ) {
+        //   socket.emit('error: room not open', {
+        //     roomName,
+        //     roomExists: roomName in rooms
+        //   });
+        //   return;
+        // }
+        if (roomName) {
+          if (!(roomName in rooms))
+            errorObj.message = `Invalid room name ${roomName}`;
+          if (
+            Object.keys(rooms[roomName].users).length ===
+            rooms[roomName].maxPlayers
+          )
+            errorObj.message = 'Room at max capacity';
+          if (rooms[roomName].game)
+            errorObj.message = 'Game has already started';
+          if (errorObj.message) {
+            socket.emit('error: room not open', {
+              roomName,
+              message: errorObj.message
+            });
+            return;
+          }
         }
 
         // IF CREATING ROOM, GENERATE RANDOM UNUSED ROOM CODE:
@@ -45,13 +68,15 @@ module.exports = (socket, io, rooms, users) => {
             users: {},
             host: null,
             dedicatedScreen,
-            messages: []
+            messages: [],
+            maxPlayers: 10
           };
         }
 
         // SERVER MEMORY CODE:
         users[socket.id] = roomName;
-        if (socket.id !== dedicatedScreen) rooms[roomName].users[socket.id] = userName;
+        if (socket.id !== dedicatedScreen)
+          rooms[roomName].users[socket.id] = userName;
 
         // SOCKET CODE:
         socket.userName = userName;
@@ -73,12 +98,12 @@ module.exports = (socket, io, rooms, users) => {
         io.in(roomName).emit('new user', {
           socketId: socket.id,
           userName,
-          currentHost: rooms[roomName].host,
+          currentHost: rooms[roomName].host
         });
         return;
       case 'start game':
         const { game } = payload;
-        rooms[socket.roomName].game = new (games[game])(    // this launches the actual game
+        rooms[socket.roomName].game = new games[game]( // this launches the actual game
           rooms[socket.roomName].users,
           rooms[socket.roomName].dedicatedScreen
         );
