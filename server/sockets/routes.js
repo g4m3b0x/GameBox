@@ -1,5 +1,3 @@
-/* eslint-disable default-case */
-/* eslint-disable complexity */
 const games = require('../games/');
 
 module.exports = (socket, io, rooms, users) => {
