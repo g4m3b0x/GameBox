@@ -42,10 +42,10 @@ class Welcome extends Component {
 
     // SOCKET LISTENERS
     socket.on('error: room not open', data => {
-      const { roomName, roomExists } = data;
-      let message = roomExists
-        ? `Room ${roomName} has already started!`
-        : `Room ${roomName} does not exist!`;
+      const { roomName, message } = data;
+      // let message = roomExists
+      //   ? `Room ${roomName} has already started!`
+      //   : `Room ${roomName} does not exist!`;
       this.handleError(message);
     });
   }
