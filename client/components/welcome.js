@@ -7,8 +7,6 @@ class Welcome extends Component {
     this.state = {
       userName: '',
       roomName: '',
-      // userNameErrorMsg: false, // special character 8207
-      // roomNameErrorMsg: '‏‏‎ ‎', // special character 8207
       dedicatedScreen: false,
       userNameErr: false,
       roomNameErr: ''
@@ -16,10 +14,6 @@ class Welcome extends Component {
     this.clickCreate = this.clickCreate.bind(this);
     this.clickJoin = this.clickJoin.bind(this);
     this.handleType = this.handleType.bind(this);
-    // this.userNameError = this.userNameError.bind(this);
-    // this.roomNameError = this.roomNameError.bind(this);
-    // this.clearUserNameError = this.clearUserNameError.bind(this);
-    // this.clearRoomNameError = this.clearRoomNameError.bind(this);
     this.toggleDedicatedScreen = this.toggleDedicatedScreen.bind(this);
     this.handleError = this.handleError.bind(this);
   }
@@ -53,11 +47,6 @@ class Welcome extends Component {
         ? `Room ${roomName} has already started!`
         : `Room ${roomName} does not exist!`;
       this.handleError(message);
-      // this.roomNameError(
-      //   roomExists
-      //     ? `Room ${roomName} has already started!`
-      //     : `Room ${roomName} does not exist!`
-      // );
     });
   }
 
@@ -81,7 +70,6 @@ class Welcome extends Component {
       this.handleError('user');
     } else if (!this.state.roomName.length) {
       this.handleError('Enter a room name!');
-      // this.roomNameError('Enter a room name!');
     } else if (
       this.state.roomName.length !== 4 ||
       !this.state.roomName
@@ -89,7 +77,6 @@ class Welcome extends Component {
         .split('')
         .every(c => c >= 'A' && c <= 'Z')
     ) {
-      // this.roomNameError(`Invalid room name: ${this.state.roomName}`);
       this.handleError(`Invalid room name: ${this.state.roomName}`);
     } else {
       socket.emit('routes reducer', {
@@ -114,32 +101,11 @@ class Welcome extends Component {
       else newState.roomNameErr = '';
       this.setState(newState);
     }
-    // if (e.target.name === 'userName' && e.target.value) {
-    //   this.clearUserNameError();
-    // }
-    // if (e.target.name === 'roomName' && e.target.value) {
-    //   this.clearRoomNameError();
-    // }
   }
   handleError(error) {
     if (error === 'user') this.setState({ userNameErr: true });
     else this.setState({ roomNameErr: error });
   }
-  // userNameError(msg) {
-  //   this.setState({ userNameErrorMsg: msg });
-  // }
-
-  // roomNameError(msg) {
-  //   this.setState({ roomNameErrorMsg: msg });
-  // }
-
-  // clearUserNameError() {
-  //   this.setState({ userNameErrorMsg: '‏‏‎ ‎' }); // special character
-  // }
-
-  // clearRoomNameError() {
-  //   this.setState({ roomNameErrorMsg: '‏‏‎ ‎' }); // special character
-  // }
 
   toggleDedicatedScreen(e) {
     if (this.state.dedicatedScreen) {
@@ -167,7 +133,6 @@ class Welcome extends Component {
             placeholder="Enter username"
             onChange={this.handleType}
           />
-          {/* <div className="welcome-error">{this.state.userNameErrorMsg}</div> */}
           <div className="welcome-error">
             <p>{this.state.userNameErr && 'Enter a Username!'}</p>
           </div>

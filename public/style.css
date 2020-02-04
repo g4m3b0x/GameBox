@@ -206,13 +206,13 @@ select {
   font-size: 0.8em;
 }
 
-#lobbyheader-game-start-game {
+#lobby-header-game-start-game {
   width: 50%;
   display: flex;
   justify-content: flex-end;
 }
 
-#lobbyheader-game-start-game > p {
+#lobby-header-game-start-game > p {
   font-size: 1.0em;
 }
 
@@ -253,6 +253,10 @@ select {
 #lobby-users {
   height: 85%;
   width: 25%;
+}
+
+#lobby-users div {
+  font-size: 0.8em;
 }
 
 #lobby-bottom {
