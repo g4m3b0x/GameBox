@@ -3,5 +3,5 @@ const Resistance = require('./resistance');
 
 module.exports = {
   'Tic Tac Toe': TicTacToe,
-  'Resistance': Resistance,
+  'The Resistance': Resistance,
 };
