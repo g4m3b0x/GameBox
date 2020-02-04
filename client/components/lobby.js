@@ -22,9 +22,6 @@ export default class Lobby extends Component {
     this._isMounted = true;
 
     // GET DATA
-    // socket.emit('request data from server', {
-    //   request: 'joined room',
-    // });
     socket.emit('routes reducer', {
       request: 'joined room',
     });

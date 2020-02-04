@@ -22,7 +22,7 @@ module.exports = class TicTac {
       this.gameBoard[y][x] = chars[this.turn];
       this.freeSquares--;
       if (this.checkWinner()) this.winner = Object.values(this.users)[this.turn];
-      else if (!this.freeSquares) this.winner = 'Nobody';
+      else if (!this.freeSquares) this.winner = -1;
       else this.turn = +!this.turn;
     }
   }
