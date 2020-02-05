@@ -15,6 +15,7 @@ module.exports = (socket, io, rooms, users) => {
           dedicatedScreen: rooms[socket.roomName].dedicatedScreen
         });
         return;
+<<<<<<< HEAD
       case 'createRoom':
         let { userName, dedicatedScreen } = payload;
         const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -34,6 +35,39 @@ module.exports = (socket, io, rooms, users) => {
           messages: [],
           maxPlayers: 10
         };
+=======
+      case 'join room':
+        let { userName, roomName, dedicatedScreen } = payload; // roomName will be modified
+
+        // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, OR GAME ALREADY STARTED, RETURN
+        if (roomName && (!(roomName in rooms) || rooms[roomName].game)) {
+          socket.emit('error: room not open', {
+            roomName,
+            roomExists: roomName in rooms
+          });
+          return;
+        }
+
+        // IF CREATING ROOM, GENERATE RANDOM UNUSED ROOM CODE:
+        if (!roomName) {
+          const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+          do {
+            roomName = '';
+            for (let i = 0; i < 4; i++) {
+              roomName += alphabet[Math.floor(Math.random() * 26)];
+            }
+          } while (roomName in rooms);
+          rooms[roomName] = {
+            roomName,
+            game: null,
+            selectedGame: '--None--',
+            users: {},
+            host: null,
+            dedicatedScreen,
+            messages: []
+          };
+        }
+>>>>>>> 9b3872612bcafe03764537447150a335038b6fbb
 
         users[socket.id] = roomName;
         if (socket.id !== dedicatedScreen)
@@ -60,6 +94,7 @@ module.exports = (socket, io, rooms, users) => {
           socketId: socket.id,
           userName,
           currentHost: rooms[roomName].host
+<<<<<<< HEAD
         });
         return;
       case 'join room':
@@ -109,6 +144,8 @@ module.exports = (socket, io, rooms, users) => {
           socketId: socket.id,
           userName: payload.userName,
           currentHost: rooms[payload.roomName].host
+=======
+>>>>>>> 9b3872612bcafe03764537447150a335038b6fbb
         });
         return;
       case 'start game':
