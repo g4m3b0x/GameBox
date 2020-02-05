@@ -1,5 +1,7 @@
+/* eslint-disable default-case */
+/* eslint-disable complexity */
 const games = require('../games/');
-
+const Rooms = require('../rooms');
 module.exports = (socket, io, rooms, users) => {
   socket.on('routes reducer', data => {
     const { request, payload } = data;
@@ -10,11 +12,11 @@ module.exports = (socket, io, rooms, users) => {
           selectedGame: rooms[socket.roomName].selectedGame,
           users: rooms[socket.roomName].users,
           currentHost: rooms[socket.roomName].host,
-          dedicatedScreen: rooms[socket.roomName].dedicatedScreen,
+          dedicatedScreen: rooms[socket.roomName].dedicatedScreen
         });
         return;
       case 'join room':
-        let { userName, roomName, dedicatedScreen } = payload;   // roomName will be modified
+        let { userName, roomName, dedicatedScreen } = payload; // roomName will be modified
 
         // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, OR GAME ALREADY STARTED, RETURN
         if (roomName && (!(roomName in rooms) || rooms[roomName].game)) {
@@ -47,7 +49,8 @@ module.exports = (socket, io, rooms, users) => {
 
         // SERVER MEMORY CODE:
         users[socket.id] = roomName;
-        if (socket.id !== dedicatedScreen) rooms[roomName].users[socket.id] = userName;
+        if (socket.id !== dedicatedScreen)
+          rooms[roomName].users[socket.id] = userName;
 
         // SOCKET CODE:
         socket.userName = userName;
@@ -69,12 +72,12 @@ module.exports = (socket, io, rooms, users) => {
         io.in(roomName).emit('new user', {
           socketId: socket.id,
           userName,
-          currentHost: rooms[roomName].host,
+          currentHost: rooms[roomName].host
         });
         return;
       case 'start game':
         const { game } = payload;
-        rooms[socket.roomName].game = new (games[game])(    // this launches the actual game
+        rooms[socket.roomName].game = new games[game]( // this launches the actual game
           rooms[socket.roomName].users,
           rooms[socket.roomName].dedicatedScreen
         );
