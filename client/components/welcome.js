@@ -52,10 +52,9 @@ class Welcome extends Component {
       this.handleError('user');
     } else {
       socket.emit('routes reducer', {
-        request: 'join room',
+        request: 'createRoom',
         payload: {
           userName: this.state.userName,
-          roomName: undefined,
           dedicatedScreen: this.state.dedicatedScreen ? socket.id : null
         }
       });

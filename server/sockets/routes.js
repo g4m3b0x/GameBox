@@ -15,51 +15,26 @@ module.exports = (socket, io, rooms, users) => {
           dedicatedScreen: rooms[socket.roomName].dedicatedScreen
         });
         return;
-      case 'join room':
-        let { userName, roomName, dedicatedScreen } = payload; // roomName will be modified
-
-        // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, OR ROOM IS FULL, OR GAME ALREADY STARTED, RETURN
-        if (roomName) {
-          const errorObj = {};
-          if (!(roomName in rooms)) {
-            errorObj.message = `Invalid room name ${roomName}`;
-          } else if (rooms[roomName].game) {
-            errorObj.message = `Game ${roomName} has already started`;
-          } else if (
-            Object.keys(rooms[roomName].users).length ===
-            rooms[roomName].maxPlayers
-          ) {
-            errorObj.message = `Room ${roomName} at max capacity`;
+      case 'createRoom':
+        let { userName, dedicatedScreen } = payload;
+        const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let roomName = '';
+        do {
+          for (let i = 0; i < 4; i++) {
+            roomName += alphabet[Math.floor(Math.random() * 26)];
           }
-          if (errorObj.message) {
-            socket.emit('error: cannot join room', {
-              message: errorObj.message
-            });
-            return;
-          }
-        }
-        // IF CREATING ROOM, GENERATE RANDOM UNUSED ROOM CODE:
-        else {
-          const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-          do {
-            roomName = '';
-            for (let i = 0; i < 4; i++) {
-              roomName += alphabet[Math.floor(Math.random() * 26)];
-            }
-          } while (roomName in rooms);
-          rooms[roomName] = {
-            roomName,
-            game: null,
-            selectedGame: '--None--',
-            users: {},
-            host: null,
-            dedicatedScreen,
-            messages: [],
-            maxPlayers: 10
-          };
-        }
+        } while (roomName in rooms);
+        rooms[roomName] = {
+          roomName,
+          game: null,
+          selectedGame: '--None--',
+          users: {},
+          host: null,
+          dedicatedScreen,
+          messages: [],
+          maxPlayers: 10
+        };
 
-        // SERVER MEMORY CODE:
         users[socket.id] = roomName;
         if (socket.id !== dedicatedScreen)
           rooms[roomName].users[socket.id] = userName;
@@ -67,7 +42,7 @@ module.exports = (socket, io, rooms, users) => {
         // SOCKET CODE:
         socket.userName = userName;
         socket.roomName = roomName;
-        if (socket.id === dedicatedScreen || rooms[roomName].host) {
+        if (socket.id === dedicatedScreen) {
           socket.hostBool = false;
         } else {
           rooms[roomName].host = socket.id;
@@ -85,6 +60,55 @@ module.exports = (socket, io, rooms, users) => {
           socketId: socket.id,
           userName,
           currentHost: rooms[roomName].host
+        });
+        return;
+      case 'join room':
+        // let { roomName } = payload; // roomName will be modified
+
+        // IF JOINING ROOM, BUT ROOM DOES NOT EXIST, OR ROOM IS FULL, OR GAME ALREADY STARTED, RETURN
+
+        const errorObj = {};
+        if (!(payload.roomName in rooms)) {
+          errorObj.message = `Invalid room name ${payload.roomName}`;
+        } else if (rooms[payload.roomName].game) {
+          errorObj.message = `Game ${payload.roomName} has already started`;
+        } else if (
+          Object.keys(rooms[payload.roomName].users).length ===
+          rooms[payload.roomName].maxPlayers
+        ) {
+          errorObj.message = `Room ${payload.roomName} at max capacity`;
+        }
+        if (errorObj.message) {
+          socket.emit('error: cannot join room', {
+            message: errorObj.message
+          });
+          return;
+        }
+
+        users[socket.id] = payload.roomName;
+
+        rooms[payload.roomName].users[socket.id] = payload.userName;
+
+        socket.userName = payload.userName;
+        socket.roomName = payload.roomName;
+        if (rooms[payload.roomName].host) {
+          socket.hostBool = false;
+        } else {
+          rooms[payload.roomName].host = socket.id;
+          socket.hostBool = true;
+        }
+
+        socket.join(payload.roomName);
+        socket.emit('joined room', {
+          userName: payload.userName,
+          roomName: payload.roomName,
+          hostBool: socket.hostBool
+        });
+
+        io.in(payload.roomName).emit('new user', {
+          socketId: socket.id,
+          userName: payload.userName,
+          currentHost: rooms[payload.roomName].host
         });
         return;
       case 'start game':
