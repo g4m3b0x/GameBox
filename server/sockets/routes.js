@@ -1,5 +1,7 @@
+/* eslint-disable default-case */
+/* eslint-disable complexity */
 const games = require('../games/');
-
+const Rooms = require('../rooms');
 module.exports = (socket, io, rooms, users) => {
   socket.on('routes reducer', data => {
     const { request, payload } = data;
