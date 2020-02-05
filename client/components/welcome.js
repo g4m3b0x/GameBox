@@ -42,8 +42,8 @@ class Welcome extends Component {
 
     // SOCKET LISTENERS
     socket.on('error: cannot join room', data => {
-      const { message } = data;
-      this.handleError(message);
+      const { msg } = data;
+      this.handleError(msg);
     });
   }
 

@@ -1,17 +1,26 @@
+const Games = require('./games');
+
 module.exports = class Rooms {
-  constructor(host, dedicatedscreen) {
-    this.users = [];
+  constructor(roomName, dedicatedscreen) {
+    this.users = {};
     this.messages = [];
     this.selectedGame = null;
     this.maxPlayers = 10;
     this.game = null;
-    this.currentHost = host;
+    this.host = null;
     this.dedicatedScreen = dedicatedscreen;
+    this.roomName = roomName;
   }
   setGame(game) {
     this.game = game;
   }
-  selectedGame(game) {
+  getUsers() {
+    return this.users;
+  }
+  setHost(id) {
+    this.host = id;
+  }
+  selectGame(game) {
     this.selectedGame = game;
   }
   addMessage(user, message) {
@@ -27,15 +36,45 @@ module.exports = class Rooms {
     };
     return roomData;
   }
-  addUser(user) {
-    this.users.push(user);
+  joinRoom(userName, io, socket) {
+    socket.userName = userName;
+    socket.roomName = this.roomName;
+    socket.hostBool = false;
+    if (socket.id !== this.dedicatedScreen) {
+      this.users[socket.id] = userName;
+      if (!this.host) {
+        this.setHost(socket.id);
+        socket.hostBool = true;
+      }
+    }
+    socket.join(this.roomName);
+    socket.emit('joined room', {
+      userName,
+      roomName: this.roomName,
+      hostBool: socket.hostBool
+    });
+    io.in(this.roomName).emit('new user', {
+      socketId: socket.id,
+      userName,
+      currentHost: this.host
+    });
   }
-  remove(userToRemove) {
-    this.users = this.users.filter(user => user !== userToRemove);
+  remove(id) {
+    delete this.users[id];
+  }
+  startGame(game, io) {
+    let newGame = new Games[game](this.users, this.dedicatedScreen);
+    this.setGame(newGame);
+    io.in(this.roomName).emit('started game', { game });
+  }
+  gameOver(io) {
+    this.setGame(null);
+    this.selectGame('--None--');
+    io.in(this.roomName).emit('status', 'lobby');
   }
   canJoin() {
     let errorObj = { status: false };
-    if (this.maxPlayers === this.users.length)
+    if (this.maxPlayers === Object.keys(this.users).length)
       errorObj.msg = 'Game is at capacity';
     else if (this.game) errorObj.msg = 'Game is already in progress';
     else errorObj.status = true;
