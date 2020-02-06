@@ -17,7 +17,7 @@ export default class TicTacToe extends Component {
     this._isMounted = true;
     if (socket.hostBool) {
       // this should only be done once, so we make the host do it
-      socket.emit('game data reducer', {
+      socket.emit('gameDataReducer', {
         request: 'getInitGameState'
       });
     }
@@ -31,7 +31,7 @@ export default class TicTacToe extends Component {
   }
 
   move(x, y) {
-    socket.emit('game data reducer', {
+    socket.emit('gameDataReducer', {
       request: 'sendMove',
       payload: { x, y }
     });

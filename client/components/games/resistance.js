@@ -32,7 +32,7 @@ export default class Resistance extends Component {
   }
 
   // move(x, y) {
-  //   socket.emit('game data reducer', {
+  //   socket.emit('gameDataReducer', {
   //     request: 'send move',
   //     payload: {x, y},
   //   })

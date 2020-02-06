@@ -145,6 +145,7 @@ export default class Lobby extends Component {
                 <button
                   type="button"
                   onClick={() => {
+                    console.log(this.state.selectedGame);
                     if (this.state.selectedGame !== '--None--') {
                       socket.emit('routesReducer', {
                         request: 'startGame',
