@@ -32,6 +32,9 @@ module.exports = (socket, io, rooms, users) => {
         }
         rooms[payload.roomName].joinRoom(payload.userName, io, socket);
         return;
+      case 'exitRoom':
+        socket.emit('status', 'welcome screen');
+        return;
       case 'startGame':
         const { game } = payload;
         rooms[socket.roomName].startGame(game, io, socket);
