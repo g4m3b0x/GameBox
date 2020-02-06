@@ -10,9 +10,9 @@ export default class Lobby extends Component {
       currentHost: null,
       dedicatedScreen: null,
       selectedGame: '--None--',
-      currentMessage: '',
+      currentMessage: ''
     };
-    this._isMounted = false;      // prevent memory leak
+    this._isMounted = false; // prevent memory leak
     this.handleSelect = this.handleSelect.bind(this);
     this.handleType = this.handleType.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
@@ -22,8 +22,8 @@ export default class Lobby extends Component {
     this._isMounted = true;
 
     // GET DATA
-    socket.emit('routes reducer', {
-      request: 'joined room',
+    socket.emit('routesReducer', {
+      request: 'joinedRoom'
     });
     socket.on('send room data', data => {
       if (this._isMounted) this.setState(data);
@@ -38,17 +38,24 @@ export default class Lobby extends Component {
       });
 
     // SOCKET LISTENERS
-    socket.on('changed selected game', game => {
+    socket.on('changedSelectedGame', game => {
       if (this._isMounted) this.setState({ selectedGame: game });
     });
-    socket.on('receive message', data => {
+    socket.on('receiveMessage', data => {
       const { sender, message } = data;
-      if (this._isMounted) this.setState({ messages: [...this.state.messages, [sender, message]] });
+      if (this._isMounted)
+        this.setState({
+          messages: [...this.state.messages, [sender, message]]
+        });
       setTimeout(this.scrollDown, 100);
     });
-    socket.on('new user', data => {
+    socket.on('newUser', data => {
       const { socketId, userName, currentHost } = data;
-      if (this._isMounted) this.setState({ users: { ...this.state.users, [socketId]: userName }, currentHost });
+      if (this._isMounted)
+        this.setState({
+          users: { ...this.state.users, [socketId]: userName },
+          currentHost
+        });
     });
     socket.on('remove user', data => {
       const { socketId, currentHost } = data;
@@ -57,7 +64,7 @@ export default class Lobby extends Component {
       if (this._isMounted) this.setState({ users: newUsersObj, currentHost });
     });
 
-    setTimeout(this.scrollDown, 100);   // scrolls all the way down when you join the room
+    setTimeout(this.scrollDown, 100); // scrolls all the way down when you join the room
   }
 
   componentWillUnmount() {
@@ -70,12 +77,12 @@ export default class Lobby extends Component {
   }
 
   handleSelect(e) {
-    socket.emit('lobby reducer', {
-      request: 'change selected game',
+    socket.emit('lobbyReducer', {
+      request: 'changeSelectedGame',
       payload: {
-        game: e.target.value,
+        game: e.target.value
       }
-    })
+    });
   }
 
   handleType(e) {
@@ -104,10 +111,10 @@ export default class Lobby extends Component {
         return newWordArr.join(' ');
       })
       .join(' ');
-    socket.emit('lobby reducer', {
-      request: 'send message',
-      payload: { message },
-    })
+    socket.emit('lobbyReducer', {
+      request: 'sendMessage',
+      payload: { message }
+    });
     this.setState({ currentMessage: '' });
   }
 
@@ -138,11 +145,12 @@ export default class Lobby extends Component {
                 <button
                   type="button"
                   onClick={() => {
+                    console.log(this.state.selectedGame);
                     if (this.state.selectedGame !== '--None--') {
-                      socket.emit('routes reducer', {
-                        request: 'start game',
+                      socket.emit('routesReducer', {
+                        request: 'startGame',
                         payload: {
-                          game: this.state.selectedGame,
+                          game: this.state.selectedGame
                         }
                       });
                     }
@@ -159,7 +167,9 @@ export default class Lobby extends Component {
         <div id="lobby-middle">
           <div id="lobby-chat">
             {this.state.messages.map(([sender, message], i) => (
-              <div key={i}><div className="chat-msg">{`${sender}: ${message}`}</div></div>
+              <div key={i}>
+                <div className="chat-msg">{`${sender}: ${message}`}</div>
+              </div>
             ))}
           </div>
           <div id="lobby-users">

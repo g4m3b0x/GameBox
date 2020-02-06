@@ -3,13 +3,13 @@
 const games = require('../games/');
 const Room = require('../rooms');
 module.exports = (socket, io, rooms, users) => {
-  socket.on('routes reducer', data => {
+  socket.on('routesReducer', data => {
     const { request, payload } = data;
     switch (request) {
-      case 'joined room':
+      case 'joinedRoom':
         socket.emit('send room data', rooms[socket.roomName].getRoomData());
         return;
-      case 'create room':
+      case 'createRoom':
         const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         let roomName;
         do {
@@ -23,22 +23,22 @@ module.exports = (socket, io, rooms, users) => {
         users[socket.id] = roomName;
         currRoom.joinRoom(payload.userName, io, socket);
         return;
-      case 'join room':
+      case 'joinRoom':
         const errorObj = rooms[payload.roomName]
           ? rooms[payload.roomName].canJoin()
           : { status: false, msg: 'invalid room' };
         if (!errorObj.status) {
-          socket.emit('error: cannot join room', errorObj);
+          socket.emit('errorOnJoin', errorObj);
           return;
         }
         users[socket.id] = payload.roomName;
         rooms[payload.roomName].joinRoom(payload.userName, io, socket);
         return;
-      case 'start game':
+      case 'startGame':
         const { game } = payload;
         rooms[socket.roomName].startGame(game, io);
         return;
-      case 'return to lobby':
+      case 'returnToLobby':
         rooms[socket.roomName].gameOver(io);
         return;
     }

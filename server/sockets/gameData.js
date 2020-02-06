@@ -1,14 +1,14 @@
 module.exports = (socket, io, rooms, users) => {
-  socket.on('game data reducer', data => {
+  socket.on('gameDataReducer', data => {
     const { request, payload } = data;
     const game = rooms[socket.roomName].game;
     switch (request) {
-      case 'get initial game state':
-        io.in(socket.roomName).emit('send game state', game.getGameState());
+      case 'getInitGameState':
+        io.in(socket.roomName).emit('sendGameState', game.getGameState());
         return;
-      case 'send move':
+      case 'sendMove':
         game.move(socket.id, payload);
-        io.in(socket.roomName).emit('send game state', game.getGameState());
+        io.in(socket.roomName).emit('sendGameState', game.getGameState());
         return;
     }
   });
