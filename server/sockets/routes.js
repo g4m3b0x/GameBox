@@ -1,6 +1,6 @@
 /* eslint-disable default-case */
 /* eslint-disable complexity */
-const games = require('../games/');
+
 const Room = require('../rooms');
 module.exports = (socket, io, rooms, users) => {
   socket.on('routesReducer', data => {
@@ -20,7 +20,7 @@ module.exports = (socket, io, rooms, users) => {
         } while (roomName in rooms);
         rooms[roomName] = new Room(roomName, payload.dedicatedScreen);
         const currRoom = rooms[roomName];
-        users[socket.id] = roomName;
+        // users[socket.id] = roomName;
         currRoom.joinRoom(payload.userName, io, socket);
         return;
       case 'joinRoom':
@@ -31,7 +31,7 @@ module.exports = (socket, io, rooms, users) => {
           socket.emit('errorOnJoin', errorObj);
           return;
         }
-        users[socket.id] = payload.roomName;
+        // users[socket.id] = payload.roomName;
         rooms[payload.roomName].joinRoom(payload.userName, io, socket);
         return;
       case 'startGame':

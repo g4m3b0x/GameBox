@@ -1,29 +1,10 @@
 module.exports = (socket, io, rooms, users) => {
   socket.on('disconnecting', reason => {
-    const roomName = socket.roomName;     // for brevity
-
-    // SERVER MEMORY CODE:
-    if (rooms[roomName]) {
-      delete rooms[roomName].users[socket.id];
-      if (rooms[roomName].dedicatedScreen === socket.id) rooms[roomName].dedicatedScreen = null;
-      if (!rooms[roomName].dedicatedScreen && !Object.keys(rooms[roomName].users).length) delete rooms[roomName];
-      else if (rooms[roomName].host === socket.id) {
-        const otherUsers = Object.keys(rooms[roomName].users).filter(user => user !== rooms[roomName].dedicatedScreen);
-        if (otherUsers.length) {
-          rooms[roomName].host = otherUsers[0];
-          socket.broadcast.to(otherUsers[0]).emit('hostMigration');
-        } else {
-          rooms[roomName].host = null;
-        }
-      }
+    const currRoom = rooms[socket.roomName];
+    if (currRoom) {
+      let deleteRoom = currRoom.disconnect(io, socket);
+      if (deleteRoom) delete rooms[socket.roomName];
     }
-    delete users[socket.id];
-
-    // SOCKET CODE:
-    io.in(roomName).emit('removeUser', {
-      socketId: socket.id,
-      currentHost: rooms[roomName] ? rooms[roomName].host : null
-    });
   });
 
   socket.on('disconnect', () => {

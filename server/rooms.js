@@ -59,8 +59,34 @@ module.exports = class Room {
       currentHost: this.host
     });
   }
-  remove(id) {
-    delete this.users[id];
+  disconnect(io, socket) {
+    delete this.users[socket.id];
+    const updatedUsers = Object.keys(this.users);
+    let deleteRoom = false;
+    if (this.dedicatedScreen === socket.id) {
+      this.dedicatedScreen = null;
+      io.in(this.roomName).emit('status', 'welcome screen');
+      return true;
+    }
+    if (updatedUsers.length && socket.id === this.host) {
+      let newHost = updatedUsers[0];
+      socket.broadcast.to(newHost).emit('hostMigration');
+      this.host = newHost;
+    } else if (!updatedUsers.length) {
+      this.host = null;
+    }
+    io.in(this.roomName).emit('removeUser', {
+      socketId: socket.id,
+      currentHost: this.host
+    });
+
+    deleteRoom = !this.dedicatedScreen && !updatedUsers.length;
+    if (this.game) this.gameOver(io);
+    return deleteRoom;
+  }
+  updateHost(socket, newHost) {
+    socket.broadcast.to(newHost).emit('hostMigration');
+    this.host = newHost;
   }
   startGame(game, io, socket) {
     const numPlayers = Object.keys(this.users).length;
