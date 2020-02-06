@@ -42,8 +42,8 @@ class Welcome extends Component {
 
     // SOCKET LISTENERS
     socket.on('error: cannot join room', data => {
-      const { message } = data;
-      this.handleError(message);
+      const { msg } = data;
+      this.handleError(msg);
     });
   }
 
@@ -52,10 +52,9 @@ class Welcome extends Component {
       this.handleError('user');
     } else {
       socket.emit('routes reducer', {
-        request: 'join room',
+        request: 'create room',
         payload: {
           userName: this.state.userName,
-          roomName: undefined,
           dedicatedScreen: this.state.dedicatedScreen ? socket.id : null
         }
       });
