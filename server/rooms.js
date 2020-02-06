@@ -62,7 +62,6 @@ module.exports = class Room {
   disconnect(io, socket) {
     delete this.users[socket.id];
     const updatedUsers = Object.keys(this.users);
-    let deleteRoom = false;
     if (this.dedicatedScreen === socket.id) {
       this.dedicatedScreen = null;
       io.in(this.roomName).emit('status', 'welcome screen');
@@ -79,10 +78,8 @@ module.exports = class Room {
       socketId: socket.id,
       currentHost: this.host
     });
-
-    deleteRoom = !this.dedicatedScreen && !updatedUsers.length;
     if (this.game) this.gameOver(io);
-    return deleteRoom;
+    return !this.dedicatedScreen && !updatedUsers.length;   // whether room should be deleted
   }
   updateHost(socket, newHost) {
     socket.broadcast.to(newHost).emit('hostMigration');
@@ -92,14 +89,14 @@ module.exports = class Room {
     const numPlayers = Object.keys(this.users).length;
     if (numPlayers < Games[game].min) {
       socket.emit(
-        'error: wrong number of players',
+        'lobbyError',
         `Minimum ${Games[game].min} players`
       );
       return;
     }
     if (numPlayers > Games[game].max) {
       socket.emit(
-        'error: wrong number of players',
+        'lobbyError',
         `Maximum ${Games[game].max} players`
       );
       return;

@@ -67,7 +67,7 @@ export default class Lobby extends Component {
       if (this._isMounted)
         this.setState({ users: newUsersObj, currentHost, hostErrorMsg: '' });
     });
-    socket.on('error: wrong number of players', msg => {
+    socket.on('lobbyError', msg => {
       if (this._isMounted) this.setState({ hostErrorMsg: msg });
     });
 
