@@ -5,6 +5,7 @@ export default class Resistance extends Component {
   constructor() {
     super();
     this.state = {
+      users: {},
       res: [],
       spies: [],
       winner: null

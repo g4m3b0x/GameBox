@@ -15,8 +15,18 @@ module.exports = class Resistance {
     this.spies = [];
     this.generateTeams();
   }
+  generateTeams() {
+    const usersCopy = Object.keys(this.users);
+    for (let i = 0; i < teamSize[Object.keys(this.users).length].spies; i++) {
+      const randomSpy = Math.floor(Math.random() * usersCopy.length);
+      [usersCopy[randomSpy], usersCopy[usersCopy.length - 1]] = [usersCopy[usersCopy.length - 1], usersCopy[randomSpy]];
+      this.spies.push(usersCopy.pop());
+    }
+    this.res.push(...usersCopy);
+  }
   getGameState() {
     return {
+      users: this.users,
       res: this.res,
       spies: this.spies,
       winner: this.winner,
@@ -32,15 +42,6 @@ module.exports = class Resistance {
     //   else if (!this.freeSquares) this.winner = -1;
     //   else this.turn = +!this.turn;
     // }
-  }
-  generateTeams() {
-    const usersCopy = Object.keys(this.users);
-    for (let i = 0; i < teamSize[Object.keys(this.users).length].spies; i++) {
-      const randomSpy = Math.floor(Math.random() * usersCopy.length);
-      [usersCopy[randomSpy], usersCopy[usersCopy.length - 1]] = [usersCopy[usersCopy.length - 1], usersCopy[randomSpy]];
-      this.spies.push(usersCopy.pop());
-    }
-    this.res.push(...usersCopy);
   }
 
 };
