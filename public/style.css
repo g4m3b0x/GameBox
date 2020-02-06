@@ -41,6 +41,11 @@ select {
   margin: 0 0 0 0;
 }
 
+.error {
+  color: red;
+  font-size: 0.75em;
+}
+
 #app {
   height: 90vh;
   width: 100vw;
@@ -124,11 +129,6 @@ select {
   align-items: flex-start;
 }
 
-.welcome-error {
-  color: red;
-  font-size: 0.75em;
-}
-
 .welcome-text {
   display: flex;
   justify-content: center;
@@ -205,6 +205,7 @@ select {
 
 #lobby-header-game button {
   font-size: 0.8em;
+  margin-left: 0.5em;
 }
 
 #lobby-header-game-start-game {
@@ -214,7 +215,7 @@ select {
 }
 
 #lobby-header-game-start-game > p {
-  font-size: 1.0em;
+  font-size: 0.75em;
 }
 
 #lobby-header > div {

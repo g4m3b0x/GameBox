@@ -36,7 +36,7 @@ module.exports = (socket, io, rooms, users) => {
         return;
       case 'startGame':
         const { game } = payload;
-        rooms[socket.roomName].startGame(game, io);
+        rooms[socket.roomName].startGame(game, io, socket);
         return;
       case 'returnToLobby':
         rooms[socket.roomName].gameOver(io);

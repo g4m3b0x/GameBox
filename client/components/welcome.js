@@ -129,7 +129,7 @@ class Welcome extends Component {
             placeholder="Enter username"
             onChange={this.handleType}
           />
-          <div className="welcome-error">
+          <div className="error">
             <p>{this.state.userNameErr && 'Enter a Username!'}</p>
           </div>
         </div>
@@ -158,7 +158,7 @@ class Welcome extends Component {
             placeholder="Enter 4-letter room code"
             onChange={this.handleType}
           />
-          <div className="welcome-error">
+          <div className="error">
             <p>{this.state.roomNameErr && `${this.state.roomNameErr}`}</p>
           </div>
         </div>
