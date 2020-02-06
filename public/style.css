@@ -179,8 +179,19 @@ select {
   justify-content: space-evenly
 }
 
+#lobby-header-room {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 #lobby-header-room > p {
   font-size: 1.25em;
+}
+
+#lobby-header-room > button {
+  height: 60%;
+  font-size: 0.6em;
 }
 
 #lobby-header-game {
