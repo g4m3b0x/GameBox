@@ -12,7 +12,7 @@ class Routes extends Component {
   }
 
   componentDidMount() {
-    socket.on('joined room', data => {
+    socket.on('joinedRoom', data => {
       const { userName, roomName, hostBool } = data;
       socket.userName = userName;
       socket.roomName = roomName;
@@ -22,7 +22,7 @@ class Routes extends Component {
     socket.on('you are now host', () => {
       socket.hostBool = true;
     });
-    socket.on('started game', data => {
+    socket.on('startedGame', data => {
       const { game } = data;
       this.setState({ status: game });
     });

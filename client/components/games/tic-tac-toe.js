@@ -8,19 +8,20 @@ export default class TicTacToe extends Component {
       gameBoard: [[]],
       winner: null
     };
-    this._isMounted = false;      // prevent memory leak
+    this._isMounted = false; // prevent memory leak
     this.move = this.move.bind(this);
     this.returnToLobby = this.returnToLobby.bind(this);
   }
 
   componentDidMount() {
     this._isMounted = true;
-    if (socket.hostBool) {    // this should only be done once, so we make the host do it
-      socket.emit('game data reducer', {
-        request: 'get initial game state'
+    if (socket.hostBool) {
+      // this should only be done once, so we make the host do it
+      socket.emit('gameDataReducer', {
+        request: 'getInitGameState'
       });
     }
-    socket.on('send game state', data => {
+    socket.on('sendGameState', data => {
       if (this._isMounted) this.setState(data);
     });
   }
@@ -30,15 +31,15 @@ export default class TicTacToe extends Component {
   }
 
   move(x, y) {
-    socket.emit('game data reducer', {
-      request: 'send move',
-      payload: {x, y},
-    })
+    socket.emit('gameDataReducer', {
+      request: 'sendMove',
+      payload: { x, y }
+    });
   }
 
   returnToLobby() {
-    socket.emit('routes reducer', {
-      request: 'return to lobby'
+    socket.emit('routesReducer', {
+      request: 'returnToLobby'
     });
   }
 
@@ -47,9 +48,9 @@ export default class TicTacToe extends Component {
       <div>
         {!this.state.winner ? (
           <div style={styleTable}>
-            {this.state.gameBoard.map((row, y) => 
+            {this.state.gameBoard.map((row, y) => (
               <div key={y} style={styleRow}>
-                {this.state.gameBoard[y].map((col, x) => 
+                {this.state.gameBoard[y].map((col, x) => (
                   <div key={x} style={styleCell}>
                     <div
                       style={styleCellDiv}
@@ -60,13 +61,17 @@ export default class TicTacToe extends Component {
                       {this.state.gameBoard[y][x]}
                     </div>
                   </div>
-                )}
+                ))}
               </div>
-            )}
+            ))}
           </div>
         ) : (
           <div>
-            <p>{this.state.winner === -1 ? 'Draw!' : `${this.state.winner} wins!`}</p>
+            <p>
+              {this.state.winner === -1
+                ? 'Draw!'
+                : `${this.state.winner} wins!`}
+            </p>
             <button onClick={this.returnToLobby}> Back to Lobby</button>
           </div>
         )}
@@ -82,19 +87,19 @@ const styleTable = {
   width: '45vh',
   display: 'flex',
   flexDirection: 'column',
-  justifyContent: 'space-between',
+  justifyContent: 'space-between'
 };
 
 const styleRow = {
   height: '30%',
   width: '100%',
   display: 'flex',
-  justifyContent: 'space-between',
+  justifyContent: 'space-between'
 };
 
 const styleCell = {
   height: '100%',
-  width: '30%',
+  width: '30%'
 };
 
 const styleCellDiv = {
@@ -105,5 +110,5 @@ const styleCellDiv = {
   border: '2px solid blue',
   display: 'flex',
   justifyContent: 'center',
-  alignItems: 'center',
-}
+  alignItems: 'center'
+};
