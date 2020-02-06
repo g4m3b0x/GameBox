@@ -7,21 +7,22 @@ export default class Resistance extends Component {
     this.state = {
       res: [],
       spies: [],
-      winner: null,
+      winner: null
     };
-    this._isMounted = false;      // prevent memory leak
+    this._isMounted = false; // prevent memory leak
     // this.move = this.move.bind(this);
     this.returnToLobby = this.returnToLobby.bind(this);
   }
 
   componentDidMount() {
     this._isMounted = true;
-    if (socket.hostBool) {    // this should only be done once, so we make the host do it
-      socket.emit('game data reducer', {
-        request: 'get initial game state'
+    if (socket.hostBool) {
+      // this should only be done once, so we make the host do it
+      socket.emit('gameDataReducer', {
+        request: 'getInitGameState'
       });
     }
-    socket.on('send game state', data => {
+    socket.on('sendGameState', data => {
       if (this._isMounted) this.setState(data);
     });
   }
@@ -38,25 +39,28 @@ export default class Resistance extends Component {
   // }
 
   returnToLobby() {
-    socket.emit('routes reducer', {
-      request: 'return to lobby'
+    socket.emit('routesReducer', {
+      request: 'returnToLobby'
     });
   }
 
   render() {
-    console.log(
-      'RES:', this.state.res,
-      'SPIES:', this.state.spies,
-    )
+    console.log('RES:', this.state.res, 'SPIES:', this.state.spies);
     return (
       <div>
         {!this.state.winner ? (
           <div>
-            {this.state.spies.includes(socket.id) ? 'YOU ARE A SPY' : 'YOU ARE RESISTANCE'}
+            {this.state.spies.includes(socket.id)
+              ? 'YOU ARE A SPY'
+              : 'YOU ARE RESISTANCE'}
           </div>
         ) : (
           <div>
-            <p>{this.state.winner === -1 ? 'Draw!' : `${this.state.winner} wins!`}</p>
+            <p>
+              {this.state.winner === -1
+                ? 'Draw!'
+                : `${this.state.winner} wins!`}
+            </p>
             <button onClick={this.returnToLobby}> Back to Lobby</button>
           </div>
         )}

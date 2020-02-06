@@ -48,12 +48,12 @@ module.exports = class Room {
       }
     }
     socket.join(this.roomName);
-    socket.emit('joined room', {
+    socket.emit('joinedRoom', {
       userName,
       roomName: this.roomName,
       hostBool: socket.hostBool
     });
-    io.in(this.roomName).emit('new user', {
+    io.in(this.roomName).emit('newUser', {
       socketId: socket.id,
       userName,
       currentHost: this.host
@@ -65,7 +65,7 @@ module.exports = class Room {
   startGame(game, io) {
     const newGame = new Games[game](this.users, this.dedicatedScreen);
     this.setGame(newGame);
-    io.in(this.roomName).emit('started game', { game });
+    io.in(this.roomName).emit('startedGame', { game });
   }
   gameOver(io) {
     this.setGame(null);
