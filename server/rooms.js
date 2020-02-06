@@ -1,14 +1,14 @@
 const Games = require('./games');
 
-module.exports = class Rooms {
-  constructor(roomName, dedicatedscreen) {
+module.exports = class Room {
+  constructor(roomName, dedicatedScreen) {
     this.users = {};
     this.messages = [];
     this.selectedGame = null;
     this.maxPlayers = 10;
     this.game = null;
     this.host = null;
-    this.dedicatedScreen = dedicatedscreen;
+    this.dedicatedScreen = dedicatedScreen;
     this.roomName = roomName;
   }
   setGame(game) {
@@ -27,7 +27,7 @@ module.exports = class Rooms {
     this.messages.push([user, message]);
   }
   getRoomData() {
-    let roomData = {
+    const roomData = {
       messages: this.messages,
       selectedGame: this.selectedGame,
       users: this.users,
@@ -63,7 +63,7 @@ module.exports = class Rooms {
     delete this.users[id];
   }
   startGame(game, io) {
-    let newGame = new Games[game](this.users, this.dedicatedScreen);
+    const newGame = new Games[game](this.users, this.dedicatedScreen);
     this.setGame(newGame);
     io.in(this.roomName).emit('started game', { game });
   }
@@ -73,7 +73,7 @@ module.exports = class Rooms {
     io.in(this.roomName).emit('status', 'lobby');
   }
   canJoin() {
-    let errorObj = { status: false };
+    const errorObj = { status: false };
     if (this.maxPlayers === Object.keys(this.users).length)
       errorObj.msg = 'Game is at capacity';
     else if (this.game) errorObj.msg = 'Game is already in progress';
