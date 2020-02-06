@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import socket from '../index.js';
 
 export default class Lobby extends Component {
@@ -10,6 +10,7 @@ export default class Lobby extends Component {
       currentHost: null,
       dedicatedScreen: null,
       selectedGame: '--None--',
+      hostErrorMsg: '',
       currentMessage: '',
     };
     this._isMounted = false;      // prevent memory leak
@@ -39,7 +40,7 @@ export default class Lobby extends Component {
 
     // SOCKET LISTENERS
     socket.on('changed selected game', game => {
-      if (this._isMounted) this.setState({ selectedGame: game });
+      if (this._isMounted) this.setState({ selectedGame: game, hostErrorMsg: '' });
     });
     socket.on('receive message', data => {
       const { sender, message } = data;
@@ -48,14 +49,17 @@ export default class Lobby extends Component {
     });
     socket.on('new user', data => {
       const { socketId, userName, currentHost } = data;
-      if (this._isMounted) this.setState({ users: { ...this.state.users, [socketId]: userName }, currentHost });
+      if (this._isMounted) this.setState({ users: { ...this.state.users, [socketId]: userName }, currentHost, hostErrorMsg: '' });
     });
     socket.on('remove user', data => {
       const { socketId, currentHost } = data;
       const newUsersObj = { ...this.state.users };
       delete newUsersObj[socketId];
-      if (this._isMounted) this.setState({ users: newUsersObj, currentHost });
+      if (this._isMounted) this.setState({ users: newUsersObj, currentHost, hostErrorMsg: '' });
     });
+    socket.on('error: wrong number of players', msg => {
+      if (this._isMounted) this.setState({ hostErrorMsg: msg });
+    })
 
     setTimeout(this.scrollDown, 100);   // scrolls all the way down when you join the room
   }
@@ -135,21 +139,24 @@ export default class Lobby extends Component {
             </div>
             <div id="lobby-header-game-start-game">
               {this.state.currentHost === socket.id ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (this.state.selectedGame !== '--None--') {
-                      socket.emit('routes reducer', {
-                        request: 'start game',
-                        payload: {
-                          game: this.state.selectedGame,
-                        }
-                      });
-                    }
-                  }}
-                >
-                  Start game
-                </button>
+                <Fragment>
+                  <p className="error">{this.state.hostErrorMsg}</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (this.state.selectedGame !== '--None--') {
+                        socket.emit('routes reducer', {
+                          request: 'start game',
+                          payload: {
+                            game: this.state.selectedGame,
+                          }
+                        });
+                      }
+                    }}
+                  >
+                    Start
+                  </button>
+                </Fragment>
               ) : (
                 <p>(Waiting for host...)</p>
               )}

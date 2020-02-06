@@ -4,7 +4,7 @@ module.exports = class Room {
   constructor(roomName, dedicatedScreen) {
     this.users = {};
     this.messages = [];
-    this.selectedGame = null;
+    this.selectedGame = '--None--';
     this.maxPlayers = 10;
     this.game = null;
     this.host = null;
@@ -62,8 +62,23 @@ module.exports = class Room {
   remove(id) {
     delete this.users[id];
   }
-  startGame(game, io) {
-    const newGame = new Games[game](this.users, this.dedicatedScreen);
+  startGame(game, io, socket) {
+    const numPlayers = Object.keys(this.users).length;
+    if (numPlayers < Games[game].min) {
+      socket.emit(
+        'error: wrong number of players',
+        `Minimum ${Games[game].min} players`
+      );
+      return;
+    }
+    if (numPlayers > Games[game].max) {
+      socket.emit(
+        'error: wrong number of players',
+        `Maximum ${Games[game].max} players`
+      );
+      return;
+    }
+    const newGame = new Games[game].instance(this.users, this.dedicatedScreen);
     this.setGame(newGame);
     io.in(this.roomName).emit('started game', { game });
   }
