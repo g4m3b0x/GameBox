@@ -157,12 +157,17 @@ class Welcome extends Component {
             value={this.state.roomName}
             placeholder="Enter 4-letter room code"
             onChange={this.handleType}
+            disabled={this.state. dedicatedScreen}
           />
           <div className="error">
             <p>{this.state.roomNameErr && `${this.state.roomNameErr}`}</p>
           </div>
         </div>
-        <button id="welcome-joinButton" onClick={this.clickJoin}>
+        <button
+          id="welcome-joinButton"
+          onClick={this.clickJoin}
+          disabled={this.state.dedicatedScreen}
+        >
           <img src="/phone-icon.png"></img>
           Join Room
         </button>

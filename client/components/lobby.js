@@ -152,16 +152,14 @@ export default class Lobby extends Component {
                 <Fragment>
                   <p className="error">{this.state.hostErrorMsg}</p>
                   <button
-                    type="button"
+                    disabled={this.state.selectedGame === '--None--'}
                     onClick={() => {
-                      if (this.state.selectedGame !== '--None--') {
-                        socket.emit('routesReducer', {
-                          request: 'startGame',
-                          payload: {
-                            game: this.state.selectedGame
-                          }
-                        });
-                      }
+                      socket.emit('routesReducer', {
+                        request: 'startGame',
+                        payload: {
+                          game: this.state.selectedGame
+                        }
+                      });
                     }}
                   >
                     Start
