@@ -26,7 +26,7 @@ export default class Lobby extends Component {
     socket.emit('routesReducer', {
       request: 'joinedRoom'
     });
-    socket.on('send room data', data => {
+    socket.on('sendRoomData', data => {
       if (this._isMounted) this.setState(data);
     });
 
@@ -59,7 +59,7 @@ export default class Lobby extends Component {
           hostErrorMsg: ''
         });
     });
-    socket.on('remove user', data => {
+    socket.on('removeUser', data => {
       const { socketId, currentHost } = data;
       const newUsersObj = { ...this.state.users };
       delete newUsersObj[socketId];

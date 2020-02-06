@@ -19,7 +19,7 @@ class Routes extends Component {
       socket.hostBool = hostBool;
       this.setState({ status: 'lobby' });
     });
-    socket.on('you are now host', () => {
+    socket.on('hostMigration', () => {
       socket.hostBool = true;
     });
     socket.on('startedGame', data => {

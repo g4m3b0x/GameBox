@@ -11,7 +11,7 @@ module.exports = (socket, io, rooms, users) => {
         const otherUsers = Object.keys(rooms[roomName].users).filter(user => user !== rooms[roomName].dedicatedScreen);
         if (otherUsers.length) {
           rooms[roomName].host = otherUsers[0];
-          socket.broadcast.to(otherUsers[0]).emit('you are now host');
+          socket.broadcast.to(otherUsers[0]).emit('hostMigration');
         } else {
           rooms[roomName].host = null;
         }
@@ -20,7 +20,7 @@ module.exports = (socket, io, rooms, users) => {
     delete users[socket.id];
 
     // SOCKET CODE:
-    io.in(roomName).emit('remove user', {
+    io.in(roomName).emit('removeUser', {
       socketId: socket.id,
       currentHost: rooms[roomName] ? rooms[roomName].host : null
     });
