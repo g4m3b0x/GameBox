@@ -11,7 +11,7 @@ export default class Lobby extends Component {
       dedicatedScreen: null,
       selectedGame: '--None--',
       hostErrorMsg: '',
-      currentMessage: '',
+      currentMessage: ''
     };
     this._isMounted = false; // prevent memory leak
     this.handleSelect = this.handleSelect.bind(this);
@@ -40,7 +40,8 @@ export default class Lobby extends Component {
 
     // SOCKET LISTENERS
     socket.on('changedSelectedGame', game => {
-      if (this._isMounted) this.setState({ selectedGame: game, hostErrorMsg: '' });
+      if (this._isMounted)
+        this.setState({ selectedGame: game, hostErrorMsg: '' });
     });
     socket.on('receiveMessage', data => {
       const { sender, message } = data;
@@ -63,11 +64,12 @@ export default class Lobby extends Component {
       const { socketId, currentHost } = data;
       const newUsersObj = { ...this.state.users };
       delete newUsersObj[socketId];
-      if (this._isMounted) this.setState({ users: newUsersObj, currentHost, hostErrorMsg: '' });
+      if (this._isMounted)
+        this.setState({ users: newUsersObj, currentHost, hostErrorMsg: '' });
     });
     socket.on('error: wrong number of players', msg => {
       if (this._isMounted) this.setState({ hostErrorMsg: msg });
-    })
+    });
 
     setTimeout(this.scrollDown, 100); // scrolls all the way down when you join the room
   }
@@ -154,9 +156,9 @@ export default class Lobby extends Component {
                     onClick={() => {
                       if (this.state.selectedGame !== '--None--') {
                         socket.emit('routesReducer', {
-                          request: 'start game',
+                          request: 'startGame',
                           payload: {
-                            game: this.state.selectedGame,
+                            game: this.state.selectedGame
                           }
                         });
                       }
