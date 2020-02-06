@@ -13,7 +13,12 @@ module.exports = class TicTacToe {
     this.turn = 0;
   }
   getGameState() {
-    return { gameBoard: this.gameBoard, winner: this.winner };
+    return {
+      users: this.users,
+      gameBoard: this.gameBoard,
+      turn: this.turn,
+      winner: this.winner
+    };
   }
   move(socketId, payload) {
     const {x, y} = payload;

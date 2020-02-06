@@ -5,7 +5,9 @@ export default class TicTacToe extends Component {
   constructor() {
     super();
     this.state = {
+      users: {},
       gameBoard: [[]],
+      turn: 0,
       winner: null
     };
     this._isMounted = false; // prevent memory leak
@@ -47,23 +49,28 @@ export default class TicTacToe extends Component {
     return (
       <div>
         {!this.state.winner ? (
-          <div style={styleTable}>
-            {this.state.gameBoard.map((row, y) => (
-              <div key={y} style={styleRow}>
-                {this.state.gameBoard[y].map((col, x) => (
-                  <div key={x} style={styleCell}>
-                    <div
-                      style={styleCellDiv}
-                      onClick={() => {
-                        this.move(x, y);
-                      }}
-                    >
-                      {this.state.gameBoard[y][x]}
+          <div>
+            <div>
+              <p>{Object.values(this.state.users)[this.state.turn]}'s turn:</p>
+            </div>
+            <div style={styleTable}>
+              {this.state.gameBoard.map((row, y) => (
+                <div key={y} style={styleRow}>
+                  {this.state.gameBoard[y].map((col, x) => (
+                    <div key={x} style={styleCell}>
+                      <div
+                        style={styleCellDiv}
+                        onClick={() => {
+                          this.move(x, y);
+                        }}
+                      >
+                        {this.state.gameBoard[y][x]}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            ))}
+                  ))}
+                </div>
+              ))}
+            </div>
           </div>
         ) : (
           <div>
