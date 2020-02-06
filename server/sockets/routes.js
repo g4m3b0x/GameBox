@@ -7,7 +7,7 @@ module.exports = (socket, io, rooms, users) => {
     const { request, payload } = data;
     switch (request) {
       case 'joinedRoom':
-        socket.emit('send room data', rooms[socket.roomName].getRoomData());
+        socket.emit('sendRoomData', rooms[socket.roomName].getRoomData());
         return;
       case 'createRoom':
         const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
