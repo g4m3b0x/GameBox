@@ -82,18 +82,12 @@ export default class Resistance extends Component {
               <div style={style.cardAreaBuffer} />
             </div>
             <div style={style.dynamicArea}>
-              <div style={style.instructions}>
-                <p>Generic Instruction</p>
-              </div>
-              <div style={style.information}>
-                <p>--Filler Information--</p>
-              </div>
+              <Voting
+                activePlayers={this.state.activePlayers}
+                users={this.state.users}
+              />
             </div>
           </div>
-          <Voting
-            activePlayers={this.state.activePlayers}
-            users={this.state.users}
-          />
         </div>
       );
     }
