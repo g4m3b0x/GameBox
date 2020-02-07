@@ -48,9 +48,8 @@ select {
 
 .flip-card {
   background-color: transparent;
-  width: 15vh;
-  height: 20vh;
   perspective: 1000px; 
+  width: 100%;
 }
 
 .flip-card-inner {
@@ -72,10 +71,7 @@ select {
   height: 100%;
   -webkit-backface-visibility: hidden; /* Safari */
   backface-visibility: hidden;
-}
-
-.flip-card-front {
-  background-color: white;
+  background-color: transparent;
 }
 
 .flip-card-back {

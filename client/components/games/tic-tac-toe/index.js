@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import socket from '../../index.js';
+import socket from '../../../index.js';
+import style from './style';
 
 export default class TicTacToe extends Component {
   constructor() {
@@ -51,13 +52,13 @@ export default class TicTacToe extends Component {
             <div>
               <p>{Object.values(this.state.users)[this.state.turn]}'s turn:</p>
             </div>
-            <div style={styleTable}>
+            <div style={style.table}>
               {this.state.gameBoard.map((row, y) => (
-                <div key={y} style={styleRow}>
+                <div key={y} style={style.row}>
                   {this.state.gameBoard[y].map((col, x) => (
-                    <div key={x} style={styleCell}>
+                    <div key={x} style={style.cell}>
                       <div
-                        style={styleCellDiv}
+                        style={style.cellDiv}
                         onClick={() => {
                           this.move(x, y);
                         }}
@@ -84,36 +85,3 @@ export default class TicTacToe extends Component {
     );
   }
 }
-
-// IN-LINE STYLES:
-
-const styleTable = {
-  height: '45vh',
-  width: '45vh',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between'
-};
-
-const styleRow = {
-  height: '30%',
-  width: '100%',
-  display: 'flex',
-  justifyContent: 'space-between'
-};
-
-const styleCell = {
-  height: '100%',
-  width: '30%'
-};
-
-const styleCellDiv = {
-  height: '100%',
-  width: '100%',
-  fontSize: '3em',
-  borderRadius: '0.5em',
-  border: '2px solid blue',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center'
-};
