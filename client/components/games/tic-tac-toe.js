@@ -6,19 +6,17 @@ export default class TicTacToe extends Component {
     super();
     this.state = {
       users: {},
+      dedicatedScreen: null,
       gameBoard: [[]],
       turn: 0,
       winner: null
     };
-    this._isMounted = false; // prevent memory leak
-    this.move = this.move.bind(this);
-    this.returnToLobby = this.returnToLobby.bind(this);
+    this._isMounted = false;  // prevent memory leak
   }
 
   componentDidMount() {
     this._isMounted = true;
-    if (socket.hostBool) {
-      // this should only be done once, so we make the host do it
+    if (socket.hostBool) {    // done once, by the host
       socket.emit('gameDataReducer', {
         request: 'getInitGameState'
       });

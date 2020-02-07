@@ -6,19 +6,19 @@ export default class Resistance extends Component {
     super();
     this.state = {
       users: {},
+      dedicatedScreen: null,
       res: [],
       spies: [],
       winner: null
     };
-    this._isMounted = false; // prevent memory leak
+    this._isMounted = false;  // prevent memory leak
     // this.move = this.move.bind(this);
     this.returnToLobby = this.returnToLobby.bind(this);
   }
 
   componentDidMount() {
     this._isMounted = true;
-    if (socket.hostBool) {
-      // this should only be done once, so we make the host do it
+    if (socket.hostBool) {    // done once, by the host
       socket.emit('gameDataReducer', {
         request: 'getInitGameState'
       });
@@ -46,27 +46,31 @@ export default class Resistance extends Component {
   }
 
   render() {
-    console.log('RES:', this.state.res, 'SPIES:', this.state.spies);
-    return (
-      <div>
-        {!this.state.winner ? (
-          <div>
-            {this.state.spies.includes(socket.id)
-              ? 'YOU ARE A SPY'
-              : 'YOU ARE RESISTANCE'}
+    if (this.state.dedicatedScreen === socket.id) {
+      return (
+        <div>
+          {'THIS IS THE DEDICATED SCREEN'}
+        </div>
+      )
+    } else {
+      return (
+        <div>
+          {this.state.spies.includes(socket.id)
+            ? 'YOU ARE A SPY'
+            : 'YOU ARE RESISTANCE'}
+          <div className="flip-card">
+            <div className="flip-card-inner">
+              <div className="flip-card-front">
+                <img src="resistance_char_res1.png" />
+              </div>
+              <div className="flip-card-back">
+                <img src="resistance_char_res1.png" />
+              </div>
+            </div>
           </div>
-        ) : (
-          <div>
-            <p>
-              {this.state.winner === -1
-                ? 'Draw!'
-                : `${this.state.winner} wins!`}
-            </p>
-            <button onClick={this.returnToLobby}> Back to Lobby</button>
-          </div>
-        )}
-      </div>
-    );
+        </div>
+      )
+    }
   }
 }
 

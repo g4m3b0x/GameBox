@@ -3,6 +3,7 @@ const chars = ['X', 'O'];
 module.exports = class TicTacToe {
   constructor(users, dedicatedScreen) {
     this.users = users;
+    this.dedicatedScreen = dedicatedScreen;
     this.winner = null;
     this.gameBoard = [
       ['‏‏‎ ‎', '‏‏‎ ‎', '‏‏‎ ‎'],
@@ -15,6 +16,7 @@ module.exports = class TicTacToe {
   getGameState() {
     return {
       users: this.users,
+      dedicatedScreen: this.dedicatedScreen,
       gameBoard: this.gameBoard,
       turn: this.turn,
       winner: this.winner

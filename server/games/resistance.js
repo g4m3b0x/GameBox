@@ -25,19 +25,29 @@ const groupSize = {
   },
 };
 
+const shuffle = arr => {
+  const output = [...arr];
+  for (let i = output.length - 1; i > 0; i--) {
+    const randomIdx = Math.floor(Math.random() * (i + 1));
+    [output[randomIdx], output[i]] = [output[i], output[randomIdx]];
+  }
+  return output;
+};
+
 module.exports = class Resistance {
   constructor(users, dedicatedScreen) {
     this.users = users;
+    this.dedicatedScreen = dedicatedScreen;
+    this.players = shuffle(Object.keys(users));
     this.winner = null;
-    this.numOfPlayers = Object.keys(users).length;
-    this.numOfSpies = groupSize[this.numOfPlayers].spies;
+    this.numOfSpies = groupSize[this.players.length].spies;
     this.res = [];
     this.spies = [];
     this.generateTeams();
-    this.missionSize = groupSize[this.numOfPlayers].missionSize;
+    this.missionSize = groupSize[this.players.length].missionSize;
     this.currentMission = 0;
     this.rejectTracker = 0;
-    this.currentLeader = Math.floor(Math.random() * Object.keys(this.users).length);
+    this.currentLeader = 0;
     this.currentPhase = 'teamSelection';
     this.proposedTeam = [];
     this.voteHistory = [
@@ -47,19 +57,18 @@ module.exports = class Resistance {
       [],
       [],
     ];
+    this.missionVote = {};
   }
   generateTeams() {
-    const usersCopy = Object.keys(this.users);
-    for (let i = 0; i < this.numOfSpies; i++) {
-      const randomSpy = Math.floor(Math.random() * usersCopy.length);
-      [usersCopy[randomSpy], usersCopy[usersCopy.length - 1]] = [usersCopy[usersCopy.length - 1], usersCopy[randomSpy]];
-      this.spies.push(usersCopy.pop());
-    }
-    this.res.push(...usersCopy);
+    const shuffledPlayers = shuffle(this.players);
+    this.spies.push(...shuffledPlayers.slice(0, this.numOfSpies));
+    this.res.push(...shuffledPlayers.slice(this.numOfSpies));
   }
   getGameState() {
     return {
       users: this.users,
+      dedicatedScreen: this.dedicatedScreen,
+      players: this.players,
       winner: this.winner,
       res: this.res,
       spies: this.spies,
@@ -69,6 +78,7 @@ module.exports = class Resistance {
       currentPhase: this.currentPhase,
       proposedTeam: this.proposedTeam,
       voteHistory: this.voteHistory,
+      missionVote: this.missionVote,
     }
   }
 
