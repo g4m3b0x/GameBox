@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import socket from '../../../index.js';
+import style from './style';
 
 export default class Voting extends Component {
   constructor(props) {

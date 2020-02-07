@@ -35,19 +35,6 @@ module.exports = {
     display: 'flex',
     flexDirection: 'column',
   },
-  instructions: {
-    height: '20%',
-    width: '100%',
-    backgroundColor: 'red',
-    display: 'flex',
-  },
-  information: {
-    height: '80%',
-    width: '100%',
-    backgroundColor: 'blue',
-    display: 'flex',
-    flexDirection: 'column',
-  },
   flipCard: {
     width: '90%',
     height: '0%',
