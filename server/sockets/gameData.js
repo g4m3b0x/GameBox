@@ -12,4 +12,8 @@ module.exports = (socket, io, rooms, users) => {
         return;
     }
   });
+  socket.on('proposingTeam', data => {
+    const game = rooms[socket.roomName].game;
+    game.proposeTeam(io, socket, data);
+  });
 };

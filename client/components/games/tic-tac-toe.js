@@ -11,12 +11,14 @@ export default class TicTacToe extends Component {
       turn: 0,
       winner: null
     };
-    this._isMounted = false;  // prevent memory leak
+    this._isMounted = false; // prevent memory leak
+    this.move = this.move.bind(this);
   }
 
   componentDidMount() {
     this._isMounted = true;
-    if (socket.hostBool) {    // done once, by the host
+    if (socket.hostBool) {
+      // done once, by the host
       socket.emit('gameDataReducer', {
         request: 'getInitGameState'
       });
