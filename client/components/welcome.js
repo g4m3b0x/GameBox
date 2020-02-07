@@ -32,14 +32,15 @@ class Welcome extends Component {
             )
             .click();
         }
-      });
+      }
+    );
     document
       .getElementById('welcome-joinInput')
       .addEventListener('keyup', e => {
         if (e.keyCode === 13)
           document.getElementById('welcome-joinButton').click();
-      });
-
+      }
+    );
     // SOCKET LISTENERS
     socket.on('errorOnJoin', data => {
       const { msg } = data;
@@ -112,7 +113,7 @@ class Welcome extends Component {
         .setAttribute('disabled', 'true');
     }
     this.setState({
-      userName: this.state.dedicatedScreen ? '' : '(Screen)', // NOT SURE IF NEEDED YET
+      userName: this.state.dedicatedScreen ? '' : '(Screen)',
       dedicatedScreen: !this.state.dedicatedScreen
     });
   }

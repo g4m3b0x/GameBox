@@ -6,6 +6,7 @@ export default class TicTacToe extends Component {
     super();
     this.state = {
       users: {},
+      dedicatedScreen: null,
       gameBoard: [[]],
       turn: 0,
       winner: null
