@@ -7,8 +7,8 @@ export default class Resistance extends Component {
     this.state = {
       users: {},
       dedicatedScreen: null,
-      res: [],
-      spies: [],
+      res: {},
+      spies: {},
       winner: null
     };
     this._isMounted = false;  // prevent memory leak
@@ -55,16 +55,21 @@ export default class Resistance extends Component {
     } else {
       return (
         <div>
-          {this.state.spies.includes(socket.id)
+          {socket.id in this.state.spies
             ? 'YOU ARE A SPY'
             : 'YOU ARE RESISTANCE'}
           <div className="flip-card">
             <div className="flip-card-inner">
               <div className="flip-card-front">
-                <img src="resistance_char_res1.png" />
+                <img src="resistance_back.png" />
               </div>
               <div className="flip-card-back">
-                <img src="resistance_char_res1.png" />
+                <img
+                  src={socket.id in this.state.spies
+                    ? this.state.spies[socket.id]
+                    : this.state.res[socket.id]
+                  }
+                />
               </div>
             </div>
           </div>
