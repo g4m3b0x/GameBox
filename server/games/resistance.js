@@ -1,32 +1,33 @@
 const groupSize = {
-  1: {            // FOR EASIER TESTING. DELETE THIS LATER
+  1: {
+    // FOR EASIER TESTING. DELETE THIS LATER
     spies: 0,
-    missionSize: [1, 1, 1, 1, 1],
+    missionSize: [1, 1, 1, 1, 1]
   },
   5: {
     spies: 2,
-    missionSize: [2, 3, 2, 3, 3],
+    missionSize: [2, 3, 2, 3, 3]
   },
   6: {
     spies: 2,
-    missionSize: [2, 3, 4, 3, 4],
+    missionSize: [2, 3, 4, 3, 4]
   },
   7: {
     spies: 3,
-    missionSize: [2, 3, 3, 4, 4],
+    missionSize: [2, 3, 3, 4, 4]
   },
   8: {
     spies: 3,
-    missionSize: [3, 4, 4, 5, 5],
+    missionSize: [3, 4, 4, 5, 5]
   },
   9: {
     spies: 3,
-    missionSize: [3, 4, 4, 5, 5],
+    missionSize: [3, 4, 4, 5, 5]
   },
   10: {
     spies: 4,
-    missionSize: [3, 4, 4, 5, 5],
-  },
+    missionSize: [3, 4, 4, 5, 5]
+  }
 };
 
 const resImages = [
@@ -35,13 +36,13 @@ const resImages = [
   'resistance_char_res3.png',
   'resistance_char_res4.png',
   'resistance_char_res5.png',
-  'resistance_char_res6.png',
+  'resistance_char_res6.png'
 ];
 const spyImages = [
   'resistance_char_spy1.png',
   'resistance_char_spy2.png',
   'resistance_char_spy3.png',
-  'resistance_char_spy4.png',
+  'resistance_char_spy4.png'
 ];
 
 const shuffle = arr => {
@@ -55,6 +56,7 @@ const shuffle = arr => {
 
 module.exports = class Resistance {
   constructor(users, dedicatedScreen) {
+    this.activePlayers = {};
     this.users = users;
     this.dedicatedScreen = dedicatedScreen;
     this.players = shuffle(Object.keys(users));
@@ -68,14 +70,9 @@ module.exports = class Resistance {
     this.rejectTracker = 0;
     this.currentLeader = 0;
     this.currentPhase = 'teamSelection';
-    this.proposedTeam = [];
-    this.voteHistory = [
-      [],
-      [],
-      [],
-      [],
-      [],
-    ];
+    this.proposedTeam = {};
+
+    this.voteHistory = [[], [], [], [], []];
     this.missionVote = {};
   }
   generateTeams() {
@@ -89,6 +86,9 @@ module.exports = class Resistance {
         this.res[shuffledPlayers[i]] = shuffledResImages[i - this.numOfSpies];
       }
     }
+    this.players = shuffledPlayers;
+
+    this.activePlayers[this.players[0]] = true;
   }
   getGameState() {
     return {
@@ -105,7 +105,13 @@ module.exports = class Resistance {
       proposedTeam: this.proposedTeam,
       voteHistory: this.voteHistory,
       missionVote: this.missionVote,
-    }
+      activePlayers: this.activePlayers
+    };
+  }
+  proposeTeam(io, socket, data) {
+    if (data.id in this.proposedTeam) delete this.proposedTeam[data.id];
+    else this.proposedTeam[data.id] = true;
+    io.in(socket.roomName).emit('proposedTeam', this.proposedTeam);
   }
 
   // move(socketId, payload) {
@@ -119,5 +125,4 @@ module.exports = class Resistance {
   //     else this.turn = +!this.turn;
   //   }
   // }
-
 };

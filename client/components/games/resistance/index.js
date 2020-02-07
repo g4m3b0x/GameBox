@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import socket from '../../../index.js';
 import style from './style';
 
+import Voting from './voting';
+
 export default class Resistance extends Component {
   constructor() {
     super();
@@ -10,16 +12,19 @@ export default class Resistance extends Component {
       dedicatedScreen: null,
       res: {},
       spies: {},
-      winner: null
+      winner: null,
+      currentPhase: null,
+      activePlayers: {}
     };
-    this._isMounted = false;  // prevent memory leak
+    this._isMounted = false; // prevent memory leak
     // this.move = this.move.bind(this);
     this.returnToLobby = this.returnToLobby.bind(this);
   }
 
   componentDidMount() {
     this._isMounted = true;
-    if (socket.hostBool) {    // done once, by the host
+    if (socket.hostBool) {
+      // done once, by the host
       socket.emit('gameDataReducer', {
         request: 'getInitGameState'
       });
@@ -36,8 +41,8 @@ export default class Resistance extends Component {
   // move(x, y) {
   //   socket.emit('gameDataReducer', {
   //     request: 'send move',
-  //     payload: {x, y},
-  //   })
+  //     payload: { x, y }
+  //   });
   // }
 
   returnToLobby() {
@@ -48,11 +53,7 @@ export default class Resistance extends Component {
 
   render() {
     if (this.state.dedicatedScreen === socket.id) {
-      return (
-        <div>
-          {'THIS IS THE DEDICATED SCREEN'}
-        </div>
-      )
+      return <div>{'THIS IS THE DEDICATED SCREEN'}</div>;
     } else {
       return (
         <div style={style.view}>
@@ -89,8 +90,12 @@ export default class Resistance extends Component {
               </div>
             </div>
           </div>
+          <Voting
+            activePlayers={this.state.activePlayers}
+            users={this.state.users}
+          />
         </div>
-      )
+      );
     }
   }
 }
