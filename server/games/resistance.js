@@ -57,6 +57,7 @@ module.exports = class Resistance {
       [],
       [],
     ];
+    this.missionVote = {};
   }
   generateTeams() {
     const shuffledPlayers = shuffle(this.players);
@@ -77,6 +78,7 @@ module.exports = class Resistance {
       currentPhase: this.currentPhase,
       proposedTeam: this.proposedTeam,
       voteHistory: this.voteHistory,
+      missionVote: this.missionVote,
     }
   }
 
