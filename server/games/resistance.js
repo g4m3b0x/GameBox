@@ -1,4 +1,8 @@
 const groupSize = {
+  1: {            // FOR EASIER TESTING. DELETE THIS LATER
+    spies: 0,
+    missionSize: [1, 1, 1, 1, 1],
+  },
   5: {
     spies: 2,
     missionSize: [2, 3, 2, 3, 3],
@@ -25,6 +29,21 @@ const groupSize = {
   },
 };
 
+const resImages = [
+  'resistance_char_res1.png',
+  'resistance_char_res2.png',
+  'resistance_char_res3.png',
+  'resistance_char_res4.png',
+  'resistance_char_res5.png',
+  'resistance_char_res6.png',
+];
+const spyImages = [
+  'resistance_char_spy1.png',
+  'resistance_char_spy2.png',
+  'resistance_char_spy3.png',
+  'resistance_char_spy4.png',
+];
+
 const shuffle = arr => {
   const output = [...arr];
   for (let i = output.length - 1; i > 0; i--) {
@@ -41,8 +60,8 @@ module.exports = class Resistance {
     this.players = shuffle(Object.keys(users));
     this.winner = null;
     this.numOfSpies = groupSize[this.players.length].spies;
-    this.res = [];
-    this.spies = [];
+    this.res = {};
+    this.spies = {};
     this.generateTeams();
     this.missionSize = groupSize[this.players.length].missionSize;
     this.currentMission = 0;
@@ -61,8 +80,15 @@ module.exports = class Resistance {
   }
   generateTeams() {
     const shuffledPlayers = shuffle(this.players);
-    this.spies.push(...shuffledPlayers.slice(0, this.numOfSpies));
-    this.res.push(...shuffledPlayers.slice(this.numOfSpies));
+    const shuffledResImages = shuffle(resImages);
+    const shuffledSpyImages = shuffle(spyImages);
+    for (let i = 0; i < shuffledPlayers.length; i++) {
+      if (i < this.numOfSpies) {
+        this.spies[shuffledPlayers[i]] = shuffledSpyImages[i];
+      } else {
+        this.res[shuffledPlayers[i]] = shuffledResImages[i - this.numOfSpies];
+      }
+    }
   }
   getGameState() {
     return {

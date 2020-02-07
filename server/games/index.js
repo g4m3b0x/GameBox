@@ -8,7 +8,7 @@ module.exports = {
     instance: TicTacToe,
   },
   'The Resistance': {
-    min: 5,
+    min: 1,   // RESTORE THIS TO 5 LATER
     max: 10,
     instance: Resistance,
   }
