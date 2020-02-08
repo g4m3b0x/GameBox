@@ -35,14 +35,32 @@ const resImages = [
   'resistance_char_res2.png',
   'resistance_char_res3.png',
   'resistance_char_res4.png',
-  'resistance_char_res5.png',
-  'resistance_char_res6.png'
+  // 'resistance_char_res5.png',
+  // 'resistance_char_res6.png',
+  // 'resistance_char_res7.png',
+  // 'resistance_char_res8.png',
+  // 'resistance_char_res9.png',
+  // 'resistance_char_res10.png',
+  
+  'resistance_char_commander.png',
+  'resistance_char_bodyguard.png',
 ];
 const spyImages = [
-  'resistance_char_spy1.png',
-  'resistance_char_spy2.png',
-  'resistance_char_spy3.png',
-  'resistance_char_spy4.png'
+  // 'resistance_char_spy1.png',
+  // 'resistance_char_spy2.png',
+  // 'resistance_char_spy3.png',
+  // 'resistance_char_spy4.png',
+  // 'resistance_char_spy5.png',
+  // 'resistance_char_spy6.png',
+  // 'resistance_char_spy7.png',
+  // 'resistance_char_spy8.png',
+  // 'resistance_char_spy9.png',
+  // 'resistance_char_spy10.png',
+
+  'resistance_char_assassin.png',
+  'resistance_char_falsecommander.png',
+  'resistance_char_deepcover.png',
+  'resistance_char_blindspy.png',
 ];
 
 const shuffle = arr => {
@@ -59,7 +77,7 @@ module.exports = class Resistance {
     this.activePlayers = {};
     this.users = users;
     this.dedicatedScreen = dedicatedScreen;
-    this.players = shuffle(Object.keys(users));
+    this.players = Object.keys(users);
     this.winner = null;
     this.numOfSpies = groupSize[this.players.length].spies;
     this.res = {};
