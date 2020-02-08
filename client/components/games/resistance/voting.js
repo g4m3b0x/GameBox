@@ -6,14 +6,19 @@ export default class Voting extends Component {
   constructor(props) {
     super();
     this.state = {
-      proposedTeam: {}
+      proposedTeam: {},
+      voting: false,
+      currentVotes: {}
     };
     this.setProposeTeam = this.setProposeTeam.bind(this);
+    this.startVote = this.startVote.bind(this);
+    this.submitVote = this.submitVote.bind(this);
   }
 
   componentDidMount() {
     socket.on('voting', data => {
-      this.setState(data);
+      console.log('invoting');
+      this.setState({ voting: true });
     });
     socket.on('proposedTeam', data => {
       this.setState({ proposedTeam: data });
@@ -24,11 +29,13 @@ export default class Voting extends Component {
     socket.emit('proposingTeam', {
       id
     });
-    // let newState = this.state.proposedTeam;
-    // newState[id] = this.props.users[id];
-    // this.setState({ proposedTeam: newState });
   }
-
+  startVote() {
+    socket.emit('startVote', 'startVote');
+  }
+  submitVote(castedVote) {
+    socket.emit('submitVote', false);
+  }
   render() {
     return (
       <div>
@@ -36,7 +43,13 @@ export default class Voting extends Component {
           {Object.keys(this.state.proposedTeam).map(user => (
             <p>{this.props.users[user]}</p>
           ))}
-
+          <button
+            disabled={!this.state.voting}
+            onClick={() => this.submitVote(true)}
+          >
+            {' '}
+            vote true
+          </button>
           {this.props.activePlayers[socket.id] ? (
             <div>
               <p>You are partyLeader</p>
@@ -47,6 +60,7 @@ export default class Voting extends Component {
                   </button>
                 ))}
               </ol>
+              <button onClick={this.startVote}>Finalize Selection</button>
             </div>
           ) : (
             <div>
