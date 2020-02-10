@@ -41,9 +41,9 @@ const resImages = [
   // 'resistance_char_res8.png',
   // 'resistance_char_res9.png',
   // 'resistance_char_res10.png',
-  
+
   'resistance_char_commander.png',
-  'resistance_char_bodyguard.png',
+  'resistance_char_bodyguard.png'
 ];
 const spyImages = [
   // 'resistance_char_spy1.png',
@@ -60,7 +60,7 @@ const spyImages = [
   'resistance_char_assassin.png',
   'resistance_char_falsecommander.png',
   'resistance_char_deepcover.png',
-  'resistance_char_blindspy.png',
+  'resistance_char_blindspy.png'
 ];
 
 const shuffle = arr => {
@@ -140,7 +140,8 @@ module.exports = class Resistance {
   }
   startVote(io, socket) {
     this.voting = true;
-
+    const { missionSize } = groupSize[this.players.length];
+    if (missionSize[this.currentMission] !== this.proposeTeam.length) return;
     io.in(socket.roomName).emit('setVoteStatus', { voting: this.voting });
   }
 
