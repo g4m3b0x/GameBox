@@ -142,7 +142,7 @@ module.exports = class Resistance {
     this.voting = true;
     const { missionSize } = groupSize[this.players.length];
     if (
-      Object.keys(this.proposedTeam).length === missionSize[this.currentMission]
+      Object.keys(this.proposedTeam).length !== missionSize[this.currentMission]
     )
       return;
     io.in(socket.roomName).emit('setVoteStatus', { voting: this.voting });
@@ -162,8 +162,8 @@ module.exports = class Resistance {
       for (let vote in this.currentVotes) {
         if (this.currentVotes[vote]) tally++;
       }
-      let passed = tally > this.players.length / 2;
-      let gameState = { passed, voting: false };
+      const passed = tally > this.players.length / 2;
+      const gameState = {};
       this.currentLeader++;
       this.voting = false;
       if (!passed) {
@@ -184,5 +184,9 @@ module.exports = class Resistance {
       }
       this.currentVotes = {};
     }
+  }
+
+  sendActivePlayers (io, socket) {
+    io.in(socket.roomName).emit('setVoteStatus', { activePlayers: this.activePlayers });
   }
 };
