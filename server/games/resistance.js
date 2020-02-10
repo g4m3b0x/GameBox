@@ -110,14 +110,20 @@ module.exports = class Resistance {
     };
   }
   proposeTeam(io, socket, data) {
+    const { missionSize } = groupSize[this.players.length];
+
     if (data.id in this.proposedTeam) delete this.proposedTeam[data.id];
+    else if (
+      Object.keys(this.proposedTeam).length === missionSize[this.currentMission]
+    )
+      return;
     else this.proposedTeam[data.id] = true;
     io.in(socket.roomName).emit('proposedTeam', this.proposedTeam);
   }
   startVote(io, socket) {
     this.voting = true;
 
-    io.in(socket.roomName).emit('voting', this.voting);
+    io.in(socket.roomName).emit('setVoteStatus', { voting: this.voting });
   }
 
   submitVote(io, socket, castedVote) {
@@ -134,25 +140,27 @@ module.exports = class Resistance {
       for (let vote in this.currentVotes) {
         if (this.currentVotes[vote]) tally++;
       }
-      let passed = tally === this.players.length;
+      let passed = tally > this.players.length / 2;
       let gameState = { passed, voting: false };
       this.currentLeader++;
       this.voting = false;
       if (!passed) {
         this.proposedTeam = {};
         this.activePlayers = {};
-        this.activePlayers[this.players[this.currentLeader]] = true;
+        this.activePlayers[
+          this.players[this.currentLeader % this.players.length]
+        ] = true;
 
         gameState.proposedTeam = this.proposedTeam;
+        gameState.activePlayers = this.activePlayers;
+        gameState.voting = this.voting;
+        io.in(socket.roomName).emit('setVoteStatus', gameState);
       } else {
         this.activePlayers = this.proposedTeam;
         this.currentPhase = 'roundStart';
-        // io.in(this.roomName).emit('sendGameState', this.getGameState());
+        io.in(socket.roomName).emit('sendGameState', this.getGameState());
       }
-      io.in(socket.roomName).emit('sendGameState', this.getGameState());
-      // gameState.voting = this.voting;
-
-      // io.in(this.roomName).emit('voteFinish', gameState);
+      this.currentVotes = {};
     }
   }
 };

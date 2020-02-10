@@ -16,9 +16,9 @@ export default class Voting extends Component {
   }
 
   componentDidMount() {
-    socket.on('voting', data => {
+    socket.on('setVoteStatus', data => {
       console.log('invoting');
-      this.setState({ voting: true });
+      this.setState(data);
     });
     socket.on('proposedTeam', data => {
       this.setState({ proposedTeam: data });
@@ -34,7 +34,7 @@ export default class Voting extends Component {
     socket.emit('startVote', 'startVote');
   }
   submitVote(castedVote) {
-    socket.emit('submitVote', false);
+    socket.emit('submitVote', castedVote);
   }
   render() {
     return (
@@ -43,14 +43,22 @@ export default class Voting extends Component {
           {Object.keys(this.state.proposedTeam).map(user => (
             <p>{this.props.users[user]}</p>
           ))}
-          <button
-            disabled={!this.state.voting}
-            onClick={() => this.submitVote(true)}
-          >
-            {' '}
-            vote true
-          </button>
-          {this.props.activePlayers[socket.id] ? (
+          {this.state.voting ? (
+            <React.Fragment>
+              <button
+                disabled={!this.state.voting}
+                onClick={() => this.submitVote(true)}
+              >
+                Approve
+              </button>
+              <button
+                disabled={!this.state.voting}
+                onClick={() => this.submitVote(false)}
+              >
+                Reject
+              </button>
+            </React.Fragment>
+          ) : this.props.activePlayers[socket.id] ? (
             <div>
               <p>You are partyLeader</p>
               <ol>
@@ -64,7 +72,7 @@ export default class Voting extends Component {
             </div>
           ) : (
             <div>
-              <p>Party leader is selecting</p>
+              <p>Party leader is currently proposing teams.</p>
             </div>
           )}
         </div>
