@@ -291,9 +291,9 @@ select {
   font-size: 0.8em;
 }
 
-.chat-msg {
-  overflow-wrap: break-word;
-  word-wrap: break-word;
+#lobby-chat img {
+  height: 0.6em;
+  margin: 0.2em;
 }
 
 #lobby-users {
@@ -315,8 +315,8 @@ select {
 }
 
 #lobby-users img {
-  height: 100%;
-  margin: 0.1em;
+  height: 50%;
+  margin: 0.2em;
 }
 
 #lobby-bottom {

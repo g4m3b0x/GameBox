@@ -44,10 +44,10 @@ export default class Lobby extends Component {
         this.setState({ selectedGame: game, hostErrorMsg: '' });
     });
     socket.on('receiveMessage', data => {
-      const { sender, message } = data;
+      const { senderId, message } = data;
       if (this._isMounted)
         this.setState({
-          messages: [...this.state.messages, [sender, message]]
+          messages: [...this.state.messages, [senderId, message]]
         });
       setTimeout(this.scrollDown, 100);
     });
@@ -103,7 +103,7 @@ export default class Lobby extends Component {
 
   sendMessage() {
     if (!this.state.currentMessage) return;
-    const noSpacesLimit = 50;
+    const noSpacesLimit = 25;
     const message = this.state.currentMessage
       .split(' ')
       .map(word => {
@@ -181,9 +181,15 @@ export default class Lobby extends Component {
         </div>
         <div id="lobby-middle">
           <div id="lobby-chat">
-            {this.state.messages.map(([sender, message], i) => (
+            {this.state.messages.map(([senderId, message], i) => (
               <div key={i}>
-                <div className="chat-msg">{`${sender}: ${message}`}</div>
+                <p>
+                  {`${this.state.users[senderId] || '(disconnected)'}`}
+                  {this.state.currentHost === senderId && (
+                    <img src="/crown.png"></img>
+                  )}
+                  {`: ${message}`}
+                </p>
               </div>
             ))}
           </div>

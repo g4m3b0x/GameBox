@@ -9,9 +9,9 @@ module.exports = (socket, io, rooms, users) => {
         return;
       case 'sendMessage':
         const { message } = payload;
-        rooms[socket.roomName].messages.push([socket.userName, message]);
+        rooms[socket.roomName].messages.push([socket.id, message]);
         io.in(socket.roomName).emit('receiveMessage', {
-          sender: socket.userName,
+          senderId: socket.id,
           message
         });
         return;
