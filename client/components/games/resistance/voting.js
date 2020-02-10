@@ -62,7 +62,7 @@ export default class Voting extends Component {
             </React.Fragment>
           ) : this.state.activePlayers[socket.id] ? (
             <div>
-              <p>You are partyLeader</p>
+              <p>You are party leader</p>
               <ol>
                 {Object.keys(this.props.users).map(user => (
                   <button onClick={() => this.setProposeTeam(user)}>
@@ -74,7 +74,7 @@ export default class Voting extends Component {
             </div>
           ) : (
             <div>
-              <p>Party leader is currently proposing teams.</p>
+              <p>{this.props.users[Object.keys(this.state.activePlayers)[0]]} is currently proposing teams.</p>
             </div>
           )}
         </div>
