@@ -52,6 +52,7 @@ export default class TicTacToe extends Component {
         {!this.state.winner ? (
           <div>
             <div>
+              <button onClick={this.returnToLobby}>Back to Lobby</button>
               <p>{Object.values(this.state.users)[this.state.turn]}'s turn:</p>
             </div>
             <div style={style.table}>
@@ -80,7 +81,7 @@ export default class TicTacToe extends Component {
                 ? 'Draw!'
                 : `${this.state.winner} wins!`}
             </p>
-            <button onClick={this.returnToLobby}> Back to Lobby</button>
+            <button onClick={this.returnToLobby}>Back to Lobby</button>
           </div>
         )}
       </div>

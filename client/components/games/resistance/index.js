@@ -58,6 +58,7 @@ export default class Resistance extends Component {
       return (
         <div style={style.view}>
           <div style={style.statusBar}>
+            <button onClick={this.returnToLobby}>Back to Lobby</button>
             <p>GENERIC STATUS MESSAGE</p>
           </div>
           <div style={style.belowStatusBar}>
