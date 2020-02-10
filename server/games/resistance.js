@@ -147,7 +147,6 @@ module.exports = class Resistance {
       return;
     io.in(socket.roomName).emit('setVoteStatus', { voting: this.voting });
   }
-
   submitVote(io, socket, castedVote) {
     if (socket.id in this.currentVotes) {
       return;
@@ -167,6 +166,11 @@ module.exports = class Resistance {
       this.currentLeader++;
       this.voting = false;
       if (!passed) {
+        this.rejectTracker++;
+        if (this.rejectTracker === 5) {
+          this.gameOver(io, socket, 'reject');
+          return;
+        }
         this.proposedTeam = {};
         this.activePlayers = {};
         this.activePlayers[
@@ -178,6 +182,7 @@ module.exports = class Resistance {
         gameState.voting = this.voting;
         io.in(socket.roomName).emit('setVoteStatus', gameState);
       } else {
+        this.rejectTracker = 0;
         this.activePlayers = this.proposedTeam;
         this.currentPhase = 'roundStart';
         io.in(socket.roomName).emit('sendGameState', this.getGameState());
@@ -185,7 +190,20 @@ module.exports = class Resistance {
       this.currentVotes = {};
     }
   }
-
+  gameOver(io, socket, reason) {
+    switch (reason) {
+      case 'reject':
+        this.winner = 'spies';
+        break;
+      case 'resWin':
+        this.winner = 'res';
+        break;
+      case 'spiesWin':
+        this.winner = 'spies';
+        break;
+    }
+    io.in(socket.roomName).emit('sendGameState', { winner: this.winner });
+  }
   sendActivePlayers (io, socket) {
     io.in(socket.roomName).emit('setVoteStatus', { activePlayers: this.activePlayers });
   }

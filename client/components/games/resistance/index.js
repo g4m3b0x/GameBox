@@ -53,7 +53,11 @@ export default class Resistance extends Component {
 
   render() {
     if (this.state.dedicatedScreen === socket.id) {
-      return <div>{'THIS IS THE DEDICATED SCREEN'}</div>;
+      return (
+        <div>
+          {'THIS IS THE DEDICATED SCREEN'}
+        </div>
+      );
     } else {
       return (
         <div style={style.view}>
