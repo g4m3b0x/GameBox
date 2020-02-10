@@ -8,7 +8,8 @@ export default class Voting extends Component {
     this.state = {
       proposedTeam: {},
       voting: false,
-      currentVotes: {}
+      currentVotes: {},
+      activePlayers: {},
     };
     this.setProposeTeam = this.setProposeTeam.bind(this);
     this.startVote = this.startVote.bind(this);
@@ -17,12 +18,13 @@ export default class Voting extends Component {
 
   componentDidMount() {
     socket.on('setVoteStatus', data => {
-      console.log('invoting');
       this.setState(data);
     });
     socket.on('proposedTeam', data => {
       this.setState({ proposedTeam: data });
     });
+
+    socket.emit('getActivePlayers');
   }
 
   setProposeTeam(id) {
@@ -31,7 +33,7 @@ export default class Voting extends Component {
     });
   }
   startVote() {
-    socket.emit('startVote', 'startVote');
+    socket.emit('startVote');
   }
   submitVote(castedVote) {
     socket.emit('submitVote', castedVote);
@@ -58,7 +60,7 @@ export default class Voting extends Component {
                 Reject
               </button>
             </React.Fragment>
-          ) : this.props.activePlayers[socket.id] ? (
+          ) : this.state.activePlayers[socket.id] ? (
             <div>
               <p>You are partyLeader</p>
               <ol>
