@@ -141,7 +141,10 @@ module.exports = class Resistance {
   startVote(io, socket) {
     this.voting = true;
     const { missionSize } = groupSize[this.players.length];
-    if (missionSize[this.currentMission] !== this.proposeTeam.length) return;
+    if (
+      Object.keys(this.proposedTeam).length === missionSize[this.currentMission]
+    )
+      return;
     io.in(socket.roomName).emit('setVoteStatus', { voting: this.voting });
   }
 
