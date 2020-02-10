@@ -72,10 +72,11 @@ export default class Resistance extends Component {
                   <div className="flip-card-back">
                     <img
                       style={style.card}
-                      src={socket.id in this.state.spies
-                        ? this.state.spies[socket.id]
-                        : this.state.res[socket.id]
-                       }
+                      src={
+                        socket.id in this.state.spies
+                          ? this.state.spies[socket.id]
+                          : this.state.res[socket.id]
+                      }
                     />
                   </div>
                 </div>
@@ -83,10 +84,14 @@ export default class Resistance extends Component {
               <div style={style.cardAreaBuffer} />
             </div>
             <div style={style.dynamicArea}>
-              <Voting
-                activePlayers={this.state.activePlayers}
-                users={this.state.users}
-              />
+              {this.state.currentPhase === 'teamSelection' ? (
+                <Voting
+                  activePlayers={this.state.activePlayers}
+                  users={this.state.users}
+                />
+              ) : (
+                <p></p>
+              )}
             </div>
           </div>
         </div>

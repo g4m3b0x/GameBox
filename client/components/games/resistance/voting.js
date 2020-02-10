@@ -6,13 +6,18 @@ export default class Voting extends Component {
   constructor(props) {
     super();
     this.state = {
-      proposedTeam: {}
+      proposedTeam: {},
+      voting: false,
+      currentVotes: {}
     };
     this.setProposeTeam = this.setProposeTeam.bind(this);
+    this.startVote = this.startVote.bind(this);
+    this.submitVote = this.submitVote.bind(this);
   }
 
   componentDidMount() {
-    socket.on('voting', data => {
+    socket.on('setVoteStatus', data => {
+      console.log('invoting');
       this.setState(data);
     });
     socket.on('proposedTeam', data => {
@@ -24,11 +29,13 @@ export default class Voting extends Component {
     socket.emit('proposingTeam', {
       id
     });
-    // let newState = this.state.proposedTeam;
-    // newState[id] = this.props.users[id];
-    // this.setState({ proposedTeam: newState });
   }
-
+  startVote() {
+    socket.emit('startVote', 'startVote');
+  }
+  submitVote(castedVote) {
+    socket.emit('submitVote', castedVote);
+  }
   render() {
     return (
       <div>
@@ -36,8 +43,22 @@ export default class Voting extends Component {
           {Object.keys(this.state.proposedTeam).map(user => (
             <p>{this.props.users[user]}</p>
           ))}
-
-          {this.props.activePlayers[socket.id] ? (
+          {this.state.voting ? (
+            <React.Fragment>
+              <button
+                disabled={!this.state.voting}
+                onClick={() => this.submitVote(true)}
+              >
+                Approve
+              </button>
+              <button
+                disabled={!this.state.voting}
+                onClick={() => this.submitVote(false)}
+              >
+                Reject
+              </button>
+            </React.Fragment>
+          ) : this.props.activePlayers[socket.id] ? (
             <div>
               <p>You are partyLeader</p>
               <ol>
@@ -47,10 +68,11 @@ export default class Voting extends Component {
                   </button>
                 ))}
               </ol>
+              <button onClick={this.startVote}>Finalize Selection</button>
             </div>
           ) : (
             <div>
-              <p>Party leader is selecting</p>
+              <p>Party leader is currently proposing teams.</p>
             </div>
           )}
         </div>

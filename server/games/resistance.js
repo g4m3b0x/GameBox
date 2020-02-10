@@ -89,9 +89,10 @@ module.exports = class Resistance {
     this.currentLeader = 0;
     this.currentPhase = 'teamSelection';
     this.proposedTeam = {};
-
+    this.currentVotes = {};
     this.voteHistory = [[], [], [], [], []];
     this.missionVote = {};
+    this.voting = false;
   }
   generateTeams() {
     const shuffledPlayers = shuffle(this.players);
@@ -127,20 +128,57 @@ module.exports = class Resistance {
     };
   }
   proposeTeam(io, socket, data) {
+    const { missionSize } = groupSize[this.players.length];
+
     if (data.id in this.proposedTeam) delete this.proposedTeam[data.id];
+    else if (
+      Object.keys(this.proposedTeam).length === missionSize[this.currentMission]
+    )
+      return;
     else this.proposedTeam[data.id] = true;
     io.in(socket.roomName).emit('proposedTeam', this.proposedTeam);
   }
+  startVote(io, socket) {
+    this.voting = true;
 
-  // move(socketId, payload) {
-  //   const {x, y} = payload;
-  //   if (socketId !== Object.keys(this.users)[this.turn]) return;
-  //   if (!chars.includes(this.gameBoard[y][x])) {
-  //     this.gameBoard[y][x] = chars[this.turn];
-  //     this.freeSquares--;
-  //     if (this.checkWinner()) this.winner = Object.values(this.users)[this.turn];
-  //     else if (!this.freeSquares) this.winner = -1;
-  //     else this.turn = +!this.turn;
-  //   }
-  // }
+    io.in(socket.roomName).emit('setVoteStatus', { voting: this.voting });
+  }
+
+  submitVote(io, socket, castedVote) {
+    if (socket.id in this.currentVotes) {
+      return;
+    } else {
+      this.currentVotes[socket.id] = castedVote;
+    }
+    if (
+      Object.keys(this.currentVotes).length === this.players.length &&
+      this.voting
+    ) {
+      let tally = 0;
+      for (let vote in this.currentVotes) {
+        if (this.currentVotes[vote]) tally++;
+      }
+      let passed = tally > this.players.length / 2;
+      let gameState = { passed, voting: false };
+      this.currentLeader++;
+      this.voting = false;
+      if (!passed) {
+        this.proposedTeam = {};
+        this.activePlayers = {};
+        this.activePlayers[
+          this.players[this.currentLeader % this.players.length]
+        ] = true;
+
+        gameState.proposedTeam = this.proposedTeam;
+        gameState.activePlayers = this.activePlayers;
+        gameState.voting = this.voting;
+        io.in(socket.roomName).emit('setVoteStatus', gameState);
+      } else {
+        this.activePlayers = this.proposedTeam;
+        this.currentPhase = 'roundStart';
+        io.in(socket.roomName).emit('sendGameState', this.getGameState());
+      }
+      this.currentVotes = {};
+    }
+  }
 };
