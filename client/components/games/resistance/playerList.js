@@ -47,27 +47,31 @@ export default class PlayerList extends Component {
     socket.emit('submitVote', castedVote);
   }
   render() {
-    return this.props.players.map((user, i) => (
-      <div key={i} style={style.playerListItem}>
-        <p
-          style={
-            socket.id in this.props.res
-              ? { color: 'gray' }
-              : user in this.props.res
-              ? { color: 'blue' }
-              : { color: 'red' }
-          }
-          onClick={() => this.setProposeTeam(user)}
-        >
-          {this.props.users[user]}
-        </p>
-        {this.props.currentPhase === 'teamSelection' && user in this.props.proposedTeam &&
-          <img
-            style={{ height: '0.75em', marginLeft: '0.5em' }}
-            src={this.props.proposedTeam[user]}
-          />
-        }
+    return (
+      <div style={style.playerListArea}>
+        {this.props.players.map((user, i) => (
+          <div key={i} style={style.playerListItem}>
+            <p
+              style={
+                socket.id in this.props.res
+                  ? { color: 'gray' }
+                  : user in this.props.res
+                  ? { color: 'blue' }
+                  : { color: 'red' }
+              }
+              onClick={() => this.setProposeTeam(user)}
+            >
+              {this.props.users[user]}
+            </p>
+            {this.props.currentPhase === 'teamSelection' && user in this.props.proposedTeam &&
+              <img
+                style={{ height: '1.0em', marginLeft: '0.5em' }}
+                src={this.props.proposedTeam[user]}
+              />
+            }
+          </div>
+        ))}
       </div>
-    ));
+    );
   }
 }

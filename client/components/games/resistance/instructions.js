@@ -45,9 +45,10 @@ export default class Instructions extends Component {
 
   render() {
     return (
-      <div>
+      <div style={style.instructionsArea}>
         {this.props.voting ? (
           <React.Fragment>
+            <p>Approve team?</p>
             <button
               onClick={() => this.submitVote(true)}
             >
@@ -61,13 +62,18 @@ export default class Instructions extends Component {
           </React.Fragment>
         ) : this.props.activePlayers[socket.id] ? (
           <React.Fragment>
-            <p>You are party leader. Choose a team of {this.props.groupSize[Object.keys(this.props.users).length].missionSize[this.props.currentMission]}!</p>
-            <button onClick={this.startVote}>Finalize Selection</button>
+            <p>Choose a team of {this.props.groupSize[Object.keys(this.props.users).length].missionSize[this.props.currentMission]}!</p>
+            <button
+              onClick={this.startVote}
+              disabled={Object.keys(this.props.proposedTeam).length !== this.props.groupSize[Object.keys(this.props.users).length].missionSize[this.props.currentMission]}
+            >
+              OK
+            </button>
           </React.Fragment>
         ) : (
           <div>
             {Object.keys(this.props.groupSize).length &&
-              <p>{this.props.users[Object.keys(this.props.activePlayers)[0]]} is currently proposing a team of {this.props.groupSize[Object.keys(this.props.users).length].missionSize[this.props.currentMission]}.</p>
+              <p>Waiting for {this.props.users[Object.keys(this.props.activePlayers)[0]]} to propose a team of {this.props.groupSize[Object.keys(this.props.users).length].missionSize[this.props.currentMission]}...</p>
             }
           </div>
         )}

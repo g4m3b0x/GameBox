@@ -37,12 +37,12 @@ module.exports = {
     flexDirection: 'column',
   },
   instructionsArea: {
-    height: '20%',
+    height: '10%',
     width: '100%',
     display: 'flex',
   },
   playerListArea: {
-    height: '80%',
+    height: '90%',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
