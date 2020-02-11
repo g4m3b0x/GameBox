@@ -4,6 +4,7 @@ const groupSize = {
     spies: 0,
     missionSize: [1, 1, 1, 1, 1]
   },
+  
   5: {
     spies: 2,
     missionSize: [2, 3, 2, 3, 3]
@@ -136,7 +137,7 @@ module.exports = class Resistance {
     )
       return;
     else this.proposedTeam[data.id] = true;
-    io.in(socket.roomName).emit('proposedTeam', this.proposedTeam);
+    io.in(socket.roomName).emit('proposedTeam', { proposedTeam: this.proposedTeam });
   }
   startVote(io, socket) {
     this.voting = true;
@@ -157,10 +158,8 @@ module.exports = class Resistance {
       Object.keys(this.currentVotes).length === this.players.length &&
       this.voting
     ) {
-      let tally = 0;
-      for (let vote in this.currentVotes) {
-        if (this.currentVotes[vote]) tally++;
-      }
+      const tally = Object.values(this.currentVotes)
+        .reduce((total, vote) => total += +vote, 0);
       const passed = tally > this.players.length / 2;
       const gameState = {};
       this.currentLeader++;
