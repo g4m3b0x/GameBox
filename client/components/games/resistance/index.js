@@ -16,6 +16,7 @@ export default class Resistance extends Component {
       winner: null,
       res: {},
       spies: {},
+      specialRoles: {},
       currentPhase: null,
       activePlayers: {},
       voting: false,
@@ -97,6 +98,9 @@ export default class Resistance extends Component {
                 activePlayers={this.state.activePlayers}
                 users={this.state.users}
                 players={this.state.players}
+                res={this.state.res}
+                spies={this.state.spies}
+                specialRoles={this.state.specialRoles}
                 currentPhase={this.state.currentPhase}
               />
             </div>

@@ -82,6 +82,7 @@ module.exports = class Resistance {
     this.numOfSpies = groupSize[this.players.length].spies;
     this.res = {};
     this.spies = {};
+    this.specialRoles = {};
     this.missionSize = groupSize[this.players.length].missionSize;
     this.currentMission = 0;
     this.rejectTracker = 0;
@@ -118,6 +119,7 @@ module.exports = class Resistance {
       winner: this.winner,
       res: this.res,
       spies: this.spies,
+      specialRoles: this.specialRoles,
       currentMission: this.currentMission,
       rejectTracker: this.rejectTracker,
       currentLeader: this.currentLeader,

@@ -56,7 +56,13 @@ module.exports = {
   card: {
     width: '100%',
   },
-  bold: {
-    fontWeight: 'bold',
+  gray: {
+    color: 'gray'
+  },
+  blue: {
+    color: 'blue',
+  },
+  red: {
+    color: 'red',
   },
 };

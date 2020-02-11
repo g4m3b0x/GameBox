@@ -53,10 +53,17 @@ export default class PlayerList extends Component {
         {this.props.players.map((user, i) => (
           <p
             key={i}
+            // style={
+            //   this.props.currentPhase === 'teamSelection' && user in this.state.proposedTeam
+            //     ? style.bold
+            //     : null
+            // }
             style={
-              this.props.currentPhase === 'teamSelection' && user in this.state.proposedTeam
-                ? style.bold
-                : null
+              socket.id in this.props.res
+                ? style.gray
+                : user in this.props.res
+                ? style.blue
+                : style.red
             }
             onClick={() => this.setProposeTeam(user)}
           >
