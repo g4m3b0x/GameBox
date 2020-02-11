@@ -63,6 +63,13 @@ const spyImages = [
   'resistance_char_deepcover.png',
   'resistance_char_blindspy.png'
 ];
+const gunImages = [
+  'resistance_token_gun1.png',
+  'resistance_token_gun2.png',
+  'resistance_token_gun3.png',
+  'resistance_token_gun4.png',
+  'resistance_token_gun5.png',
+];
 
 const shuffle = arr => {
   const output = [...arr];
@@ -87,9 +94,10 @@ module.exports = class Resistance {
     this.currentMission = 0;
     this.rejectTracker = 0;
     this.currentLeader = 0;
-    this.activePlayers = {};
     this.currentPhase = 'teamSelection';
+    this.activePlayers = {};
     this.proposedTeam = {};
+    this.gunImages = gunImages;
     this.currentVotes = {};
     this.voteHistory = [[], [], [], [], []];
     this.missionVote = {};
@@ -113,6 +121,7 @@ module.exports = class Resistance {
   }
   getGameState() {
     return {
+      groupSize,
       users: this.users,
       dedicatedScreen: this.dedicatedScreen,
       players: this.players,
@@ -124,22 +133,30 @@ module.exports = class Resistance {
       rejectTracker: this.rejectTracker,
       currentLeader: this.currentLeader,
       currentPhase: this.currentPhase,
+      activePlayers: this.activePlayers,
       proposedTeam: this.proposedTeam,
       voteHistory: this.voteHistory,
       missionVote: this.missionVote,
-      activePlayers: this.activePlayers,
       voting: this.voting,
     };
   }
   proposeTeam(io, socket, data) {
     const { missionSize } = groupSize[this.players.length];
 
-    if (data.id in this.proposedTeam) delete this.proposedTeam[data.id];
+    if (!Object.keys(this.proposedTeam).length) {
+      this.gunImages = shuffle(this.gunImages);
+    }
+    if (data.id in this.proposedTeam) {
+      this.gunImages.push(this.proposedTeam[data.id]);
+      delete this.proposedTeam[data.id];
+    }
     else if (
       Object.keys(this.proposedTeam).length === missionSize[this.currentMission]
     )
       return;
-    else this.proposedTeam[data.id] = true;
+    else {
+      this.proposedTeam[data.id] = this.gunImages.pop();
+    }
     io.in(socket.roomName).emit('proposedTeam', { proposedTeam: this.proposedTeam });
   }
   startVote(io, socket) {
