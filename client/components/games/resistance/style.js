@@ -1,11 +1,13 @@
 module.exports = {
+  screen: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
   view: {
     height: '100%',
     width: '100%',
-    // backgroundColor: 'red',
     display: 'flex',
     flexDirection: 'column',
-    // justifyContent: 'space-between'
   },
   statusBar: {
     height: '25%',
@@ -31,7 +33,6 @@ module.exports = {
   dynamicArea: {
     height: '100%',
     width: '67%',
-    // backgroundColor: 'green',
     display: 'flex',
     flexDirection: 'column',
   },

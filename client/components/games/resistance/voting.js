@@ -3,7 +3,7 @@ import socket from '../../../index.js';
 import style from './style';
 
 export default class Voting extends Component {
-  constructor(props) {
+  constructor() {
     super();
     this.state = {
       proposedTeam: {},
@@ -11,26 +11,30 @@ export default class Voting extends Component {
       currentVotes: {},
       activePlayers: {},
     };
+    this._isMounted = false; // prevent memory leak
     this.setProposeTeam = this.setProposeTeam.bind(this);
     this.startVote = this.startVote.bind(this);
     this.submitVote = this.submitVote.bind(this);
   }
 
   componentDidMount() {
+    this._isMounted = true;
     socket.on('setVoteStatus', data => {
-      this.setState(data);
+      if (this._isMounted) this.setState(data);
     });
     socket.on('proposedTeam', data => {
-      this.setState({ proposedTeam: data });
+      if (this._isMounted) this.setState(data);
     });
 
     socket.emit('getActivePlayers');
   }
 
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   setProposeTeam(id) {
-    socket.emit('proposingTeam', {
-      id
-    });
+    socket.emit('proposingTeam', { id });
   }
   startVote() {
     socket.emit('startVote');
@@ -42,8 +46,8 @@ export default class Voting extends Component {
     return (
       <div>
         <div>
-          {Object.keys(this.state.proposedTeam).map(user => (
-            <p>{this.props.users[user]}</p>
+          {Object.keys(this.state.proposedTeam).map((user, i) => (
+            <p key={i}>{this.props.users[user]}</p>
           ))}
           {this.state.voting ? (
             <React.Fragment>
@@ -64,8 +68,8 @@ export default class Voting extends Component {
             <div>
               <p>You are party leader</p>
               <ol>
-                {Object.keys(this.props.users).map(user => (
-                  <button onClick={() => this.setProposeTeam(user)}>
+                {this.props.players.map((user, i) => (
+                  <button key={i} onClick={() => this.setProposeTeam(user)}>
                     {this.props.users[user]}
                   </button>
                 ))}
