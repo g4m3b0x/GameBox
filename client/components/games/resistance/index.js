@@ -65,7 +65,16 @@ export default class Resistance extends Component {
       <div style={style.view}>
         <div style={style.statusBar}>
           <button onClick={this.returnToLobby}>Back to Lobby</button>
-          <p>STATUS BAR AREA</p>
+          <div>
+            <div>
+              <p>MISSION {this.state.currentMission + 1}</p>
+            </div>
+            <div>
+            {this.state.currentPhase === 'teamSelection' && (
+              <p>Current leader: {this.state.users[Object.keys(this.state.activePlayers)[0]]}</p>
+            )}
+            </div>
+          </div>
         </div>
         <div style={style.belowStatusBar}>
           <div style={style.cardArea}>
@@ -90,29 +99,26 @@ export default class Resistance extends Component {
             <div style={style.cardAreaBuffer} />
           </div>
           <div style={style.dynamicArea}>
-            <div style={style.instructionsArea}>
-              <Instructions
-                groupSize={this.state.groupSize}
-                currentMission={this.state.currentMission}
-                activePlayers={this.state.activePlayers}
-                users={this.state.users}
-                players={this.state.players}
-                currentPhase={this.state.currentPhase}
-                voting={this.state.voting}
-              />
-            </div>
-            <div style={style.playerListArea}>
-              <PlayerList
-                activePlayers={this.state.activePlayers}
-                users={this.state.users}
-                players={this.state.players}
-                res={this.state.res}
-                spies={this.state.spies}
-                specialRoles={this.state.specialRoles}
-                currentPhase={this.state.currentPhase}
-                proposedTeam={this.state.proposedTeam}
-              />
-            </div>
+            <Instructions
+              groupSize={this.state.groupSize}
+              currentMission={this.state.currentMission}
+              activePlayers={this.state.activePlayers}
+              users={this.state.users}
+              players={this.state.players}
+              currentPhase={this.state.currentPhase}
+              proposedTeam={this.state.proposedTeam}
+              voting={this.state.voting}
+            />
+            <PlayerList
+              activePlayers={this.state.activePlayers}
+              users={this.state.users}
+              players={this.state.players}
+              res={this.state.res}
+              spies={this.state.spies}
+              specialRoles={this.state.specialRoles}
+              currentPhase={this.state.currentPhase}
+              proposedTeam={this.state.proposedTeam}
+            />
           </div>
         </div>
       </div>
