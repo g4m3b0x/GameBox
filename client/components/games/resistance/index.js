@@ -10,6 +10,7 @@ export default class Resistance extends Component {
   constructor() {
     super();
     this.state = {
+      groupSize: {},
       users: {},
       dedicatedScreen: null,
       players: [],
@@ -17,8 +18,10 @@ export default class Resistance extends Component {
       res: {},
       spies: {},
       specialRoles: {},
+      currentMission: 0,
       currentPhase: null,
       activePlayers: {},
+      proposedTeam: {},
       voting: false,
     };
     this._isMounted = false; // prevent memory leak
@@ -37,6 +40,9 @@ export default class Resistance extends Component {
       if (this._isMounted) this.setState(data);
     });
     socket.on('setVoteStatus', data => {
+      if (this._isMounted) this.setState(data);
+    });
+    socket.on('proposedTeam', data => {
       if (this._isMounted) this.setState(data);
     });
   }
@@ -86,6 +92,8 @@ export default class Resistance extends Component {
           <div style={style.dynamicArea}>
             <div style={style.instructionsArea}>
               <Instructions
+                groupSize={this.state.groupSize}
+                currentMission={this.state.currentMission}
                 activePlayers={this.state.activePlayers}
                 users={this.state.users}
                 players={this.state.players}
@@ -102,6 +110,7 @@ export default class Resistance extends Component {
                 spies={this.state.spies}
                 specialRoles={this.state.specialRoles}
                 currentPhase={this.state.currentPhase}
+                proposedTeam={this.state.proposedTeam}
               />
             </div>
           </div>
