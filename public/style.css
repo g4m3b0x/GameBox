@@ -293,6 +293,7 @@ select {
 
 #lobby-chat img {
   height: 0.6em;
+  width: 0.6em;
   margin: 0.2em;
 }
 
@@ -315,7 +316,8 @@ select {
 }
 
 #lobby-users img {
-  height: 50%;
+  height: 0.6em;
+  width: 0.6em;
   margin: 0.2em;
 }
 

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import socket from '../../../index.js';
 import style from './style';
 
-export default class Voting extends Component {
+export default class DedicatedScreen extends Component {
   constructor() {
     super();
     this.state = {

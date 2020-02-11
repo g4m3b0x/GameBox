@@ -24,8 +24,8 @@ module.exports = (socket, io, rooms, users) => {
     const game = rooms[socket.roomName].game;
     game.submitVote(io, socket, data);
   });
-  socket.on('getActivePlayers', () => {
-    const game = rooms[socket.roomName].game;
-    game.sendActivePlayers(io, socket);
-  });
+  // socket.on('getActivePlayers', () => {
+  //   const game = rooms[socket.roomName].game;
+  //   game.sendActivePlayers(io, socket);
+  // });
 };
