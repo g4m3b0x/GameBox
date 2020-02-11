@@ -66,7 +66,9 @@ export default class Instructions extends Component {
           </React.Fragment>
         ) : (
           <div>
-            <p>{this.props.users[Object.keys(this.props.activePlayers)[0]]} is currently proposing a team of {this.props.groupSize[Object.keys(this.props.users).length].missionSize[this.props.currentMission]}.</p>
+            {Object.keys(this.props.groupSize).length &&
+              <p>{this.props.users[Object.keys(this.props.activePlayers)[0]]} is currently proposing a team of {this.props.groupSize[Object.keys(this.props.users).length].missionSize[this.props.currentMission]}.</p>
+            }
           </div>
         )}
       </div>
