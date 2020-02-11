@@ -186,7 +186,7 @@ export default class Lobby extends Component {
                 <p>
                   {`${this.state.users[senderId] || '(disconnected)'}`}
                   {this.state.currentHost === senderId && (
-                    <img src="/crown.png"></img>
+                    <img src="/crown.png" />
                   )}
                   {`: ${message}`}
                 </p>
@@ -199,7 +199,7 @@ export default class Lobby extends Component {
               <div key={i}>
                 <p>{`${this.state.users[user]}`}</p>
                 {this.state.currentHost === user && (
-                  <img src="/crown.png"></img>
+                  <img src="/crown.png" />
                 )}
               </div>
             ))}

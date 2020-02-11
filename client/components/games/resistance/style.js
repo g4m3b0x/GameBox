@@ -46,6 +46,15 @@ module.exports = {
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  playerListItem: {
+    height: '1em',
+    width: '80%',
+    margin: '0.25em',
+    display: 'flex',
+    alignItems: 'center',
   },
   flipCard: {
     width: '90%',
@@ -55,14 +64,5 @@ module.exports = {
   },
   card: {
     width: '100%',
-  },
-  gray: {
-    color: 'gray'
-  },
-  blue: {
-    color: 'blue',
-  },
-  red: {
-    color: 'red',
-  },
+  }
 };

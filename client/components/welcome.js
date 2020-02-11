@@ -139,7 +139,7 @@ class Welcome extends Component {
         </div>
         <div id="welcome-create">
           <button id="welcome-createButton" onClick={this.clickCreate}>
-            <img src="/monitor-icon.png"></img>
+            <img src="/monitor-icon.png" />
             Create Room
           </button>
           <div id="welcome-dedicatedScreen">
@@ -169,7 +169,7 @@ class Welcome extends Component {
           onClick={this.clickJoin}
           disabled={this.state.dedicatedScreen}
         >
-          <img src="/phone-icon.png"></img>
+          <img src="/phone-icon.png" />
           Join Room
         </button>
       </div>
