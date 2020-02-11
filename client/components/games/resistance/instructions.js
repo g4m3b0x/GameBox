@@ -49,16 +49,14 @@ export default class Instructions extends Component {
         {this.props.voting ? (
           <React.Fragment>
             <p>Approve team?</p>
-            <button
+            <img
+              src={'/resistance_token_approve.png'}
               onClick={() => this.submitVote(true)}
-            >
-              Approve
-            </button>
-            <button
+            />
+            <img
+              src={'/resistance_token_reject.png'}
               onClick={() => this.submitVote(false)}
-            >
-              Reject
-            </button>
+            />
           </React.Fragment>
         ) : this.props.activePlayers[socket.id] ? (
           <React.Fragment>
