@@ -3,7 +3,8 @@ import socket from '../../../index.js';
 import style from './style';
 
 import DedicatedScreen from './dedicatedScreen';
-import Voting from './voting';
+import Instructions from './instructions';
+import PlayerList from './playerList';
 
 export default class Resistance extends Component {
   constructor() {
@@ -16,7 +17,8 @@ export default class Resistance extends Component {
       res: {},
       spies: {},
       currentPhase: null,
-      activePlayers: {}
+      activePlayers: {},
+      voting: false,
     };
     this._isMounted = false; // prevent memory leak
     this.returnToLobby = this.returnToLobby.bind(this);
@@ -31,6 +33,9 @@ export default class Resistance extends Component {
       });
     }
     socket.on('sendGameState', data => {
+      if (this._isMounted) this.setState(data);
+    });
+    socket.on('setVoteStatus', data => {
       if (this._isMounted) this.setState(data);
     });
   }
@@ -53,7 +58,7 @@ export default class Resistance extends Component {
       <div style={style.view}>
         <div style={style.statusBar}>
           <button onClick={this.returnToLobby}>Back to Lobby</button>
-          <p>GENERIC STATUS MESSAGE</p>
+          <p>STATUS BAR AREA</p>
         </div>
         <div style={style.belowStatusBar}>
           <div style={style.cardArea}>
@@ -78,15 +83,23 @@ export default class Resistance extends Component {
             <div style={style.cardAreaBuffer} />
           </div>
           <div style={style.dynamicArea}>
-            {this.state.currentPhase === 'teamSelection' ? (
-              <Voting
+            <div style={style.instructionsArea}>
+              <Instructions
                 activePlayers={this.state.activePlayers}
                 users={this.state.users}
                 players={this.state.players}
+                currentPhase={this.state.currentPhase}
+                voting={this.state.voting}
               />
-            ) : (
-              <p></p>
-            )}
+            </div>
+            <div style={style.playerListArea}>
+              <PlayerList
+                activePlayers={this.state.activePlayers}
+                users={this.state.users}
+                players={this.state.players}
+                currentPhase={this.state.currentPhase}
+              />
+            </div>
           </div>
         </div>
       </div>

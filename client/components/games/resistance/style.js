@@ -36,6 +36,17 @@ module.exports = {
     display: 'flex',
     flexDirection: 'column',
   },
+  instructionsArea: {
+    height: '20%',
+    width: '100%',
+    display: 'flex',
+  },
+  playerListArea: {
+    height: '80%',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
   flipCard: {
     width: '90%',
     height: '0%',
@@ -44,5 +55,8 @@ module.exports = {
   },
   card: {
     width: '100%',
+  },
+  bold: {
+    fontWeight: 'bold',
   },
 };
