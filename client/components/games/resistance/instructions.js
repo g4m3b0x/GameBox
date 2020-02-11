@@ -50,10 +50,12 @@ export default class Instructions extends Component {
           <React.Fragment>
             <p>Approve team?</p>
             <img
+              style={{ height: '1.5em', marginLeft: '0.5em' }}
               src={'/resistance_token_approve.png'}
               onClick={() => this.submitVote(true)}
             />
             <img
+              style={{ height: '1.5em', marginLeft: '0.5em' }}
               src={'/resistance_token_reject.png'}
               onClick={() => this.submitVote(false)}
             />
@@ -62,6 +64,7 @@ export default class Instructions extends Component {
           <React.Fragment>
             <p>Choose a team of {this.props.groupSize[Object.keys(this.props.users).length].missionSize[this.props.currentMission]}!</p>
             <button
+              style={{ marginLeft: '0.5em' }}
               onClick={this.startVote}
               disabled={Object.keys(this.props.proposedTeam).length !== this.props.groupSize[Object.keys(this.props.users).length].missionSize[this.props.currentMission]}
             >
