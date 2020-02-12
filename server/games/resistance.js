@@ -237,7 +237,6 @@ module.exports = class Resistance {
       this.currentLeader++;
       this.voting = false;
       this.currentVotes = {};
-      this.proposedTeam = {};
       this.currentPhase = 'teamSelectionReveal';
       io.in(socket.roomName).emit('sendGameState', this.getGameState());
       if (!passed) {
@@ -253,6 +252,7 @@ module.exports = class Resistance {
         this.rejectTracker = 0;
         this.activePlayers = this.proposedTeam;
       }
+      this.proposedTeam = {};
       setTimeout(() => {
         this.currentPhase = passed ? 'roundStart' : 'teamSelection';
         io.in(socket.roomName).emit('sendGameState', this.getGameState());

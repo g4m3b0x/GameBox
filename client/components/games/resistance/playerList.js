@@ -28,27 +28,27 @@ export default class PlayerList extends Component {
       <div style={style.playerListArea}>
         {this.props.players.map((user, i) => (
           <div key={i} style={style.playerListItem}>
-            <p
+            <button
               style={
                 user === socket.id
                   ? socket.id in this.props.res
-                    ? { color: 'blue' }
-                    : { color: 'red' }
+                    ? style.playerBlue //{ color: 'blue' }
+                    : style.playerRed //{ color: 'red' }
                   : socket.id === this.props.specialRoles.bodyguard && (user === this.props.specialRoles.commander || user === this.props.specialRoles.falseCommander)
-                    ? { color: 'purple' }
+                    ? style.playerPurple //{ color: 'purple' }
                     : (socket.id in this.props.res && socket.id !== this.props.specialRoles.commander)
                       || socket.id === this.props.specialRoles.blindSpy
-                        ? { color: 'gray' }
+                        ? style.playerGray //{ color: 'gray' }
                         : user in this.props.res
                           || (user === this.props.specialRoles.deepCover && socket.id === this.props.specialRoles.commander)
                           || (user === this.props.specialRoles.blindSpy && socket.id in this.props.spies && user !== socket.id)
-                            ? { color: 'blue' }
-                            : { color: 'red' }
+                            ? style.playerBlue //{ color: 'blue' }
+                            : style.playerRed //{ color: 'red' }
               }
               onClick={() => this.setProposeTeam(user)}
             >
-              {this.props.users[user]}
-            </p>
+              <p style={style.playerName}>{this.props.users[user]}</p>
+            </button>
             {this.props.currentPhase === 'teamSelection' && user in this.props.proposedTeam &&
               <img
                 style={style.gunImage}
