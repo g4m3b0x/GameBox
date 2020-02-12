@@ -282,6 +282,7 @@ module.exports = class Resistance {
       this.currentPhase = 'teamSelection';
       this.resultOfVotes = shuffle(Object.values(this.missionVotes));
       io.in(socket.roomName).emit('sendGameState', this.getGameState());
+      this.missionVotes = {};
     }
   }
   gameOver(io, socket, reason) {
