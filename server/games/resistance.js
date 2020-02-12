@@ -41,7 +41,7 @@ const resImages = [
   'resistance_char_res7.png',
   'resistance_char_res8.png',
   'resistance_char_res9.png',
-  'resistance_char_res10.png',
+  'resistance_char_res10.png'
 
   // 'resistance_char_commander.png',
   // 'resistance_char_bodyguard.png'
@@ -56,7 +56,7 @@ const spyImages = [
   'resistance_char_spy7.png',
   'resistance_char_spy8.png',
   'resistance_char_spy9.png',
-  'resistance_char_spy10.png',
+  'resistance_char_spy10.png'
 
   // 'resistance_char_assassin.png',
   // 'resistance_char_falsecommander.png',
@@ -68,7 +68,7 @@ const gunImages = [
   'resistance_token_gun2.png',
   'resistance_token_gun3.png',
   'resistance_token_gun4.png',
-  'resistance_token_gun5.png',
+  'resistance_token_gun5.png'
 ];
 
 const shuffle = arr => {
@@ -96,7 +96,7 @@ module.exports = class Resistance {
       bodyguard: '',
       falseCommander: '',
       deepCover: '',
-      blindSpy: '',
+      blindSpy: ''
     };
     this.missionSize = groupSize[this.players.length].missionSize;
     this.currentMission = 0;
@@ -112,6 +112,7 @@ module.exports = class Resistance {
     this.voteHistory = [[], [], [], [], []];
     this.missionVotes = {};
     this.voting = false;
+    this.resultOfVotes = [];
     this.generateTeams();
   }
   generateTeams() {
@@ -140,25 +141,23 @@ module.exports = class Resistance {
           this.specialRoles[TEST_SPY_TITLES[i]] = shuffledPlayers[i];
         }
         // **********
-
       } else {
         this.res[shuffledPlayers[i]] = shuffledResImages[i - this.numOfSpies];
 
         // **********FOR TESTING (REMOVE LATER):
         const TEST_RES_IMAGES = {
           4: 'resistance_char_commander.png',
-          5: 'resistance_char_bodyguard.png',
+          5: 'resistance_char_bodyguard.png'
         };
         const TEST_RES_TITLES = {
           4: 'commander',
-          5: 'bodyguard',
+          5: 'bodyguard'
         };
         if (this.players.length === 10 && i < 6) {
           this.res[shuffledPlayers[i]] = TEST_RES_IMAGES[i];
           this.specialRoles[TEST_RES_TITLES[i]] = shuffledPlayers[i];
         }
         // **********
-
       }
     }
     this.players = shuffle(shuffledPlayers);
@@ -184,7 +183,6 @@ module.exports = class Resistance {
       voteHistory: this.voteHistory,
       missionVotes: this.missionVotes,
       voting: this.voting
-
     };
   }
   proposeTeam(io, socket, data) {
@@ -196,16 +194,16 @@ module.exports = class Resistance {
     if (data.id in this.proposedTeam) {
       this.gunImages.push(this.proposedTeam[data.id]);
       delete this.proposedTeam[data.id];
-    }
-    else if (
+    } else if (
       Object.keys(this.proposedTeam).length === missionSize[this.currentMission]
     )
       return;
-
     else {
       this.proposedTeam[data.id] = this.gunImages.pop();
     }
-    io.in(socket.roomName).emit('proposedTeam', { proposedTeam: this.proposedTeam });
+    io.in(socket.roomName).emit('proposedTeam', {
+      proposedTeam: this.proposedTeam
+    });
   }
   startVote(io, socket) {
     const { missionSize } = groupSize[this.players.length];
@@ -223,7 +221,7 @@ module.exports = class Resistance {
       this.currentVotes[socket.id] = castedVote;
       io.in(socket.roomName).emit('updateVote', {
         socketId: socket.id,
-        castedVote,
+        castedVote
       });
     }
     if (
@@ -279,6 +277,7 @@ module.exports = class Resistance {
       else if (this.successes === 3) this.gameOver(io, socket, 'resWin');
       this.currentMission++;
       const resultVotes = shuffle(Object.values(this.missionVotes));
+      io.in(socket.roomName).emit('sendGameState', this.getGameState());
     }
   }
   gameOver(io, socket, reason) {
