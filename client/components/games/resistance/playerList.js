@@ -57,13 +57,13 @@ export default class PlayerList extends Component {
                 src={this.props.proposedTeam[user]}
               />
             }
-            {this.props.currentPhase === 'teamSelection' && this.props.voting && user in this.props.currentVotes &&
+            {this.props.currentPhase === 'teamSelection' && this.props.voting && user in this.props.teamVotes &&
               <img
                 style={{ height: '1.0em', marginLeft: '0.5em' }}
                 src={
                   user !== socket.id
                     ? '/resistance_token_back.png'
-                    : this.props.currentVotes[user]
+                    : this.props.teamVotes[user]
                     ? '/resistance_token_approve.png'
                     : '/resistance_token_reject.png'
                 }

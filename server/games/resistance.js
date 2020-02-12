@@ -108,7 +108,7 @@ module.exports = class Resistance {
     this.activePlayers = {};
     this.proposedTeam = {};
     this.gunImages = gunImages;
-    this.currentVotes = {};
+    this.teamVotes = {};
     this.voteHistory = [[], [], [], [], []];
     this.missionVotes = {};
     this.voting = false;
@@ -179,7 +179,7 @@ module.exports = class Resistance {
       currentPhase: this.currentPhase,
       activePlayers: this.activePlayers,
       proposedTeam: this.proposedTeam,
-      currentVotes: this.currentVotes,
+      teamVotes: this.teamVotes,
       voteHistory: this.voteHistory,
       missionVotes: this.missionVotes,
       resultOfVotes: this.resultOfVotes,
@@ -217,28 +217,27 @@ module.exports = class Resistance {
     io.in(socket.roomName).emit('setVoteStatus', { voting: true });
   }
   submitVote(io, socket, castedVote) {
-    if (socket.id in this.currentVotes) {
+    if (socket.id in this.teamVotes) {
       return;
     } else {
-      this.currentVotes[socket.id] = castedVote;
+      this.teamVotes[socket.id] = castedVote;
       io.in(socket.roomName).emit('updateVote', {
         socketId: socket.id,
         castedVote
       });
     }
     if (
-      Object.keys(this.currentVotes).length === this.players.length &&
+      Object.keys(this.teamVotes).length === this.players.length &&
       this.voting
     ) {
-      const tally = Object.values(this.currentVotes).reduce(
-        (total, vote) => (total += +vote),
-        0
+      const tally = Object.values(this.teamVotes).reduce(
+        (total, vote) => (total += +vote), 0
       );
       const passed = tally > this.players.length / 2;
       // const gameState = {};
       this.currentLeader++;
       this.voting = false;
-      this.currentVotes = {};
+      this.teamVotes = {};
       // this.currentPhase = 'teamSelectionReveal';
       // io.in(socket.roomName).emit('sendGameState', this.getGameState());
       if (!passed) {
@@ -270,14 +269,23 @@ module.exports = class Resistance {
     this.missionVotes[socket.id] = castedVote;
     const totalVotes = this.missionSize[this.currentMission];
     if (Object.keys(this.missionVotes).length === totalVotes) {
-      let tally = 0;
-      for (let key in this.missionVotes) {
-        if (this.missionVotes[key]) tally++;
-      }
-      if (tally !== totalVotes) this.failures++;
+      // let tally = 0;
+      // for (let key in this.missionVotes) {
+      //   if (this.missionVotes[key]) tally++;
+      // }
+      const tally = Object.values(this.missionVotes).reduce(
+        (total, vote) => (total += +vote), 0
+      );
+      if (tally !== totalVotes) this.failures++;      // on mission 4, 2 fails req'd for 7+ players
       else this.successes++;
-      if (this.failures === 3) this.gameOver(io, socket, 'spiesWin');
-      else if (this.successes === 3) this.gameOver(io, socket, 'resWin');
+      if (this.failures === 3) {
+        this.gameOver(io, socket, 'spiesWin');
+        return;
+      }
+      if (this.successes === 3) {
+        this.gameOver(io, socket, 'resWin');
+        return;
+      }
       this.currentMission++;
       this.currentPhase = 'teamSelection';
       this.resultOfVotes = shuffle(Object.values(this.missionVotes));
