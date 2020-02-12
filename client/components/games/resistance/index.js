@@ -74,9 +74,9 @@ export default class Resistance extends Component {
     }
     return (
       <div style={style.view}>
-        <div style={style.statusBar}>
+        <div style={style.topArea}>
           <button onClick={this.returnToLobby}>Back to Lobby</button>
-          <div>
+          <div style={style.statusBar}>
             <div>
               <p>MISSION {this.state.currentMission + 1}</p>
             </div>
@@ -89,8 +89,37 @@ export default class Resistance extends Component {
               )}
             </div>
           </div>
+          <div style={style.instructions}>
+            {this.state.currentPhase === 'teamSelection' ? (
+              <Instructions
+                groupSize={this.state.groupSize}
+                currentMission={this.state.currentMission}
+                activePlayers={this.state.activePlayers}
+                users={this.state.users}
+                players={this.state.players}
+                currentPhase={this.state.currentPhase}
+                proposedTeam={this.state.proposedTeam}
+                currentVotes={this.state.currentVotes}
+                voting={this.state.voting}
+              />
+            ) : (
+              <Mission activePlayers={this.state.activePlayers} />
+            )}
+          </div>
         </div>
-        <div style={style.belowStatusBar}>
+        <div style={style.bottomArea}>
+          <PlayerList
+            activePlayers={this.state.activePlayers}
+            users={this.state.users}
+            players={this.state.players}
+            res={this.state.res}
+            spies={this.state.spies}
+            specialRoles={this.state.specialRoles}
+            currentPhase={this.state.currentPhase}
+            proposedTeam={this.state.proposedTeam}
+            currentVotes={this.state.currentVotes}
+            voting={this.state.voting}
+          />
           <div style={style.cardArea}>
             <div style={style.cardAreaBuffer} />
             <div className="flip-card" style={style.flipCard}>
@@ -111,35 +140,6 @@ export default class Resistance extends Component {
               </div>
             </div>
             <div style={style.cardAreaBuffer} />
-          </div>
-          <div style={style.dynamicArea}>
-            {this.state.currentPhase === 'teamSelection' ? (
-              <Instructions
-                groupSize={this.state.groupSize}
-                currentMission={this.state.currentMission}
-                activePlayers={this.state.activePlayers}
-                users={this.state.users}
-                players={this.state.players}
-                currentPhase={this.state.currentPhase}
-                proposedTeam={this.state.proposedTeam}
-                currentVotes={this.state.currentVotes}
-                voting={this.state.voting}
-              />
-            ) : (
-              <Mission activePlayers={this.state.activePlayers} />
-            )}
-            <PlayerList
-              activePlayers={this.state.activePlayers}
-              users={this.state.users}
-              players={this.state.players}
-              res={this.state.res}
-              spies={this.state.spies}
-              specialRoles={this.state.specialRoles}
-              currentPhase={this.state.currentPhase}
-              proposedTeam={this.state.proposedTeam}
-              currentVotes={this.state.currentVotes}
-              voting={this.state.voting}
-            />
           </div>
         </div>
       </div>
