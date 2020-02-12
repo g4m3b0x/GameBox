@@ -5,17 +5,19 @@ function missionVote(castedVote) {
   socket.emit('missionVote', castedVote);
 }
 
-const Mission = props => {
+const MissionInput = props => {
   return props.activePlayers[socket.id] ? (
     <div>
       <button onClick={() => missionVote(true)}>Success</button>
-      <button onClick={() => missionVote(false)}>Fail </button>
+      {socket.id in props.spies &&
+        <button onClick={() => missionVote(false)}>Fail</button>
+      }
     </div>
   ) : (
     <div>
-      <p> Players on mission are currrently casting their vote</p>
+      <p>Players on mission are currrently casting their vote</p>
     </div>
   );
 };
 
-export default Mission;
+export default MissionInput;

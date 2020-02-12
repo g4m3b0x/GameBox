@@ -3,9 +3,9 @@ import socket from '../../../index.js';
 import style from './style';
 
 import DedicatedScreen from './dedicatedScreen';
-import Instructions from './instructions';
+import TeamSelectionInput from './teamSelectionInput';
+import MissionInput from './missionInput';
 import PlayerList from './playerList';
-import Mission from './Mission';
 export default class Resistance extends Component {
   constructor() {
     super();
@@ -22,7 +22,7 @@ export default class Resistance extends Component {
       currentPhase: null,
       activePlayers: {},
       proposedTeam: {},
-      currentVotes: {},
+      teamVotes: {},
       voting: false
     };
     this._isMounted = false; // prevent memory leak
@@ -50,8 +50,8 @@ export default class Resistance extends Component {
       const { socketId, castedVote } = data;
       if (this._isMounted)
         this.setState({
-          currentVotes: {
-            ...this.state.currentVotes,
+          teamVotes: {
+            ...this.state.teamVotes,
             [socketId]: castedVote
           }
         });
@@ -91,7 +91,7 @@ export default class Resistance extends Component {
           </div>
           <div style={style.instructions}>
             {this.state.currentPhase === 'teamSelection' ? (
-              <Instructions
+              <TeamSelectionInput
                 groupSize={this.state.groupSize}
                 currentMission={this.state.currentMission}
                 activePlayers={this.state.activePlayers}
@@ -99,11 +99,15 @@ export default class Resistance extends Component {
                 players={this.state.players}
                 currentPhase={this.state.currentPhase}
                 proposedTeam={this.state.proposedTeam}
-                currentVotes={this.state.currentVotes}
+                teamVotes={this.state.teamVotes}
                 voting={this.state.voting}
               />
             ) : (
-              <Mission activePlayers={this.state.activePlayers} />
+              <MissionInput
+                res={this.state.res}
+                spies={this.state.spies}
+                activePlayers={this.state.activePlayers}
+              />
             )}
           </div>
         </div>
@@ -117,7 +121,7 @@ export default class Resistance extends Component {
             specialRoles={this.state.specialRoles}
             currentPhase={this.state.currentPhase}
             proposedTeam={this.state.proposedTeam}
-            currentVotes={this.state.currentVotes}
+            teamVotes={this.state.teamVotes}
             voting={this.state.voting}
           />
           <div style={style.cardArea}>
