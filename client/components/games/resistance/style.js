@@ -41,6 +41,10 @@ module.exports = {
     width: '100%',
     display: 'flex',
   },
+  approveButton: {
+    height: '1.5em',
+    marginLeft: '0.5em',
+  },
   playerListArea: {
     height: '90%',
     width: '100%',
@@ -55,6 +59,10 @@ module.exports = {
     margin: '0.25em',
     display: 'flex',
     alignItems: 'center',
+  },
+  gunImage: {
+    height: '1.0em',
+    marginLeft: '0.5em',
   },
   flipCard: {
     width: '90%',
