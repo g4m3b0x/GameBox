@@ -36,32 +36,32 @@ const resImages = [
   'resistance_char_res2.png',
   'resistance_char_res3.png',
   'resistance_char_res4.png',
-  // 'resistance_char_res5.png',
-  // 'resistance_char_res6.png',
-  // 'resistance_char_res7.png',
-  // 'resistance_char_res8.png',
-  // 'resistance_char_res9.png',
-  // 'resistance_char_res10.png',
+  'resistance_char_res5.png',
+  'resistance_char_res6.png',
+  'resistance_char_res7.png',
+  'resistance_char_res8.png',
+  'resistance_char_res9.png',
+  'resistance_char_res10.png'
 
-  'resistance_char_commander.png',
-  'resistance_char_bodyguard.png'
+  // 'resistance_char_commander.png',
+  // 'resistance_char_bodyguard.png'
 ];
 const spyImages = [
-  // 'resistance_char_spy1.png',
-  // 'resistance_char_spy2.png',
-  // 'resistance_char_spy3.png',
-  // 'resistance_char_spy4.png',
-  // 'resistance_char_spy5.png',
-  // 'resistance_char_spy6.png',
-  // 'resistance_char_spy7.png',
-  // 'resistance_char_spy8.png',
-  // 'resistance_char_spy9.png',
-  // 'resistance_char_spy10.png',
+  'resistance_char_spy1.png',
+  'resistance_char_spy2.png',
+  'resistance_char_spy3.png',
+  'resistance_char_spy4.png',
+  'resistance_char_spy5.png',
+  'resistance_char_spy6.png',
+  'resistance_char_spy7.png',
+  'resistance_char_spy8.png',
+  'resistance_char_spy9.png',
+  'resistance_char_spy10.png'
 
-  'resistance_char_assassin.png',
-  'resistance_char_falsecommander.png',
-  'resistance_char_deepcover.png',
-  'resistance_char_blindspy.png'
+  // 'resistance_char_assassin.png',
+  // 'resistance_char_falsecommander.png',
+  // 'resistance_char_deepcover.png',
+  // 'resistance_char_blindspy.png'
 ];
 const gunImages = [
   'resistance_token_gun1.png',
@@ -90,7 +90,14 @@ module.exports = class Resistance {
     this.res = {};
     this.spies = {};
     this.successes = 0;
-    this.specialRoles = {};
+    this.specialRoles = {
+      commander: '',
+      assassin: '',
+      bodyguard: '',
+      falseCommander: '',
+      deepCover: '',
+      blindSpy: ''
+    };
     this.missionSize = groupSize[this.players.length].missionSize;
     this.currentMission = 0;
     this.rejectTracker = 0;
@@ -115,12 +122,45 @@ module.exports = class Resistance {
     for (let i = 0; i < shuffledPlayers.length; i++) {
       if (i < this.numOfSpies) {
         this.spies[shuffledPlayers[i]] = shuffledSpyImages[i];
+
+        // **********FOR TESTING (REMOVE LATER):
+        const TEST_SPY_IMAGES = {
+          0: 'resistance_char_assassin.png',
+          1: 'resistance_char_falsecommander.png',
+          2: 'resistance_char_deepcover.png',
+          3: 'resistance_char_blindspy.png'
+        };
+        const TEST_SPY_TITLES = {
+          0: 'assassin',
+          1: 'falseCommander',
+          2: 'deepCover',
+          3: 'blindSpy'
+        };
+        if (this.players.length === 10) {
+          this.spies[shuffledPlayers[i]] = TEST_SPY_IMAGES[i];
+          this.specialRoles[TEST_SPY_TITLES[i]] = shuffledPlayers[i];
+        }
+        // **********
       } else {
         this.res[shuffledPlayers[i]] = shuffledResImages[i - this.numOfSpies];
+
+        // **********FOR TESTING (REMOVE LATER):
+        const TEST_RES_IMAGES = {
+          4: 'resistance_char_commander.png',
+          5: 'resistance_char_bodyguard.png'
+        };
+        const TEST_RES_TITLES = {
+          4: 'commander',
+          5: 'bodyguard'
+        };
+        if (this.players.length === 10 && i < 6) {
+          this.res[shuffledPlayers[i]] = TEST_RES_IMAGES[i];
+          this.specialRoles[TEST_RES_TITLES[i]] = shuffledPlayers[i];
+        }
+        // **********
       }
     }
-    this.players = shuffledPlayers;
-
+    this.players = shuffle(shuffledPlayers);
     this.activePlayers[this.players[0]] = true;
   }
   getGameState() {
@@ -139,6 +179,7 @@ module.exports = class Resistance {
       currentPhase: this.currentPhase,
       activePlayers: this.activePlayers,
       proposedTeam: this.proposedTeam,
+      currentVotes: this.currentVotes,
       voteHistory: this.voteHistory,
       missionVotes: this.missionVotes,
       voting: this.voting
@@ -178,6 +219,10 @@ module.exports = class Resistance {
       return;
     } else {
       this.currentVotes[socket.id] = castedVote;
+      io.in(socket.roomName).emit('updateVote', {
+        socketId: socket.id,
+        castedVote
+      });
     }
     if (
       Object.keys(this.currentVotes).length === this.players.length &&
@@ -193,35 +238,25 @@ module.exports = class Resistance {
       this.voting = false;
       this.currentVotes = {};
       this.proposedTeam = {};
-      io.in(socket.roomName).emit('proposedTeam', {
-        proposedTeam: this.proposedTeam
-      });
+      this.currentPhase = 'teamSelectionReveal';
+      io.in(socket.roomName).emit('sendGameState', this.getGameState());
       if (!passed) {
         this.rejectTracker++;
         if (this.rejectTracker === 5) {
           this.gameOver(io, socket, 'reject');
           return;
         }
-        // this.proposedTeam = {};
         this.activePlayers = {
           [this.players[this.currentLeader % this.players.length]]: true
         };
-        // this.activePlayers[
-        //   this.players[this.currentLeader % this.players.length]
-        // ] = true;
-
-        // gameState.proposedTeam = this.proposedTeam;
-        // gameState.activePlayers = this.activePlayers;
-        // gameState.voting = this.voting;
-        // io.in(socket.roomName).emit('setVoteStatus', gameState);
       } else {
         this.rejectTracker = 0;
         this.activePlayers = this.proposedTeam;
-        this.currentPhase = 'missionStart';
-        // io.in(socket.roomName).emit('sendGameState', this.getGameState());
       }
-      // this.currentVotes = {};
-      io.in(socket.roomName).emit('sendGameState', this.getGameState());
+      setTimeout(() => {
+        this.currentPhase = passed ? 'roundStart' : 'teamSelection';
+        io.in(socket.roomName).emit('sendGameState', this.getGameState());
+      }, 5000);
     }
   }
 
@@ -259,7 +294,4 @@ module.exports = class Resistance {
     }
     io.in(socket.roomName).emit('sendGameState', { winner: this.winner });
   }
-  // sendActivePlayers (io, socket) {
-  //   io.in(socket.roomName).emit('setVoteStatus', { activePlayers: this.activePlayers });
-  // }
 };

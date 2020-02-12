@@ -22,6 +22,7 @@ export default class Resistance extends Component {
       currentPhase: null,
       activePlayers: {},
       proposedTeam: {},
+      currentVotes: {},
       voting: false
     };
     this._isMounted = false; // prevent memory leak
@@ -44,6 +45,16 @@ export default class Resistance extends Component {
     });
     socket.on('proposedTeam', data => {
       if (this._isMounted) this.setState(data);
+    });
+    socket.on('updateVote', data => {
+      const { socketId, castedVote } = data;
+      if (this._isMounted)
+        this.setState({
+          currentVotes: {
+            ...this.state.currentVotes,
+            [socketId]: castedVote
+          }
+        });
     });
   }
 
@@ -102,7 +113,7 @@ export default class Resistance extends Component {
             <div style={style.cardAreaBuffer} />
           </div>
           <div style={style.dynamicArea}>
-            {this.state.currentPhase === 'proposeTeam' ? (
+            {this.state.currentPhase === 'teamSelection' ? (
               <Instructions
                 groupSize={this.state.groupSize}
                 currentMission={this.state.currentMission}
@@ -111,10 +122,11 @@ export default class Resistance extends Component {
                 players={this.state.players}
                 currentPhase={this.state.currentPhase}
                 proposedTeam={this.state.proposedTeam}
+                currentVotes={this.state.currentVotes}
                 voting={this.state.voting}
               />
             ) : (
-              <GamePlay />
+              <Mission activePlayers={this.state.activePlayers} />
             )}
             <PlayerList
               activePlayers={this.state.activePlayers}
@@ -125,6 +137,8 @@ export default class Resistance extends Component {
               specialRoles={this.state.specialRoles}
               currentPhase={this.state.currentPhase}
               proposedTeam={this.state.proposedTeam}
+              currentVotes={this.state.currentVotes}
+              voting={this.state.voting}
             />
           </div>
         </div>
