@@ -12,9 +12,11 @@ export default class PlayerList extends Component {
   }
   setProposeTeam(id) {
     if (
-      this.props.currentPhase !== 'teamSelection'
-      || !(socket.id in this.props.activePlayers)
-    ) return;
+      this.props.currentPhase !== 'teamSelection' ||
+      !(socket.id in this.props.activePlayers)
+    )
+      return;
+    console.log('in propose team');
     socket.emit('proposingTeam', { id });
   }
   startVote() {
@@ -32,18 +34,18 @@ export default class PlayerList extends Component {
               style={
                 user === socket.id
                   ? socket.id in this.props.res
-                    ? style.playerBlue //{ color: 'blue' }
-                    : style.playerRed //{ color: 'red' }
+                    ? style.playerBlue
+                    : style.playerRed
                   : socket.id === this.props.specialRoles.bodyguard && (user === this.props.specialRoles.commander || user === this.props.specialRoles.falseCommander)
-                    ? style.playerPurple //{ color: 'purple' }
+                    ? style.playerPurple
                     : (socket.id in this.props.res && socket.id !== this.props.specialRoles.commander)
                       || socket.id === this.props.specialRoles.blindSpy
-                        ? style.playerGray //{ color: 'gray' }
+                        ? style.playerGray
                         : user in this.props.res
                           || (user === this.props.specialRoles.deepCover && socket.id === this.props.specialRoles.commander)
                           || (user === this.props.specialRoles.blindSpy && socket.id in this.props.spies && user !== socket.id)
-                            ? style.playerBlue //{ color: 'blue' }
-                            : style.playerRed //{ color: 'red' }
+                            ? style.playerBlue
+                            : style.playerRed
               }
               onClick={() => this.setProposeTeam(user)}
             >

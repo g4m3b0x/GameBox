@@ -17,7 +17,9 @@ export default class DedicatedScreen extends Component {
       currentLeader: 0,
       currentPhase: null,
       proposedTeam: {},
-      activePlayers: {}
+      activePlayers: {},
+      resultOfVotes: [],
+      successes: 0
     };
     this._isMounted = false; // prevent memory leak
   }
@@ -42,6 +44,7 @@ export default class DedicatedScreen extends Component {
   render() {
     return (
       <div style={style.screen}>
+        <p>Successes: {this.state.successes}</p>
         <p>Players:</p>
         <p>
           [
@@ -70,6 +73,9 @@ export default class DedicatedScreen extends Component {
             </p>
           </React.Fragment>
         )}
+        {this.state.resultOfVotes.map(vote => (
+          <p> {vote}</p>
+        ))}
       </div>
     );
   }
