@@ -256,11 +256,10 @@ module.exports = class Resistance {
       }
       this.proposedTeam = {};
       this.gunImages = gunImages;
-      // setTimeout(() => {
-
-      // }, 5000);
-      this.currentPhase = passed ? 'roundStart' : 'teamSelection';
-      io.in(socket.roomName).emit('sendGameState', this.getGameState());
+      setTimeout(() => {
+        this.currentPhase = passed ? 'roundStart' : 'teamSelection';
+        io.in(socket.roomName).emit('sendGameState', this.getGameState());
+      }, 1);
     }
   }
 

@@ -30,54 +30,45 @@ export default class PlayerList extends Component {
       <div style={style.playerListArea}>
         {this.props.players.map((user, i) => (
           <div key={i} style={style.playerListItem}>
-            <p
+            <button
               style={
                 user === socket.id
                   ? socket.id in this.props.res
-                    ? { color: 'blue' }
-                    : { color: 'red' }
-                  : socket.id === this.props.specialRoles.bodyguard &&
-                    (user === this.props.specialRoles.commander ||
-                      user === this.props.specialRoles.falseCommander)
-                  ? { color: 'purple' }
-                  : (socket.id in this.props.res &&
-                      socket.id !== this.props.specialRoles.commander) ||
-                    socket.id === this.props.specialRoles.blindSpy
-                  ? { color: 'gray' }
-                  : user in this.props.res ||
-                    (user === this.props.specialRoles.deepCover &&
-                      socket.id === this.props.specialRoles.commander) ||
-                    (user === this.props.specialRoles.blindSpy &&
-                      socket.id in this.props.spies &&
-                      user !== socket.id)
-                  ? { color: 'blue' }
-                  : { color: 'red' }
+                    ? style.playerBlue
+                    : style.playerRed
+                  : socket.id === this.props.specialRoles.bodyguard && (user === this.props.specialRoles.commander || user === this.props.specialRoles.falseCommander)
+                    ? style.playerPurple
+                    : (socket.id in this.props.res && socket.id !== this.props.specialRoles.commander)
+                      || socket.id === this.props.specialRoles.blindSpy
+                        ? style.playerGray
+                        : user in this.props.res
+                          || (user === this.props.specialRoles.deepCover && socket.id === this.props.specialRoles.commander)
+                          || (user === this.props.specialRoles.blindSpy && socket.id in this.props.spies && user !== socket.id)
+                            ? style.playerBlue
+                            : style.playerRed
               }
               onClick={() => this.setProposeTeam(user)}
             >
-              {this.props.users[user]}
-            </p>
-            {this.props.currentPhase === 'teamSelection' &&
-              user in this.props.proposedTeam && (
-                <img
-                  style={style.gunImage}
-                  src={this.props.proposedTeam[user]}
-                />
-              )}
-            {this.props.currentPhase === 'teamSelection' &&
-              this.props.voting &&
-              user in this.props.currentVotes && (
-                <img
-                  style={{ height: '1.0em', marginLeft: '0.5em' }}
-                  src={
-                    user !== socket.id
-                      ? '/resistance_token_back.png'
-                      : this.props.currentVotes[user]
-                      ? '/resistance_token_approve.png'
-                      : '/resistance_token_reject.png'
-                  }
-                />
-              )}
+              <p style={style.playerName}>{this.props.users[user]}</p>
+            </button>
+            {this.props.currentPhase === 'teamSelection' && user in this.props.proposedTeam &&
+              <img
+                style={style.gunImage}
+                src={this.props.proposedTeam[user]}
+              />
+            }
+            {this.props.currentPhase === 'teamSelection' && this.props.voting && user in this.props.currentVotes &&
+              <img
+                style={{ height: '1.0em', marginLeft: '0.5em' }}
+                src={
+                  user !== socket.id
+                    ? '/resistance_token_back.png'
+                    : this.props.currentVotes[user]
+                    ? '/resistance_token_approve.png'
+                    : '/resistance_token_reject.png'
+                }
+              />
+            }
           </div>
         ))}
       </div>

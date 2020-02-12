@@ -9,35 +9,28 @@ module.exports = {
     display: 'flex',
     flexDirection: 'column',
   },
+  topArea: {
+    height: '30%',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+  },
   statusBar: {
-    height: '25%',
+    height: '50%',
     width: '100%',
   },
-  belowStatusBar: {
-    height: '75%',
+  instructions: {
+    height: '50%',
     width: '100%',
-    display: 'flex',
-  },
-  cardArea: {
-    height: '100%',
-    width: '33%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  cardAreaBuffer: {
-    flexBasis: '1px',
-    flexGrow: '1',
-  },
-  dynamicArea: {
-    height: '100%',
-    width: '67%',
-    display: 'flex',
-    flexDirection: 'column',
   },
   instructionsArea: {
-    height: '10%',
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+  },
+  bottomArea: {
+    height: '70%',
     width: '100%',
     display: 'flex',
   },
@@ -46,8 +39,8 @@ module.exports = {
     marginLeft: '0.5em',
   },
   playerListArea: {
-    height: '90%',
-    width: '100%',
+    height: '100%',
+    width: '75%',
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -60,9 +53,45 @@ module.exports = {
     display: 'flex',
     alignItems: 'center',
   },
+  playerGray: {
+    borderRadius: '5px',
+    border: '2px solid gray',
+    backgroundColor: 'lightgray',
+  },
+  playerBlue: {
+    borderRadius: '5px',
+    border: '2px solid blue',
+    backgroundColor: 'lightblue',
+  },
+  playerRed: {
+    borderRadius: '5px',
+    border: '2px solid red',
+    backgroundColor: 'pink',
+  },
+  playerPurple: {
+    borderRadius: '5px',
+    border: '2px solid purple',
+    backgroundColor: 'violet',
+  },
+  playerName: {
+    margin: '0 0.5em 0 0.5em',
+    fontSize: '0.5em',
+  },
   gunImage: {
     height: '1.0em',
     marginLeft: '0.5em',
+  },
+  cardArea: {
+    height: '100%',
+    width: '25%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
+  cardAreaBuffer: {
+    flexBasis: '1px',
+    flexGrow: '1',
   },
   flipCard: {
     width: '90%',
