@@ -22,6 +22,7 @@ export default class Resistance extends Component {
       currentPhase: null,
       activePlayers: {},
       proposedTeam: {},
+      currentVotes: {},
       voting: false,
     };
     this._isMounted = false; // prevent memory leak
@@ -45,6 +46,15 @@ export default class Resistance extends Component {
     socket.on('proposedTeam', data => {
       if (this._isMounted) this.setState(data);
     });
+    socket.on('updateVote', data => {
+      const { socketId, castedVote } = data;
+      if (this._isMounted) this.setState({
+        currentVotes: {
+          ...this.state.currentVotes,
+          [socketId]: castedVote,
+        }
+      });
+    })
   }
 
   componentWillUnmount() {
@@ -107,6 +117,7 @@ export default class Resistance extends Component {
               players={this.state.players}
               currentPhase={this.state.currentPhase}
               proposedTeam={this.state.proposedTeam}
+              currentVotes={this.state.currentVotes}
               voting={this.state.voting}
             />
             <PlayerList
@@ -118,6 +129,8 @@ export default class Resistance extends Component {
               specialRoles={this.state.specialRoles}
               currentPhase={this.state.currentPhase}
               proposedTeam={this.state.proposedTeam}
+              currentVotes={this.state.currentVotes}
+              voting={this.state.voting}
             />
           </div>
         </div>
