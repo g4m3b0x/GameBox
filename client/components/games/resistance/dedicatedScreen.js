@@ -43,13 +43,31 @@ export default class DedicatedScreen extends Component {
     return (
       <div style={style.screen}>
         <p>Players:</p>
-        <p>[{this.state.players.map(socketId => this.state.users[socketId]).join(', ')}]</p>
-        <p>{!this.state.winner ? 'Game in progress...' : this.state.winner === 'res' ? 'Resistance wins!' : 'Spies win!' }</p>
+        <p>
+          [
+          {this.state.players
+            .map(socketId => this.state.users[socketId])
+            .join(', ')}
+          ]
+        </p>
+        <p>
+          {!this.state.winner
+            ? 'Game in progress...'
+            : this.state.winner === 'res'
+            ? 'Resistance wins!'
+            : 'Spies win!'}
+        </p>
         <p>Current phase: {this.state.currentPhase}</p>
         {!!Object.keys(this.state.proposedTeam).length && (
           <React.Fragment>
             <p>Proposed Team:</p>
-            <p>[{Object.keys(this.state.proposedTeam).map(socketId => this.state.users[socketId]).join(', ')}]</p>
+            <p>
+              [
+              {Object.keys(this.state.proposedTeam)
+                .map(socketId => this.state.users[socketId])
+                .join(', ')}
+              ]
+            </p>
           </React.Fragment>
         )}
       </div>

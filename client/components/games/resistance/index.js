@@ -5,7 +5,7 @@ import style from './style';
 import DedicatedScreen from './dedicatedScreen';
 import Instructions from './instructions';
 import PlayerList from './playerList';
-
+import Mission from './Mission';
 export default class Resistance extends Component {
   constructor() {
     super();
@@ -22,7 +22,7 @@ export default class Resistance extends Component {
       currentPhase: null,
       activePlayers: {},
       proposedTeam: {},
-      voting: false,
+      voting: false
     };
     this._isMounted = false; // prevent memory leak
     this.returnToLobby = this.returnToLobby.bind(this);
@@ -70,9 +70,12 @@ export default class Resistance extends Component {
               <p>MISSION {this.state.currentMission + 1}</p>
             </div>
             <div>
-            {this.state.currentPhase === 'teamSelection' && (
-              <p>Current leader: {this.state.users[Object.keys(this.state.activePlayers)[0]]}</p>
-            )}
+              {this.state.currentPhase === 'teamSelection' && (
+                <p>
+                  Current leader:{' '}
+                  {this.state.users[Object.keys(this.state.activePlayers)[0]]}
+                </p>
+              )}
             </div>
           </div>
         </div>
@@ -99,16 +102,20 @@ export default class Resistance extends Component {
             <div style={style.cardAreaBuffer} />
           </div>
           <div style={style.dynamicArea}>
-            <Instructions
-              groupSize={this.state.groupSize}
-              currentMission={this.state.currentMission}
-              activePlayers={this.state.activePlayers}
-              users={this.state.users}
-              players={this.state.players}
-              currentPhase={this.state.currentPhase}
-              proposedTeam={this.state.proposedTeam}
-              voting={this.state.voting}
-            />
+            {this.state.currentPhase === 'proposeTeam' ? (
+              <Instructions
+                groupSize={this.state.groupSize}
+                currentMission={this.state.currentMission}
+                activePlayers={this.state.activePlayers}
+                users={this.state.users}
+                players={this.state.players}
+                currentPhase={this.state.currentPhase}
+                proposedTeam={this.state.proposedTeam}
+                voting={this.state.voting}
+              />
+            ) : (
+              <GamePlay />
+            )}
             <PlayerList
               activePlayers={this.state.activePlayers}
               users={this.state.users}

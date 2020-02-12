@@ -68,7 +68,7 @@ const gunImages = [
   'resistance_token_gun2.png',
   'resistance_token_gun3.png',
   'resistance_token_gun4.png',
-  'resistance_token_gun5.png',
+  'resistance_token_gun5.png'
 ];
 
 const shuffle = arr => {
@@ -105,6 +105,7 @@ module.exports = class Resistance {
     this.voteHistory = [[], [], [], [], []];
     this.missionVotes = {};
     this.voting = false;
+    this.resultOfVotes = [];
     this.generateTeams();
   }
   generateTeams() {
@@ -141,7 +142,6 @@ module.exports = class Resistance {
       voteHistory: this.voteHistory,
       missionVotes: this.missionVotes,
       voting: this.voting
-
     };
   }
   proposeTeam(io, socket, data) {
@@ -153,16 +153,16 @@ module.exports = class Resistance {
     if (data.id in this.proposedTeam) {
       this.gunImages.push(this.proposedTeam[data.id]);
       delete this.proposedTeam[data.id];
-    }
-    else if (
+    } else if (
       Object.keys(this.proposedTeam).length === missionSize[this.currentMission]
     )
       return;
-
     else {
       this.proposedTeam[data.id] = this.gunImages.pop();
     }
-    io.in(socket.roomName).emit('proposedTeam', { proposedTeam: this.proposedTeam });
+    io.in(socket.roomName).emit('proposedTeam', {
+      proposedTeam: this.proposedTeam
+    });
   }
   startVote(io, socket) {
     const { missionSize } = groupSize[this.players.length];
@@ -217,7 +217,7 @@ module.exports = class Resistance {
       } else {
         this.rejectTracker = 0;
         this.activePlayers = this.proposedTeam;
-        this.currentPhase = 'roundStart';
+        this.currentPhase = 'missionStart';
         // io.in(socket.roomName).emit('sendGameState', this.getGameState());
       }
       // this.currentVotes = {};
@@ -242,6 +242,7 @@ module.exports = class Resistance {
       else if (this.successes === 3) this.gameOver(io, socket, 'resWin');
       this.currentMission++;
       const resultVotes = shuffle(Object.values(this.missionVotes));
+      io.in(socket.roomName).emit('sendGameState', this.getGameState());
     }
   }
   gameOver(io, socket, reason) {
