@@ -17,26 +17,27 @@ module.exports = {
     alignItems: 'flex-end',
   },
   statusBar: {
-    height: '50%',
-    width: '100%',
-  },
-  instructions: {
-    height: '50%',
-    width: '100%',
-  },
-  instructionsArea: {
-    height: '100%',
+    height: '25%',
     width: '100%',
     display: 'flex',
   },
+  instructions: {
+    height: '75%',
+    width: '100%',
+    display: 'flex',
+  },
+  teamVoteButton: {
+    height: '1.5em',
+    marginLeft: '0.5em',
+  },
+  missionVoteButton: {
+    height: '3.0em',
+    marginLeft: '0.5em',
+  }, 
   bottomArea: {
     height: '70%',
     width: '100%',
     display: 'flex',
-  },
-  approveButton: {
-    height: '1.5em',
-    marginLeft: '0.5em',
   },
   playerListArea: {
     height: '100%',
@@ -52,6 +53,14 @@ module.exports = {
     margin: '0.25em',
     display: 'flex',
     alignItems: 'center',
+  },
+  playerVoteArea: {
+    height: '100%',
+    width: '2.5em',
+  },
+  playerVoteToken: {
+    height: '1.0em',
+    margin: '0 0.5em 0 0.5em',
   },
   playerGray: {
     borderRadius: '5px',

@@ -61,6 +61,7 @@ export default class DedicatedScreen extends Component {
             : 'Spies win!'}
         </p>
         <p>Current phase: {this.state.currentPhase}</p>
+        <p>Current leader: {this.state.users[this.state.players[this.state.currentLeader % this.state.players.length]]}</p>
         {!!Object.keys(this.state.proposedTeam).length && (
           <React.Fragment>
             <p>Proposed Team:</p>
@@ -74,7 +75,7 @@ export default class DedicatedScreen extends Component {
           </React.Fragment>
         )}
         {this.state.resultOfVotes.map(vote => (
-          <p> {vote}</p>
+          <p>{vote}</p>
         ))}
       </div>
     );
