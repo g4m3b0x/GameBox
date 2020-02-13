@@ -19,11 +19,13 @@ export default class Resistance extends Component {
       spies: {},
       specialRoles: {},
       currentMission: 0,
+      currentLeader: 0,
       currentPhase: null,
       activePlayers: {},
       proposedTeam: {},
       teamVotes: {},
-      voting: false
+      voting: false,
+      missionVotes: {},
     };
     this._isMounted = false; // prevent memory leak
     this.returnToLobby = this.returnToLobby.bind(this);
@@ -46,12 +48,22 @@ export default class Resistance extends Component {
     socket.on('proposedTeam', data => {
       if (this._isMounted) this.setState(data);
     });
-    socket.on('updateVote', data => {
+    socket.on('updateTeamVote', data => {
       const { socketId, castedVote } = data;
       if (this._isMounted)
         this.setState({
           teamVotes: {
             ...this.state.teamVotes,
+            [socketId]: castedVote
+          }
+        });
+    });
+    socket.on('updateMissionVote', data => {
+      const { socketId, castedVote } = data;
+      if (this._isMounted)
+        this.setState({
+          missionVotes: {
+            ...this.state.missionVotes,
             [socketId]: castedVote
           }
         });
@@ -77,17 +89,13 @@ export default class Resistance extends Component {
         <div style={style.topArea}>
           <button onClick={this.returnToLobby}>Back to Lobby</button>
           <div style={style.statusBar}>
-            <div>
-              <p>MISSION {this.state.currentMission + 1}</p>
-            </div>
-            <div>
-              {this.state.currentPhase === 'teamSelection' && (
-                <p>
-                  Current leader:{' '}
-                  {this.state.users[Object.keys(this.state.activePlayers)[0]]}
-                </p>
-              )}
-            </div>
+            <p>
+              MISSION
+              {' ' + (this.state.currentMission + 1) + ' '}
+              {this.state.currentPhase === 'teamSelection' && this.state.players.length &&
+                `| Current leader: ${this.state.users[this.state.players[this.state.currentLeader % this.state.players.length]]}`
+              }
+            </p>
           </div>
           <div style={style.instructions}>
             {this.state.currentPhase === 'teamSelection' ? (
@@ -107,6 +115,7 @@ export default class Resistance extends Component {
                 res={this.state.res}
                 spies={this.state.spies}
                 activePlayers={this.state.activePlayers}
+                missionVotes={this.state.missionVotes}
               />
             )}
           </div>
@@ -119,10 +128,12 @@ export default class Resistance extends Component {
             res={this.state.res}
             spies={this.state.spies}
             specialRoles={this.state.specialRoles}
+            currentLeader={this.state.currentLeader}
             currentPhase={this.state.currentPhase}
             proposedTeam={this.state.proposedTeam}
             teamVotes={this.state.teamVotes}
             voting={this.state.voting}
+            missionVotes={this.state.missionVotes}
           />
           <div style={style.cardArea}>
             <div style={style.cardAreaBuffer} />

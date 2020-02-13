@@ -1,22 +1,34 @@
 import React from 'react';
 import socket from '../../../index.js';
+import style from './style';
 
-function missionVote(castedVote) {
-  socket.emit('missionVote', castedVote);
+function submitMissionVote(castedVote) {
+  socket.emit('submitMissionVote', castedVote);
 }
 
 const MissionInput = props => {
   return props.activePlayers[socket.id] ? (
-    <div>
-      <button onClick={() => missionVote(true)}>Success</button>
-      {socket.id in props.spies &&
-        <button onClick={() => missionVote(false)}>Fail</button>
-      }
-    </div>
+    !(socket.id in props.missionVotes) ? (
+      <React.Fragment>
+        <p>Complete mission?</p>
+        <img
+          style={style.missionVoteButton}
+          src={'/resistance_mission_success.png'}
+          onClick={() => submitMissionVote(true)}
+        />
+        {socket.id in props.spies &&
+          <img
+            style={style.missionVoteButton}
+            src={'/resistance_mission_fail.png'}
+            onClick={() => submitMissionVote(false)}
+          />
+        }
+      </React.Fragment>
+    ) : (
+      <p>Waiting for remaining team members...</p>
+    )
   ) : (
-    <div>
-      <p>Players on mission are currrently casting their vote</p>
-    </div>
+    <p>Waiting for team members to complete mission...</p>
   );
 };
 

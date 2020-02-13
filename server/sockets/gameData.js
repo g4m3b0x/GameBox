@@ -16,16 +16,16 @@ module.exports = (socket, io, rooms, users) => {
     const game = rooms[socket.roomName].game;
     game.proposeTeam(io, socket, data);
   });
-  socket.on('startVote', () => {
+  socket.on('startTeamVote', () => {
     const game = rooms[socket.roomName].game;
-    game.startVote(io, socket);
+    game.startTeamVote(io, socket);
   });
-  socket.on('submitVote', data => {
+  socket.on('submitTeamVote', data => {
     const game = rooms[socket.roomName].game;
-    game.submitVote(io, socket, data);
+    game.submitTeamVote(io, socket, data);
   });
-  socket.on('missionVote', data => {
+  socket.on('submitMissionVote', data => {
     const game = rooms[socket.roomName].game;
-    game.missionVote(io, socket, data);
+    game.submitMissionVote(io, socket, data);
   });
 };
