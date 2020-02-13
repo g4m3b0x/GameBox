@@ -64,22 +64,22 @@ module.exports = {
   },
   playerGray: {
     borderRadius: '5px',
-    border: '2px solid gray',
+    border: '1px solid gray',
     backgroundColor: 'lightgray',
   },
   playerBlue: {
     borderRadius: '5px',
-    border: '2px solid blue',
+    border: '1px solid blue',
     backgroundColor: 'lightblue',
   },
   playerRed: {
     borderRadius: '5px',
-    border: '2px solid red',
+    border: '1px solid red',
     backgroundColor: 'pink',
   },
   playerPurple: {
     borderRadius: '5px',
-    border: '2px solid purple',
+    border: '1px solid purple',
     backgroundColor: 'violet',
   },
   playerName: {
