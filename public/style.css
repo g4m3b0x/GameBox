@@ -14,7 +14,7 @@ input {
   width: 100%;
   font-family: 'Darker Grotesque';
   font-size: 1em;
-  border-width: 0px 0px 2px 0px;
+  border-width: 0px 0px 1px 0px;
   border-color: #eeeeee;
   outline: none;
 }
@@ -23,7 +23,7 @@ button {
   font-family: 'Darker Grotesque';
   font-size: 1em;
   border-radius: 5px;
-  border: 2px solid gray;
+  border: 1px solid gray;
   outline: none;
   background-color: lightgray;
   display: flex;
@@ -36,7 +36,7 @@ select {
   font-family: 'Darker Grotesque';
   font-size: 1em;
   border-radius: 5px;
-  border: 2px solid gray;
+  border: 1px solid gray;
   outline: none;
   margin: 0 0 0 0;
 }
