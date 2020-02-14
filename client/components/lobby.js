@@ -71,7 +71,9 @@ export default class Lobby extends Component {
       if (this._isMounted) this.setState({ hostErrorMsg: msg });
     });
 
-    setTimeout(this.scrollDown, 100); // scrolls all the way down when you join the room
+    // MISCELLANEOUS
+    document.getElementById('lobby-typeMessage').focus();
+    setTimeout(this.scrollDown, 100);
   }
 
   componentWillUnmount() {
