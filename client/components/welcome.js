@@ -46,6 +46,8 @@ class Welcome extends Component {
       const { msg } = data;
       this.handleError(msg);
     });
+    // FOCUS
+    document.getElementById('welcome-nameInput').focus();
   }
 
   clickCreate() {

@@ -64,7 +64,7 @@ module.exports = {
     display: 'flex',
   },
   playerToken: {
-    height: '1.0em',
+    height: '80%',
   },
   playerGray: {
     borderRadius: '5px',
