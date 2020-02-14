@@ -6,6 +6,8 @@ import DedicatedScreen from './dedicatedScreen';
 import TeamSelectionInput from './teamSelectionInput';
 import MissionInput from './missionInput';
 import PlayerList from './playerList';
+import CardArea from './cardArea';
+
 export default class Resistance extends Component {
   constructor() {
     super();
@@ -82,7 +84,7 @@ export default class Resistance extends Component {
 
   render() {
     if (this.state.dedicatedScreen === socket.id) {
-      return <DedicatedScreen />;
+      return <DedicatedScreen gameState={this.state} />;
     }
     return (
       <div style={style.view}>
@@ -99,63 +101,15 @@ export default class Resistance extends Component {
           </div>
           <div style={style.instructions}>
             {this.state.currentPhase === 'teamSelection' ? (
-              <TeamSelectionInput
-                groupSize={this.state.groupSize}
-                currentMission={this.state.currentMission}
-                activePlayers={this.state.activePlayers}
-                users={this.state.users}
-                players={this.state.players}
-                currentPhase={this.state.currentPhase}
-                proposedTeam={this.state.proposedTeam}
-                teamVotes={this.state.teamVotes}
-                voting={this.state.voting}
-              />
+              <TeamSelectionInput gameState={this.state} />
             ) : (
-              <MissionInput
-                res={this.state.res}
-                spies={this.state.spies}
-                activePlayers={this.state.activePlayers}
-                missionVotes={this.state.missionVotes}
-              />
+              <MissionInput gameState={this.state} />
             )}
           </div>
         </div>
         <div style={style.bottomArea}>
-          <PlayerList
-            activePlayers={this.state.activePlayers}
-            users={this.state.users}
-            players={this.state.players}
-            res={this.state.res}
-            spies={this.state.spies}
-            specialRoles={this.state.specialRoles}
-            currentLeader={this.state.currentLeader}
-            currentPhase={this.state.currentPhase}
-            proposedTeam={this.state.proposedTeam}
-            teamVotes={this.state.teamVotes}
-            voting={this.state.voting}
-            missionVotes={this.state.missionVotes}
-          />
-          <div style={style.cardArea}>
-            <div style={style.cardAreaBuffer} />
-            <div className="flip-card" style={style.flipCard}>
-              <div className="flip-card-inner">
-                <div className="flip-card-front">
-                  <img style={style.card} src="resistance_char_back.png" />
-                </div>
-                <div className="flip-card-back">
-                  <img
-                    style={style.card}
-                    src={
-                      socket.id in this.state.spies
-                        ? this.state.spies[socket.id]
-                        : this.state.res[socket.id]
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-            <div style={style.cardAreaBuffer} />
-          </div>
+          <PlayerList gameState={this.state} />
+          <CardArea gameState={this.state} />
         </div>
       </div>
     );

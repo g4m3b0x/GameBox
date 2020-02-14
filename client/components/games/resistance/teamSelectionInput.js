@@ -10,8 +10,9 @@ function submitTeamVote(castedVote) {
 }
 
 const TeamSelectionInput = props => {
-  return props.voting ? (
-    !(socket.id in props.teamVotes) ? (
+  const gameState = props.gameState;
+  return gameState.voting ? (
+    !(socket.id in gameState.teamVotes) ? (
       <React.Fragment>
         <p>Approve team?</p>
         <img
@@ -28,13 +29,13 @@ const TeamSelectionInput = props => {
     ) : (
       <p>Waiting for remaining votes...</p>
     )
-  ) : props.activePlayers[socket.id] ? (
+  ) : gameState.activePlayers[socket.id] ? (
     <React.Fragment>
       <p>
         Choose a team of{' '}
         {
-          props.groupSize[Object.keys(props.users).length]
-            .missionSize[props.currentMission]
+          gameState.groupSize[Object.keys(gameState.users).length]
+            .missionSize[gameState.currentMission]
         }
         !
       </p>
@@ -42,9 +43,9 @@ const TeamSelectionInput = props => {
         style={style.genericButton}
         onClick={startTeamVote}
         disabled={
-          Object.keys(props.proposedTeam).length !==
-          props.groupSize[Object.keys(props.users).length]
-            .missionSize[props.currentMission]
+          Object.keys(gameState.proposedTeam).length !==
+          gameState.groupSize[Object.keys(gameState.users).length]
+            .missionSize[gameState.currentMission]
         }
       >
         Submit
@@ -52,20 +53,20 @@ const TeamSelectionInput = props => {
     </React.Fragment>
   ) : (
     <div>
-      {Object.keys(props.groupSize).length && (
+      {Object.keys(gameState.groupSize).length && (
         <p>
           Waiting for{' '}
-          {props.users[Object.keys(props.activePlayers)[0]]} to
+          {gameState.users[Object.keys(gameState.activePlayers)[0]]} to
           propose a team of{' '}
           {
-            props.groupSize[Object.keys(props.users).length]
-              .missionSize[props.currentMission]
+            gameState.groupSize[Object.keys(gameState.users).length]
+              .missionSize[gameState.currentMission]
           }
           ...
         </p>
       )}
     </div>
   );
-}
+};
 
 export default TeamSelectionInput;

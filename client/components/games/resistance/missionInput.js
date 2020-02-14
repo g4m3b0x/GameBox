@@ -7,8 +7,9 @@ function submitMissionVote(castedVote) {
 }
 
 const MissionInput = props => {
-  return props.activePlayers[socket.id] ? (
-    !(socket.id in props.missionVotes) ? (
+  const gameState = props.gameState;
+  return gameState.activePlayers[socket.id] ? (
+    !(socket.id in gameState.missionVotes) ? (
       <React.Fragment>
         <p>Complete mission?</p>
         <img
@@ -16,7 +17,7 @@ const MissionInput = props => {
           src={'/resistance_mission_success.png'}
           onClick={() => submitMissionVote(true)}
         />
-        {socket.id in props.spies &&
+        {socket.id in gameState.spies &&
           <img
             style={style.missionVoteButton}
             src={'/resistance_mission_fail.png'}

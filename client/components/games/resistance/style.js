@@ -62,7 +62,6 @@ module.exports = {
     height: '100%',
     width: '1.4em',
     display: 'flex',
-    // justifyContent: 'space-evenly',
   },
   playerToken: {
     height: '1.0em',

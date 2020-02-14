@@ -11,12 +11,14 @@ function setProposeTeam(currentPhase, activePlayers, id) {
 }
 
 const PlayerList = props => {
+  const gameState = props.gameState;
   return (
     <div style={style.playerListArea}>
-      {props.players.map((user, i) => (
+      {gameState.players.map((user, i) => (
         <div key={i} style={style.playerListItem}>
           <div style={style.playerTokenArea}>
-            {props.players && user === props.players[props.currentLeader % props.players.length] &&
+            {gameState.players
+              && user === gameState.players[gameState.currentLeader % gameState.players.length] &&
               <img
                 style={style.playerToken}
                 src={'/resistance_token_leader.png'}
@@ -24,25 +26,27 @@ const PlayerList = props => {
             }
           </div>
           <div style={style.playerTokenArea}>
-            {props.currentPhase === 'teamSelection' && props.voting && user in props.teamVotes &&
+            {gameState.currentPhase === 'teamSelection'
+              && gameState.voting && user in gameState.teamVotes &&
               <img
                 style={style.playerToken}
                 src={
                   user !== socket.id
                     ? '/resistance_token_back.png'
-                    : props.teamVotes[user]
+                    : gameState.teamVotes[user]
                     ? '/resistance_token_approve.png'
                     : '/resistance_token_reject.png'
                 }
               />
             }
-            {props.currentPhase === 'roundStart' && props.missionVotes && user in props.missionVotes &&
+            {gameState.currentPhase === 'roundStart'
+              && gameState.missionVotes && user in gameState.missionVotes &&
               <img
                 style={style.playerToken}
                 src={
                   user !== socket.id
                     ? '/resistance_mission_back.png'
-                    : props.missionVotes[user]
+                    : gameState.missionVotes[user]
                     ? '/resistance_mission_success.png'
                     : '/resistance_mission_fail.png'
                 }
@@ -52,34 +56,34 @@ const PlayerList = props => {
           <button
             style={
               user === socket.id
-                ? socket.id in props.res
+                ? socket.id in gameState.res
                   ? style.playerBlue
                   : style.playerRed
-                : socket.id === props.specialRoles.bodyguard && (user === props.specialRoles.commander || user === props.specialRoles.falseCommander)
+                : socket.id === gameState.specialRoles.bodyguard && (user === gameState.specialRoles.commander || user === gameState.specialRoles.falseCommander)
                   ? style.playerPurple
-                  : (socket.id in props.res && socket.id !== props.specialRoles.commander)
-                    || socket.id === props.specialRoles.blindSpy
+                  : (socket.id in gameState.res && socket.id !== gameState.specialRoles.commander)
+                    || socket.id === gameState.specialRoles.blindSpy
                       ? style.playerGray
-                      : user in props.res
-                        || (user === props.specialRoles.deepCover && socket.id === props.specialRoles.commander)
-                        || (user === props.specialRoles.blindSpy && socket.id in props.spies && user !== socket.id)
+                      : user in gameState.res
+                        || (user === gameState.specialRoles.deepCover && socket.id === pgameStaterops.specialRoles.commander)
+                        || (user === gameState.specialRoles.blindSpy && socket.id in gameState.spies && user !== socket.id)
                           ? style.playerBlue
                           : style.playerRed
             }
-            onClick={() => setProposeTeam(props.currentPhase, props.activePlayers, user)}
+            onClick={() => setProposeTeam(gameState.currentPhase, gameState.activePlayers, user)}
           >
-            <p style={style.playerName}>{props.users[user]}</p>
+            <p style={style.playerName}>{gameState.users[user]}</p>
           </button>
-          {(props.currentPhase === 'teamSelection' || props.currentPhase === 'roundStart') && user in props.proposedTeam &&
+          {(gameState.currentPhase === 'teamSelection' || gameState.currentPhase === 'roundStart') && user in gameState.proposedTeam &&
             <img
               style={style.gunImage}
-              src={props.proposedTeam[user]}
+              src={gameState.proposedTeam[user]}
             />
           }
         </div>
       ))}
     </div>
   );
-}
+};
 
 export default PlayerList;
