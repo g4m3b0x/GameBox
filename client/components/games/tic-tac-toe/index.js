@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import socket from '../../../index.js';
 import style from './style';
 
+import BackToLobby from '../backToLobby';
+
 export default class TicTacToe extends Component {
   constructor() {
     super();
@@ -52,7 +54,7 @@ export default class TicTacToe extends Component {
         {!this.state.winner ? (
           <div>
             <div style={style.topArea}>
-              <button className="tiny-button" onClick={this.returnToLobby}>Back to Lobby</button>
+              <BackToLobby />
               <p style={{ width: '100%' }}>{Object.values(this.state.users)[this.state.turn]}'s turn:</p>
             </div>
             <div style={style.table}>
