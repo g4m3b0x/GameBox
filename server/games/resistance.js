@@ -89,7 +89,6 @@ module.exports = class Resistance {
     this.numOfSpies = groupSize[this.players.length].spies;
     this.res = {};
     this.spies = {};
-    this.successes = 0;
     this.specialRoles = {
       commander: '',
       assassin: '',
@@ -102,17 +101,16 @@ module.exports = class Resistance {
     this.currentMission = 0;
     this.rejectTracker = 0;
     this.currentLeader = 0;
-    this.failures = 0;
-    this.activePlayers = {};
     this.currentPhase = 'teamSelection';
-    this.activePlayers = {};
+    this.voting = false;
     this.proposedTeam = {};
     this.gunImages = gunImages;
     this.teamVotes = {};
     this.voteHistory = [[], [], [], [], []];
     this.missionVotes = {};
-    this.voting = false;
     this.resultOfVotes = [];
+    this.successes = 0;
+    this.failures = 0;
     this.generateTeams();
   }
   generateTeams() {
@@ -161,7 +159,6 @@ module.exports = class Resistance {
       }
     }
     this.players = shuffle(shuffledPlayers);
-    this.activePlayers[this.players[0]] = true;
   }
   getGameState() {
     return {
@@ -177,14 +174,14 @@ module.exports = class Resistance {
       rejectTracker: this.rejectTracker,
       currentLeader: this.currentLeader,
       currentPhase: this.currentPhase,
-      activePlayers: this.activePlayers,
+      voting: this.voting,
       proposedTeam: this.proposedTeam,
       teamVotes: this.teamVotes,
-      voting: this.voting,
       voteHistory: this.voteHistory,
       missionVotes: this.missionVotes,
       resultOfVotes: this.resultOfVotes,
-      successes: this.successes
+      successes: this.successes,
+      failures: this.failures,
     };
   }
   proposeTeam(io, socket, data) {
@@ -245,15 +242,9 @@ module.exports = class Resistance {
           this.gameOver(io, socket, 'reject');
           return;
         }
-        this.currentLeader++;
-        this.activePlayers = {
-          [this.players[this.currentLeader % this.players.length]]: true
-        };
-        this.proposedTeam = {};
-        this.gunImages = gunImages;
+        this.nextVote();
       } else {
         this.rejectTracker = 0;
-        this.activePlayers = this.proposedTeam;
       }
       setTimeout(() => {
         this.currentPhase = passed ? 'roundStart' : 'teamSelection';
@@ -261,7 +252,13 @@ module.exports = class Resistance {
       }, 1);
     }
   }
-
+  nextVote() {
+    this.currentLeader = (this.currentLeader + 1) % this.players.length;
+    this.currentPhase = 'teamSelection';
+    this.missionVotes = {};
+    this.proposedTeam = {};
+    this.gunImages = gunImages;
+  }
   submitMissionVote(io, socket, castedVote) {
     if (socket.id in this.missionVotes) {
       return;
@@ -297,13 +294,9 @@ module.exports = class Resistance {
         }
         return;
       }
-      this.currentLeader++;
       this.currentMission++;
-      this.currentPhase = 'teamSelection';
       this.resultOfVotes = shuffle(Object.values(this.missionVotes));
-      this.missionVotes = {};
-      this.proposedTeam = {};
-      this.gunImages = gunImages;
+      this.nextVote();
       io.in(socket.roomName).emit('sendGameState', this.getGameState());
     }
   }

@@ -2,11 +2,8 @@ import React from 'react';
 import socket from '../../../index.js';
 import style from './style';
 
-function setProposeTeam(currentPhase, activePlayers, id) {
-  if (
-    currentPhase !== 'teamSelection'
-    || !(socket.id in activePlayers)
-  ) return;
+function setProposeTeam(currentPhase, leaderId, id) {
+  if (currentPhase !== 'teamSelection' || socket.id !== leaderId) return;
   socket.emit('proposingTeam', { id });
 }
 
@@ -18,7 +15,7 @@ const PlayerList = props => {
         <div key={i} style={style.playerListItem}>
           <div style={style.playerTokenArea}>
             {gameState.players
-              && user === gameState.players[gameState.currentLeader % gameState.players.length] &&
+              && user === gameState.players[gameState.currentLeader] &&
               <img
                 style={style.playerToken}
                 src={'/resistance_token_leader.png'}
@@ -70,7 +67,7 @@ const PlayerList = props => {
                           ? style.playerBlue
                           : style.playerRed
             }
-            onClick={() => setProposeTeam(gameState.currentPhase, gameState.activePlayers, user)}
+            onClick={() => setProposeTeam(gameState.currentPhase, gameState.players[gameState.currentLeader], user)}
           >
             <p style={style.playerName}>{gameState.users[user]}</p>
           </button>

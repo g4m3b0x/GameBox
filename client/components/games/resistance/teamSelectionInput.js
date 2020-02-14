@@ -29,7 +29,7 @@ const TeamSelectionInput = props => {
     ) : (
       <p>Waiting for remaining votes...</p>
     )
-  ) : gameState.activePlayers[socket.id] ? (
+  ) : socket.id === gameState.players[gameState.currentLeader] ? (
     <React.Fragment>
       <p>
         Choose a team of{' '}
@@ -56,7 +56,7 @@ const TeamSelectionInput = props => {
       {Object.keys(gameState.groupSize).length && (
         <p>
           Waiting for{' '}
-          {gameState.users[Object.keys(gameState.activePlayers)[0]]} to
+          {gameState.users[gameState.players[gameState.currentLeader]]} to
           propose a team of{' '}
           {
             gameState.groupSize[Object.keys(gameState.users).length]

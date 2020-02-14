@@ -25,7 +25,6 @@ export default class Resistance extends Component {
       currentMission: 0,
       currentLeader: 0,
       currentPhase: null,
-      activePlayers: {},
       proposedTeam: {},
       teamVotes: {},
       voting: false,

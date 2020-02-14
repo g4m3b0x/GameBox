@@ -6,7 +6,7 @@ const DedicatedScreen = props => {
   const gameState = props.gameState;
   return (
     <div style={style.screen}>
-      <p>Successes: {gameState.successes}</p>
+      <p>Successes: {gameState.successes}, Failures: {gameState.failures}</p>
       <p>Players:</p>
       <p>
         [
@@ -25,7 +25,7 @@ const DedicatedScreen = props => {
       <p>Current phase: {gameState.currentPhase}</p>
       <p>Current mission: {gameState.currentMission + 1}</p>
       <p>Reject tracker: {gameState.rejectTracker}</p>
-      <p>Current leader: {gameState.users[gameState.players[gameState.currentLeader % gameState.players.length]]}</p>
+      <p>Current leader: {gameState.users[gameState.players[gameState.currentLeader]]}</p>
       {!!Object.keys(gameState.proposedTeam).length && (
         <React.Fragment>
           <p>Proposed Team:</p>

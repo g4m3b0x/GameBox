@@ -8,8 +8,8 @@ const StatusBar = props => {
       <p>
         MISSION
         {' ' + (gameState.currentMission + 1) + ' '}
-        {gameState.currentPhase === 'teamSelection' && gameState.players.length &&
-          `| Leader: ${gameState.users[gameState.players[gameState.currentLeader % gameState.players.length]]}`
+        {gameState.players.length &&
+          `| Leader: ${gameState.users[gameState.players[gameState.currentLeader]]}`
         }
       </p>
     </div>
