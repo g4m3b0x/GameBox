@@ -39,7 +39,7 @@ const TeamSelectionInput = props => {
         !
       </p>
       <button
-        style={{ marginLeft: '0.5em' }}
+        style={style.genericButton}
         onClick={startTeamVote}
         disabled={
           Object.keys(props.proposedTeam).length !==

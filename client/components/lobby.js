@@ -132,6 +132,7 @@ export default class Lobby extends Component {
           <div id="lobby-header-room">
             <p>ROOM CODE: {socket.roomName}</p>
             <button
+              className="tiny-button"
               onClick={() => {
                 socket.emit('routesReducer', { request: 'exitRoom' });
                 socket.emit('disconnecting');

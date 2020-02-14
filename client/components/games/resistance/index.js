@@ -87,13 +87,13 @@ export default class Resistance extends Component {
     return (
       <div style={style.view}>
         <div style={style.topArea}>
-          <button onClick={this.returnToLobby}>Back to Lobby</button>
+          <button className="tiny-button" onClick={this.returnToLobby}>Back to Lobby</button>
           <div style={style.statusBar}>
             <p>
               MISSION
               {' ' + (this.state.currentMission + 1) + ' '}
               {this.state.currentPhase === 'teamSelection' && this.state.players.length &&
-                `| Current leader: ${this.state.users[this.state.players[this.state.currentLeader % this.state.players.length]]}`
+                `| Leader: ${this.state.users[this.state.players[this.state.currentLeader % this.state.players.length]]}`
               }
             </p>
           </div>

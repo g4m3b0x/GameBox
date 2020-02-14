@@ -32,6 +32,10 @@ button {
   margin: 0 0 0 0;
 }
 
+.tiny-button {
+  font-size: 0.6em;
+}
+
 select {
   font-family: 'Darker Grotesque';
   font-size: 1em;
@@ -219,11 +223,6 @@ select {
 
 #lobby-header-room > p {
   font-size: 1.25em;
-}
-
-#lobby-header-room > button {
-  height: 60%;
-  font-size: 0.6em;
 }
 
 #lobby-header-game {

@@ -1,4 +1,9 @@
 module.exports = {
+  topArea: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end'
+  },
   table: {
     height: '45vh',
     width: '45vh',
