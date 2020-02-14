@@ -1,83 +1,48 @@
-import React, { Component } from 'react';
-import socket from '../../../index.js';
+import React from 'react';
+// import socket from '../../../index.js';
 import style from './style';
 
-export default class DedicatedScreen extends Component {
-  constructor() {
-    super();
-    this.state = {
-      users: {},
-      dedicatedScreen: null,
-      players: [],
-      winner: null,
-      res: {},
-      spies: {},
-      currentMission: 0,
-      rejectTracker: 0,
-      currentLeader: 0,
-      currentPhase: null,
-      proposedTeam: {},
-      activePlayers: {},
-      resultOfVotes: [],
-      successes: 0
-    };
-    this._isMounted = false; // prevent memory leak
-  }
+const DedicatedScreen = props => {
+  const gameState = props.gameState;
+  return (
+    <div style={style.screen}>
+      <p>Successes: {gameState.successes}</p>
+      <p>Players:</p>
+      <p>
+        [
+        {gameState.players
+          .map(socketId => gameState.users[socketId])
+          .join(', ')}
+        ]
+      </p>
+      <p>
+        {!gameState.winner
+          ? 'Game in progress...'
+          : gameState.winner === 'res'
+          ? 'Resistance wins!'
+          : 'Spies win!'}
+      </p>
+      <p>Current phase: {gameState.currentPhase}</p>
+      <p>Current mission: {gameState.currentMission + 1}</p>
+      <p>Reject tracker: {gameState.rejectTracker}</p>
+      <p>Current leader: {gameState.users[gameState.players[gameState.currentLeader % gameState.players.length]]}</p>
+      {!!Object.keys(gameState.proposedTeam).length && (
+        <React.Fragment>
+          <p>Proposed Team:</p>
+          <p>
+            [
+            {Object.keys(gameState.proposedTeam)
+              .map(socketId => gameState.users[socketId])
+              .join(', ')}
+            ]
+          </p>
+        </React.Fragment>
+      )}
+      {gameState.resultOfVotes.map(vote => (
+        <p>{vote}</p>
+      ))}
+    </div>
+  );
+};
 
-  componentDidMount() {
-    this._isMounted = true;
-    socket.emit('gameDataReducer', {
-      request: 'getInitGameState'
-    });
-    socket.on('sendGameState', data => {
-      if (this._isMounted) this.setState(data);
-    });
-    socket.on('proposedTeam', data => {
-      if (this._isMounted) this.setState(data);
-    });
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
-  render() {
-    return (
-      <div style={style.screen}>
-        <p>Successes: {this.state.successes}</p>
-        <p>Players:</p>
-        <p>
-          [
-          {this.state.players
-            .map(socketId => this.state.users[socketId])
-            .join(', ')}
-          ]
-        </p>
-        <p>
-          {!this.state.winner
-            ? 'Game in progress...'
-            : this.state.winner === 'res'
-            ? 'Resistance wins!'
-            : 'Spies win!'}
-        </p>
-        <p>Current phase: {this.state.currentPhase}</p>
-        <p>Current leader: {this.state.users[this.state.players[this.state.currentLeader % this.state.players.length]]}</p>
-        {!!Object.keys(this.state.proposedTeam).length && (
-          <React.Fragment>
-            <p>Proposed Team:</p>
-            <p>
-              [
-              {Object.keys(this.state.proposedTeam)
-                .map(socketId => this.state.users[socketId])
-                .join(', ')}
-              ]
-            </p>
-          </React.Fragment>
-        )}
-        {this.state.resultOfVotes.map(vote => (
-          <p>{vote}</p>
-        ))}
-      </div>
-    );
-  }
-}
+export default DedicatedScreen;
