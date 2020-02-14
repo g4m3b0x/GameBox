@@ -26,6 +26,10 @@ module.exports = {
     width: '100%',
     display: 'flex',
   },
+  genericButton: {
+    height: '1.5em',
+    marginLeft: '0.5em',
+  },
   teamVoteButton: {
     height: '1.5em',
     marginLeft: '0.5em',
@@ -49,18 +53,19 @@ module.exports = {
   },
   playerListItem: {
     height: '1em',
-    width: '80%',
+    width: '90%',
     margin: '0.25em',
     display: 'flex',
     alignItems: 'center',
   },
-  playerVoteArea: {
+  playerTokenArea: {
     height: '100%',
-    width: '2.5em',
+    width: '1.4em',
+    display: 'flex',
+    // justifyContent: 'space-evenly',
   },
-  playerVoteToken: {
+  playerToken: {
     height: '1.0em',
-    margin: '0 0.5em 0 0.5em',
   },
   playerGray: {
     borderRadius: '5px',
@@ -83,7 +88,6 @@ module.exports = {
     backgroundColor: 'violet',
   },
   playerName: {
-    margin: '0 0.5em 0 0.5em',
     fontSize: '0.5em',
   },
   gunImage: {

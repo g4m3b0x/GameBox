@@ -51,9 +51,9 @@ export default class TicTacToe extends Component {
       <div>
         {!this.state.winner ? (
           <div>
-            <div>
-              <button onClick={this.returnToLobby}>Back to Lobby</button>
-              <p>{Object.values(this.state.users)[this.state.turn]}'s turn:</p>
+            <div style={style.topArea}>
+              <button className="tiny-button" onClick={this.returnToLobby}>Back to Lobby</button>
+              <p style={{ width: '100%' }}>{Object.values(this.state.users)[this.state.turn]}'s turn:</p>
             </div>
             <div style={style.table}>
               {this.state.gameBoard.map((row, y) => (

@@ -15,10 +15,18 @@ const PlayerList = props => {
     <div style={style.playerListArea}>
       {props.players.map((user, i) => (
         <div key={i} style={style.playerListItem}>
-          <div style={style.playerVoteArea}>
+          <div style={style.playerTokenArea}>
+            {props.players && user === props.players[props.currentLeader % props.players.length] &&
+              <img
+                style={style.playerToken}
+                src={'/resistance_token_leader.png'}
+              />
+            }
+          </div>
+          <div style={style.playerTokenArea}>
             {props.currentPhase === 'teamSelection' && props.voting && user in props.teamVotes &&
               <img
-                style={style.playerVoteToken}
+                style={style.playerToken}
                 src={
                   user !== socket.id
                     ? '/resistance_token_back.png'
@@ -30,7 +38,7 @@ const PlayerList = props => {
             }
             {props.currentPhase === 'roundStart' && props.missionVotes && user in props.missionVotes &&
               <img
-                style={style.playerVoteToken}
+                style={style.playerToken}
                 src={
                   user !== socket.id
                     ? '/resistance_mission_back.png'
