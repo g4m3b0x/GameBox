@@ -53,18 +53,24 @@ const DedicatedScreen = props => {
           {seatingArrangement.top.map((n, i) => (
             <Avatar
               key={i}
+              playerNum={n}
+              gameState={gameState}
               userName={gameState.users[gameState.players[n]]}
             />
           ))}
         </div>
         <div style={style.screenMiddleLine}>
           <Avatar
+            playerNum={seatingArrangement.middle[0]}
+            gameState={gameState}
             userName={gameState.users[gameState.players[seatingArrangement.middle[0]]]}
           />
           <div style={style.screenMissionInfo}>
-                        
+
           </div>
           <Avatar
+            playerNum={seatingArrangement.middle[1]}
+            gameState={gameState}
             userName={gameState.users[gameState.players[seatingArrangement.middle[1]]]}
           />
         </div>
@@ -72,6 +78,8 @@ const DedicatedScreen = props => {
           {seatingArrangement.bottom.map((n, i) => (
             <Avatar
               key={i}
+              playerNum={n}
+              gameState={gameState}
               userName={gameState.users[gameState.players[n]]}
             />
           ))}
