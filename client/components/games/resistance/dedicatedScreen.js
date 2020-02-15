@@ -1,12 +1,84 @@
 import React from 'react';
-// import socket from '../../../index.js';
 import style from './style';
+
+import Avatar from './avatar';
+
+const seatingArrangementChart = {
+  1: {
+    top: [0],
+    middle: [],
+    bottom: [],
+  },
+  5: {
+    top: [0],
+    middle: [4, 1],
+    bottom: [2, 3],
+  },
+  6: {
+    top: [0, 1],
+    middle: [5, 2],
+    bottom: [3, 4],
+  },
+  7: {
+    top: [0, 1],
+    middle: [6, 2],
+    bottom: [3, 4, 5],
+  },
+  8: {
+    top: [0, 1, 2],
+    middle: [7, 3],
+    bottom: [4, 5, 6],
+  },
+  9: {
+    top: [0, 1, 2],
+    middle: [8, 3],
+    bottom: [4, 5, 6, 7],
+  },
+  10: {
+    top: [0, 1, 2, 3],
+    middle: [9, 4],
+    bottom: [5, 6, 7, 8],
+  },
+};
 
 const DedicatedScreen = props => {
   const gameState = props.gameState;
+  const seatingArrangement = seatingArrangementChart[gameState.players.length];
   return (
     <div style={style.screen}>
-      <p>Successes: {gameState.successes}, Failures: {gameState.failures}</p>
+      <div style={style.screenTopArea}>
+      </div>
+      <div style={style.screenMainArea}>
+        <div style={style.screenTopLine}>
+          {seatingArrangement.top.map((n, i) => (
+            <Avatar
+              key={i}
+              userName={gameState.users[gameState.players[n]]}
+            />
+          ))}
+        </div>
+        <div style={style.screenMiddleLine}>
+          <Avatar
+            userName={gameState.users[gameState.players[seatingArrangement.middle[0]]]}
+          />
+          <div style={style.screenMissionInfo}>
+                        
+          </div>
+          <Avatar
+            userName={gameState.users[gameState.players[seatingArrangement.middle[1]]]}
+          />
+        </div>
+        <div style={style.screenBottomLine}>
+          {seatingArrangement.bottom.map((n, i) => (
+            <Avatar
+              key={i}
+              userName={gameState.users[gameState.players[n]]}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* <p>Successes: {gameState.successes}, Failures: {gameState.failures}</p>
       <p>Players:</p>
       <p>
         [
@@ -40,7 +112,8 @@ const DedicatedScreen = props => {
       )}
       {gameState.resultOfVotes.map(vote => (
         <p>{vote}</p>
-      ))}
+      ))} */}
+
     </div>
   );
 };

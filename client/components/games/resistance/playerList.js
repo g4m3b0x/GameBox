@@ -62,7 +62,7 @@ const PlayerList = props => {
                     || socket.id === gameState.specialRoles.blindSpy
                       ? style.playerGray
                       : user in gameState.res
-                        || (user === gameState.specialRoles.deepCover && socket.id === pgameStaterops.specialRoles.commander)
+                        || (user === gameState.specialRoles.deepCover && socket.id === gameState.specialRoles.commander)
                         || (user === gameState.specialRoles.blindSpy && socket.id in gameState.spies && user !== socket.id)
                           ? style.playerBlue
                           : style.playerRed

@@ -1,7 +1,60 @@
 module.exports = {
   screen: {
+    height: '100%',
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
+  },
+  screenTopArea: {
+    height: '25%',
+    width: '100%',
+    display: 'flex',
+  },
+  screenMainArea: {
+    height: '70%',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  screenTopLine: {
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-evenly',
+  },
+  screenMiddleLine: {
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-evenly',
+  },
+  screenMissionInfo: {
+    height: '100%',
+    width: '60%',
+    display: 'flex',
+    backgroundColor: 'yellow',
+  },
+  screenBottomLine: {
+    height: '100%',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-evenly',
+  },
+  screenPlayer: {
+    height: '100%',
+    width: '20%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  screenPlayerImage: {
+    height: 'auto',
+    width: '75%',
+  },
+  screenPlayerName: {
+    fontSize: '0.75em',
   },
   view: {
     height: '100%',
@@ -10,7 +63,7 @@ module.exports = {
     flexDirection: 'column',
   },
   topArea: {
-    height: '30%',
+    height: '25%',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -39,7 +92,7 @@ module.exports = {
     marginLeft: '0.5em',
   }, 
   bottomArea: {
-    height: '70%',
+    height: '75%',
     width: '100%',
     display: 'flex',
   },
