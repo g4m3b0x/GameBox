@@ -25,10 +25,11 @@ export default class Resistance extends Component {
       currentMission: 0,
       currentLeader: 0,
       currentPhase: null,
+      voting: false,
       proposedTeam: {},
       teamVotes: {},
-      voting: false,
       missionVotes: {},
+      missionResults: [],
     };
     this._isMounted = false; // prevent memory leak
     this.returnToLobby = this.returnToLobby.bind(this);
@@ -90,7 +91,9 @@ export default class Resistance extends Component {
     return (
       <div style={style.view}>
         <div style={style.topArea}>
-          <BackToLobby />
+          {socket.hostBool &&
+            <BackToLobby />
+          }
           <StatusBar gameState={this.state} />
           <div style={style.instructions}>
             {this.state.currentPhase === 'teamSelection' ? (

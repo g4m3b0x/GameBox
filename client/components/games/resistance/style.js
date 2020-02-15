@@ -9,6 +9,8 @@ module.exports = {
     height: '25%',
     width: '100%',
     display: 'flex',
+    flexDirection: 'column',
+    fontSize: '0.75em',
   },
   screenMainArea: {
     height: '70%',
@@ -33,6 +35,7 @@ module.exports = {
     height: '100%',
     width: '60%',
     display: 'flex',
+    fontSize: '0.75em',
     // backgroundColor: 'yellow',
   },
   screenBottomLine: {

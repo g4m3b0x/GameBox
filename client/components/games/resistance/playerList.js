@@ -8,7 +8,7 @@ function setProposeTeam(currentPhase, leaderId, id) {
 }
 
 const PlayerList = props => {
-  const gameState = props.gameState;
+  const { gameState } = props;
   return (
     <div style={style.playerListArea}>
       {gameState.players.map((user, i) => (

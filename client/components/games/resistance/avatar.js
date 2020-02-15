@@ -2,7 +2,7 @@ import React from 'react';
 import style from './style';
 
 const Avatar = props => {
-  const {playerNum, gameState} = props;
+  const { playerNum, gameState } = props;
   const user = gameState.players[playerNum];
   return (
     <div style={style.screenPlayer}>
@@ -20,7 +20,7 @@ const Avatar = props => {
         {user in gameState.proposedTeam &&
           <img
             style={style.screenPlayerGunToken}
-            src={'/resistance_token_gun1.png'}
+            src={gameState.proposedTeam[user]}
           />
         }
         {user in gameState.teamVotes &&

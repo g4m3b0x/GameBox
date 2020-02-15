@@ -10,7 +10,7 @@ function submitTeamVote(castedVote) {
 }
 
 const TeamSelectionInput = props => {
-  const gameState = props.gameState;
+  const { gameState } = props;
   return gameState.voting ? (
     !(socket.id in gameState.teamVotes) ? (
       <React.Fragment>

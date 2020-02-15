@@ -2,6 +2,7 @@ import React from 'react';
 import style from './style';
 
 import Avatar from './avatar';
+import MissionInfo from './missionInfo';
 
 const seatingArrangementChart = {
   1: {
@@ -42,11 +43,27 @@ const seatingArrangementChart = {
 };
 
 const DedicatedScreen = props => {
-  const gameState = props.gameState;
+  const { gameState } = props;
   const seatingArrangement = seatingArrangementChart[gameState.players.length];
   return (
     <div style={style.screen}>
       <div style={style.screenTopArea}>
+        <p>Players:</p>
+        <p>
+          [
+          {gameState.players
+            .map(socketId => gameState.users[socketId])
+            .join(', ')}
+          ]
+        </p>
+        <p>
+          {!gameState.winner
+            ? 'Game in progress...'
+            : gameState.winner === 'res'
+            ? 'Resistance wins!'
+            : 'Spies win!'}
+        </p>
+        <p>Current phase: {gameState.currentPhase}</p>
       </div>
       <div style={style.screenMainArea}>
         <div style={style.screenTopLine}>
@@ -65,9 +82,7 @@ const DedicatedScreen = props => {
             gameState={gameState}
             userName={gameState.users[gameState.players[seatingArrangement.middle[0]]]}
           />
-          <div style={style.screenMissionInfo}>
-
-          </div>
+          <MissionInfo gameState={gameState} />
           <Avatar
             playerNum={seatingArrangement.middle[1]}
             gameState={gameState}
@@ -85,43 +100,6 @@ const DedicatedScreen = props => {
           ))}
         </div>
       </div>
-
-      {/* <p>Successes: {gameState.successes}, Failures: {gameState.failures}</p>
-      <p>Players:</p>
-      <p>
-        [
-        {gameState.players
-          .map(socketId => gameState.users[socketId])
-          .join(', ')}
-        ]
-      </p>
-      <p>
-        {!gameState.winner
-          ? 'Game in progress...'
-          : gameState.winner === 'res'
-          ? 'Resistance wins!'
-          : 'Spies win!'}
-      </p>
-      <p>Current phase: {gameState.currentPhase}</p>
-      <p>Current mission: {gameState.currentMission + 1}</p>
-      <p>Reject tracker: {gameState.rejectTracker}</p>
-      <p>Current leader: {gameState.users[gameState.players[gameState.currentLeader]]}</p>
-      {!!Object.keys(gameState.proposedTeam).length && (
-        <React.Fragment>
-          <p>Proposed Team:</p>
-          <p>
-            [
-            {Object.keys(gameState.proposedTeam)
-              .map(socketId => gameState.users[socketId])
-              .join(', ')}
-            ]
-          </p>
-        </React.Fragment>
-      )}
-      {gameState.resultOfVotes.map(vote => (
-        <p>{vote}</p>
-      ))} */}
-
     </div>
   );
 };

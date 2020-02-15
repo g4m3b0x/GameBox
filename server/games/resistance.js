@@ -109,8 +109,7 @@ module.exports = class Resistance {
     this.voteHistory = [[], [], [], [], []];
     this.missionVotes = {};
     this.resultOfVotes = [];
-    this.successes = 0;
-    this.failures = 0;
+    this.missionResults = [];
     this.generateTeams();
   }
   generateTeams() {
@@ -180,25 +179,24 @@ module.exports = class Resistance {
       voteHistory: this.voteHistory,
       missionVotes: this.missionVotes,
       resultOfVotes: this.resultOfVotes,
-      successes: this.successes,
-      failures: this.failures,
+      missionResults: this.missionResults,
     };
   }
-  proposeTeam(io, socket, data) {
+  proposeTeam(io, socket, player) {
     const { missionSize } = groupSize[this.players.length];
 
     if (!Object.keys(this.proposedTeam).length) {
       this.gunImages = shuffle(this.gunImages);
     }
-    if (data.id in this.proposedTeam) {
-      this.gunImages.push(this.proposedTeam[data.id]);
-      delete this.proposedTeam[data.id];
+    if (player.id in this.proposedTeam) {
+      this.gunImages.push(this.proposedTeam[player.id]);
+      delete this.proposedTeam[player.id];
     } else if (
       Object.keys(this.proposedTeam).length === missionSize[this.currentMission]
     ) {
       return;
     } else {
-      this.proposedTeam[data.id] = this.gunImages.pop();
+      this.proposedTeam[player.id] = this.gunImages.pop();
     }
     io.in(socket.roomName).emit('proposedTeam', {
       proposedTeam: this.proposedTeam
@@ -278,15 +276,15 @@ module.exports = class Resistance {
         ((this.players.length < 7 || this.currentMission !== 3) && totalVotes - tally >= 1)
         || totalVotes - tally >= 2
       ) {
-        this.failures++;
+        this.missionResults.push(0);
       } else {
-        this.successes++;
+        this.missionResults.push(1);
       }
-      if (this.failures === 3) {
+      if (this.missionResults.reduce((failures, mission) => mission ? failures : failures + 1, 0) === 3) {
         this.gameOver(io, socket, 'spiesWin');
         return;
       }
-      if (this.successes === 3) {
+      if (this.missionResults.reduce((successes, mission) => mission ? successes + 1 : successes, 0) === 3) {
         if (!this.specialRoles.assassin) {
           this.gameOver(io, socket, 'resWin');
         } else {
