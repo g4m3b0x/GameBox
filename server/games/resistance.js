@@ -109,7 +109,7 @@ module.exports = class Resistance {
     // this.voteHistory = [[], [], [], [], []];
     this.missionVotes = {};
     this.resultOfVotes = [];
-    this.missionResults = [];
+    this.missionResults = [null, null, null, null, null];
     this.generateTeams();
   }
   generateTeams() {
@@ -264,15 +264,11 @@ module.exports = class Resistance {
     this.gunImages = gunImages;
   }
   submitMissionVote(io, socket, castedVote) {
-    if (socket.id in this.missionVotes) {
-      return;
-    } else {
-      this.missionVotes[socket.id] = castedVote;
-      io.in(socket.roomName).emit('updateMissionVote', {
-        socketId: socket.id,
-        castedVote
-      });
-    }
+    this.missionVotes[socket.id] = castedVote;
+    io.in(socket.roomName).emit('updateMissionVote', {
+      socketId: socket.id,
+      castedVote
+    });
     const totalVotes = this.groupSize.missionSize[this.currentMission];
     if (Object.keys(this.missionVotes).length === totalVotes) {
       const tally = Object.values(this.missionVotes).reduce(
@@ -282,15 +278,15 @@ module.exports = class Resistance {
         ((this.players.length < 7 || this.currentMission !== 3) && totalVotes - tally >= 1)
         || totalVotes - tally >= 2
       ) {
-        this.missionResults.push(0);
+        this.missionResults[this.currentMission] = 0;
       } else {
-        this.missionResults.push(1);
+        this.missionResults[this.currentMission] = 1;
       }
-      if (this.missionResults.reduce((failures, mission) => mission ? failures : failures + 1, 0) === 3) {
+      if (this.missionResults.reduce((failures, mission) => mission === 0 ? failures + 1 : failures, 0) === 3) {
         this.gameOver(io, socket, 'spiesWin');
         return;
       }
-      if (this.missionResults.reduce((successes, mission) => mission ? successes + 1 : successes, 0) === 3) {
+      if (this.missionResults.reduce((successes, mission) => mission === 1 ? successes + 1 : successes, 0) === 3) {
         if (!this.specialRoles.assassin) {
           this.gameOver(io, socket, 'resWin');
         } else {

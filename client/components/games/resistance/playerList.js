@@ -81,7 +81,7 @@ const PlayerList = props => {
           >
             <p style={style.playerName}>{gameState.users[user]}</p>
           </button>
-          {(gameState.currentPhase === 'teamSelection' || gameState.currentPhase === 'mission') && user in gameState.proposedTeam &&
+          {user in gameState.proposedTeam &&
             <img
               style={style.gunImage}
               src={gameState.proposedTeam[user]}

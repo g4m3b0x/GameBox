@@ -31,7 +31,7 @@ export default class Resistance extends Component {
       proposedTeam: {},
       teamVotes: {},
       missionVotes: {},
-      missionResults: [],
+      missionResults: [null, null, null, null, null],
     };
     this._isMounted = false; // prevent memory leak
     this.returnToLobby = this.returnToLobby.bind(this);
