@@ -23,10 +23,21 @@ const Avatar = props => {
             src={gameState.proposedTeam[user]}
           />
         }
-        {user in gameState.teamVotes &&
+        {gameState.currentPhase === 'teamSelection'
+          && user in gameState.teamVotes &&
           <img
             style={style.screenPlayerVoteToken}
             src={'/resistance_token_back.png'}
+          />
+        }
+        {gameState.currentPhase === 'voteReveal' &&
+          <img
+            style={style.screenPlayerVoteToken}
+            src={
+              gameState.teamVotes[user]
+                ? '/resistance_token_approve.png'
+                : '/resistance_token_reject.png'
+            }
           />
         }
         {user in gameState.missionVotes &&

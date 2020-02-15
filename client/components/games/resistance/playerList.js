@@ -36,6 +36,16 @@ const PlayerList = props => {
                 }
               />
             }
+            {gameState.currentPhase === 'voteReveal' &&
+              <img
+                style={style.playerToken}
+                src={
+                  gameState.teamVotes[user]
+                    ? '/resistance_token_approve.png'
+                    : '/resistance_token_reject.png'
+                }
+              />
+            }
             {gameState.currentPhase === 'mission'
               && gameState.missionVotes && user in gameState.missionVotes &&
               <img

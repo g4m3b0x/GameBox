@@ -16,8 +16,8 @@ const VoteRevealInput = props => {
         onClick={completeVoteReveal}
       >
         {gameState.voting
-          ? 'Next vote'
-          : 'Begin mission'
+          ? 'Next'
+          : 'Begin'
         }
       </button>
     </React.Fragment>

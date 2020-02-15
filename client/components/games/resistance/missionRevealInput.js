@@ -15,7 +15,7 @@ const MissionRevealInput = props => {
         style={style.genericButton}
         onClick={completeMissionReveal}
       >
-        Next mission
+        Next
       </button>
     </React.Fragment>
   ) : (

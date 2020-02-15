@@ -48,22 +48,40 @@ const DedicatedScreen = props => {
   return (
     <div style={style.screen}>
       <div style={style.screenTopArea}>
-        <p>Players:</p>
-        <p>
-          [
-          {gameState.players
-            .map(socketId => gameState.users[socketId])
-            .join(', ')}
-          ]
-        </p>
-        <p>
-          {!gameState.winner
-            ? 'Game in progress...'
-            : gameState.winner === 'res'
-            ? 'Resistance wins!'
-            : 'Spies win!'}
-        </p>
-        <p>Current phase: {gameState.currentPhase}</p>
+        
+        {/* <div style={{ display: 'flex', flexDirection: 'column', fontSize: '0.75em' }}>
+          <p>Players:</p>
+          <p>
+            [
+            {gameState.players
+              .map(socketId => gameState.users[socketId])
+              .join(', ')}
+            ]
+          </p>
+          <p>
+            {!gameState.winner
+              ? 'Game in progress...'
+              : gameState.winner === 'res'
+              ? 'Resistance wins!'
+              : 'Spies win!'}
+          </p>
+          <p>Current phase: {gameState.currentPhase}</p>
+        </div> */}
+
+        {gameState.currentPhase === 'missionReveal' &&
+          gameState.resultOfVotes.map((card, i) => (
+            <img
+              key={i}
+              style={style.screenMissionCard}
+              src={
+                card
+                  ? '/resistance_mission_success.png'
+                  : '/resistance_mission_fail.png'
+              }
+            />
+          ))
+        }
+
       </div>
       <div style={style.screenMainArea}>
         <div style={style.screenTopLine}>

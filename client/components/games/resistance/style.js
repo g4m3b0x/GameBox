@@ -9,8 +9,12 @@ module.exports = {
     height: '25%',
     width: '100%',
     display: 'flex',
-    flexDirection: 'column',
-    fontSize: '0.75em',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  screenMissionCard: {
+    height: '2em',
+    width: '3em',
   },
   screenMainArea: {
     height: '70%',

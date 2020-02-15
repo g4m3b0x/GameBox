@@ -106,7 +106,7 @@ module.exports = class Resistance {
     this.proposedTeam = {};
     this.gunImages = gunImages;
     this.teamVotes = {};
-    this.voteHistory = [[], [], [], [], []];
+    // this.voteHistory = [[], [], [], [], []];
     this.missionVotes = {};
     this.resultOfVotes = [];
     this.missionResults = [];
@@ -176,7 +176,7 @@ module.exports = class Resistance {
       voting: this.voting,
       proposedTeam: this.proposedTeam,
       teamVotes: this.teamVotes,
-      voteHistory: this.voteHistory,
+      // voteHistory: this.voteHistory,
       missionVotes: this.missionVotes,
       resultOfVotes: this.resultOfVotes,
       missionResults: this.missionResults,
@@ -230,7 +230,6 @@ module.exports = class Resistance {
       );
       const passed = tally > this.players.length / 2;
       // this.voting = false;
-      this.teamVotes = {};
       if (!passed) {
         this.rejectTracker++;
         if (this.rejectTracker === 5) {
@@ -257,6 +256,7 @@ module.exports = class Resistance {
     } else {
       this.currentPhase = 'mission';
     }
+    this.teamVotes = {};
     io.in(socket.roomName).emit('sendGameState', this.getGameState());
   }
   nextVote() {
@@ -307,6 +307,7 @@ module.exports = class Resistance {
     }
   }
   completeMissionReveal(io, socket) {
+    this.resultOfVotes = [];
     this.currentMission++;
     this.nextVote();
     io.in(socket.roomName).emit('sendGameState', this.getGameState());
