@@ -8,7 +8,7 @@ function setProposeTeam(currentPhase, leaderId, id) {
 }
 
 const PlayerList = props => {
-  const gameState = props.gameState;
+  const { gameState } = props;
   return (
     <div style={style.playerListArea}>
       {gameState.players.map((user, i) => (
@@ -36,7 +36,17 @@ const PlayerList = props => {
                 }
               />
             }
-            {gameState.currentPhase === 'roundStart'
+            {gameState.currentPhase === 'voteReveal' &&
+              <img
+                style={style.playerToken}
+                src={
+                  gameState.teamVotes[user]
+                    ? '/resistance_token_approve.png'
+                    : '/resistance_token_reject.png'
+                }
+              />
+            }
+            {gameState.currentPhase === 'mission'
               && gameState.missionVotes && user in gameState.missionVotes &&
               <img
                 style={style.playerToken}
@@ -62,7 +72,7 @@ const PlayerList = props => {
                     || socket.id === gameState.specialRoles.blindSpy
                       ? style.playerGray
                       : user in gameState.res
-                        || (user === gameState.specialRoles.deepCover && socket.id === pgameStaterops.specialRoles.commander)
+                        || (user === gameState.specialRoles.deepCover && socket.id === gameState.specialRoles.commander)
                         || (user === gameState.specialRoles.blindSpy && socket.id in gameState.spies && user !== socket.id)
                           ? style.playerBlue
                           : style.playerRed
@@ -71,7 +81,7 @@ const PlayerList = props => {
           >
             <p style={style.playerName}>{gameState.users[user]}</p>
           </button>
-          {(gameState.currentPhase === 'teamSelection' || gameState.currentPhase === 'roundStart') && user in gameState.proposedTeam &&
+          {user in gameState.proposedTeam &&
             <img
               style={style.gunImage}
               src={gameState.proposedTeam[user]}

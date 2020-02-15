@@ -3,7 +3,7 @@ import socket from '../../../index.js';
 import style from './style';
 
 const CardArea = props => {
-  const gameState = props.gameState;
+  const { gameState } = props;
   return (
     <div style={style.cardArea}>
       <div style={style.cardAreaBuffer} />

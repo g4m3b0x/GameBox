@@ -10,7 +10,7 @@ function submitTeamVote(castedVote) {
 }
 
 const TeamSelectionInput = props => {
-  const gameState = props.gameState;
+  const { gameState } = props;
   return gameState.voting ? (
     !(socket.id in gameState.teamVotes) ? (
       <React.Fragment>
@@ -34,8 +34,7 @@ const TeamSelectionInput = props => {
       <p>
         Choose a team of{' '}
         {
-          gameState.groupSize[Object.keys(gameState.users).length]
-            .missionSize[gameState.currentMission]
+          gameState.groupSize.missionSize[gameState.currentMission]
         }
         !
       </p>
@@ -44,8 +43,7 @@ const TeamSelectionInput = props => {
         onClick={startTeamVote}
         disabled={
           Object.keys(gameState.proposedTeam).length !==
-          gameState.groupSize[Object.keys(gameState.users).length]
-            .missionSize[gameState.currentMission]
+          gameState.groupSize.missionSize[gameState.currentMission]
         }
       >
         Submit
@@ -59,8 +57,7 @@ const TeamSelectionInput = props => {
           {gameState.users[gameState.players[gameState.currentLeader]]} to
           propose a team of{' '}
           {
-            gameState.groupSize[Object.keys(gameState.users).length]
-              .missionSize[gameState.currentMission]
+            gameState.groupSize.missionSize[gameState.currentMission]
           }
           ...
         </p>

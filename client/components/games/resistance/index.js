@@ -6,7 +6,9 @@ import DedicatedScreen from './dedicatedScreen';
 import BackToLobby from '../backToLobby';
 import StatusBar from './statusBar';
 import TeamSelectionInput from './teamSelectionInput';
+import VoteRevealInput from './voteRevealInput';
 import MissionInput from './missionInput';
+import MissionRevealInput from './missionRevealInput';
 import PlayerList from './playerList';
 import CardArea from './cardArea';
 
@@ -25,10 +27,11 @@ export default class Resistance extends Component {
       currentMission: 0,
       currentLeader: 0,
       currentPhase: null,
+      voting: false,
       proposedTeam: {},
       teamVotes: {},
-      voting: false,
       missionVotes: {},
+      missionResults: [null, null, null, null, null],
     };
     this._isMounted = false; // prevent memory leak
     this.returnToLobby = this.returnToLobby.bind(this);
@@ -90,13 +93,21 @@ export default class Resistance extends Component {
     return (
       <div style={style.view}>
         <div style={style.topArea}>
-          <BackToLobby />
+          {socket.hostBool &&
+            <BackToLobby />
+          }
           <StatusBar gameState={this.state} />
           <div style={style.instructions}>
             {this.state.currentPhase === 'teamSelection' ? (
               <TeamSelectionInput gameState={this.state} />
-            ) : (
+            ) : this.state.currentPhase === 'voteReveal' ? (
+              <VoteRevealInput gameState={this.state} />
+            ) : this.state.currentPhase === 'mission' ? (
               <MissionInput gameState={this.state} />
+            ) : this.state.currentPhase === 'missionReveal' ? (
+              <MissionRevealInput gameState={this.state} />
+            ) : (
+              null
             )}
           </div>
         </div>

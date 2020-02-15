@@ -7,7 +7,7 @@ function submitMissionVote(castedVote) {
 }
 
 const MissionInput = props => {
-  const gameState = props.gameState;
+  const { gameState } = props;
   return gameState.proposedTeam[socket.id] ? (
     !(socket.id in gameState.missionVotes) ? (
       <React.Fragment>

@@ -2,7 +2,7 @@ import React from 'react';
 import style from './style';
 
 const StatusBar = props => {
-  const gameState = props.gameState;
+  const { gameState } = props;
   return (
     <div style={style.statusBar}>
       <p>

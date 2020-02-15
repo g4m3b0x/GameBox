@@ -1,7 +1,120 @@
 module.exports = {
   screen: {
+    height: '100%',
+    width: '100%',
     display: 'flex',
     flexDirection: 'column',
+  },
+  screenTopArea: {
+    height: '25%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  screenMissionCard: {
+    height: '2em',
+    width: '3em',
+  },
+  screenMainArea: {
+    height: '70%',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  screenTopLine: {
+    height: '33%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-evenly',
+  },
+  screenMiddleLine: {
+    height: '34%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-evenly',
+  },
+  screenMissionInfo: {
+    height: '100%',
+    width: '60%',
+    display: 'flex',
+    flexDirection: 'column',
+    fontSize: '0.75em',
+  },
+  screenMissionTracker: {
+    height: '75%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    fontSize: '3.0em',
+  },
+  screenMissionToken: {
+    height: '0.75em',
+    width: '0.75em',
+  },
+  screenRejectTracker: {
+    height: '25%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: '1.0em',
+  },
+  screenBottomLine: {
+    height: '33%',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row-reverse',
+    justifyContent: 'space-evenly',
+  },
+  screenPlayer: {
+    height: '100%',
+    width: '15%',
+    display: 'flex',
+  },
+  screenPlayerAvatarArea: {
+    height: '100%',
+    width: '70%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  screenPlayerImage: {
+    width: '80%',
+  },
+  screenPlayerTokenArea: {
+    height: '100%',
+    width: '30%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+  screenPlayerLeaderToken: {
+    height: '10%',
+    width: '0.5em',
+    marginBottom: '0.25em',
+  },
+  screenPlayerGunToken: {
+    height: '10%',
+    width: '1.0em',
+    marginBottom: '0.25em',
+  },
+  screenPlayerVoteToken: {
+    height: '10%',
+    width: '0.5em',
+    marginBottom: '0.25em',
+  },
+  screenPlayerMissionToken: {
+    height: '10%',
+    width: '0.75em',
+    marginBottom: '0.25em',
+  },
+  screenPlayerName: {
+    fontSize: '0.5em',
+    marginBottom: '0.25em',
   },
   view: {
     height: '100%',
@@ -10,7 +123,7 @@ module.exports = {
     flexDirection: 'column',
   },
   topArea: {
-    height: '30%',
+    height: '25%',
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
@@ -39,7 +152,7 @@ module.exports = {
     marginLeft: '0.5em',
   }, 
   bottomArea: {
-    height: '70%',
+    height: '75%',
     width: '100%',
     display: 'flex',
   },
