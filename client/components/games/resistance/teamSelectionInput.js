@@ -34,8 +34,7 @@ const TeamSelectionInput = props => {
       <p>
         Choose a team of{' '}
         {
-          gameState.groupSize[gameState.players.length]
-            .missionSize[gameState.currentMission]
+          gameState.groupSize.missionSize[gameState.currentMission]
         }
         !
       </p>
@@ -44,8 +43,7 @@ const TeamSelectionInput = props => {
         onClick={startTeamVote}
         disabled={
           Object.keys(gameState.proposedTeam).length !==
-          gameState.groupSize[gameState.players.length]
-            .missionSize[gameState.currentMission]
+          gameState.groupSize.missionSize[gameState.currentMission]
         }
       >
         Submit
@@ -59,8 +57,7 @@ const TeamSelectionInput = props => {
           {gameState.users[gameState.players[gameState.currentLeader]]} to
           propose a team of{' '}
           {
-            gameState.groupSize[gameState.players.length]
-              .missionSize[gameState.currentMission]
+            gameState.groupSize.missionSize[gameState.currentMission]
           }
           ...
         </p>

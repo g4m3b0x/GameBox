@@ -82,11 +82,12 @@ const shuffle = arr => {
 
 module.exports = class Resistance {
   constructor(users, dedicatedScreen) {
+    this.groupSize = groupSize[Object.keys(users).length];
     this.users = users;
     this.dedicatedScreen = dedicatedScreen;
     this.players = Object.keys(users);
     this.winner = null;
-    this.numOfSpies = groupSize[this.players.length].spies;
+    this.numOfSpies = this.groupSize.spies;
     this.res = {};
     this.spies = {};
     this.specialRoles = {
@@ -97,7 +98,6 @@ module.exports = class Resistance {
       deepCover: '',
       blindSpy: ''
     };
-    this.missionSize = groupSize[this.players.length].missionSize;
     this.currentMission = 0;
     this.rejectTracker = 0;
     this.currentLeader = 0;
@@ -161,7 +161,7 @@ module.exports = class Resistance {
   }
   getGameState() {
     return {
-      groupSize,
+      groupSize: this.groupSize,
       users: this.users,
       dedicatedScreen: this.dedicatedScreen,
       players: this.players,
@@ -183,8 +183,6 @@ module.exports = class Resistance {
     };
   }
   proposeTeam(io, socket, player) {
-    const { missionSize } = groupSize[this.players.length];
-
     if (!Object.keys(this.proposedTeam).length) {
       this.gunImages = shuffle(this.gunImages);
     }
@@ -192,7 +190,7 @@ module.exports = class Resistance {
       this.gunImages.push(this.proposedTeam[player.id]);
       delete this.proposedTeam[player.id];
     } else if (
-      Object.keys(this.proposedTeam).length === missionSize[this.currentMission]
+      Object.keys(this.proposedTeam).length === this.groupSize.missionSize[this.currentMission]
     ) {
       return;
     } else {
@@ -203,9 +201,8 @@ module.exports = class Resistance {
     });
   }
   startTeamVote(io, socket) {
-    const { missionSize } = groupSize[this.players.length];
     if (
-      Object.keys(this.proposedTeam).length !== missionSize[this.currentMission]
+      Object.keys(this.proposedTeam).length !== this.groupSize.missionSize[this.currentMission]
     )
       return;
     this.voting = true;
@@ -276,7 +273,7 @@ module.exports = class Resistance {
         castedVote
       });
     }
-    const totalVotes = this.missionSize[this.currentMission];
+    const totalVotes = this.groupSize.missionSize[this.currentMission];
     if (Object.keys(this.missionVotes).length === totalVotes) {
       const tally = Object.values(this.missionVotes).reduce(
         (total, vote) => (total += +vote), 0
