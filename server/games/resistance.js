@@ -229,26 +229,35 @@ module.exports = class Resistance {
         (total, vote) => (total += +vote), 0
       );
       const passed = tally > this.players.length / 2;
-      // const gameState = {};
-      this.voting = false;
+      // this.voting = false;
       this.teamVotes = {};
-      // this.currentPhase = 'teamSelectionReveal';
-      // io.in(socket.roomName).emit('sendGameState', this.getGameState());
       if (!passed) {
         this.rejectTracker++;
         if (this.rejectTracker === 5) {
           this.gameOver(io, socket, 'reject');
           return;
         }
-        this.nextVote();
+        // this.nextVote();
       } else {
         this.rejectTracker = 0;
+        this.voting = false;
       }
-      setTimeout(() => {
-        this.currentPhase = passed ? 'roundStart' : 'teamSelection';
-        io.in(socket.roomName).emit('sendGameState', this.getGameState());
-      }, 1);
+      this.currentPhase = 'voteReveal';
+      io.in(socket.roomName).emit('sendGameState', this.getGameState());
+      // setTimeout(() => {
+      //   this.currentPhase = passed ? 'mission' : 'teamSelection';
+      //   io.in(socket.roomName).emit('sendGameState', this.getGameState());
+      // }, 1);
     }
+  }
+  completeVoteReveal(io, socket) {
+    if (this.voting) {
+      this.voting = false;
+      this.nextVote();
+    } else {
+      this.currentPhase = 'mission';
+    }
+    io.in(socket.roomName).emit('sendGameState', this.getGameState());
   }
   nextVote() {
     this.currentLeader = (this.currentLeader + 1) % this.players.length;
@@ -292,11 +301,15 @@ module.exports = class Resistance {
         }
         return;
       }
-      this.currentMission++;
+      this.currentPhase = 'missionReveal';
       this.resultOfVotes = shuffle(Object.values(this.missionVotes));
-      this.nextVote();
       io.in(socket.roomName).emit('sendGameState', this.getGameState());
     }
+  }
+  completeMissionReveal(io, socket) {
+    this.currentMission++;
+    this.nextVote();
+    io.in(socket.roomName).emit('sendGameState', this.getGameState());
   }
   gameOver(io, socket, reason) {
     switch (reason) {

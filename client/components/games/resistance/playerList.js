@@ -36,7 +36,7 @@ const PlayerList = props => {
                 }
               />
             }
-            {gameState.currentPhase === 'roundStart'
+            {gameState.currentPhase === 'mission'
               && gameState.missionVotes && user in gameState.missionVotes &&
               <img
                 style={style.playerToken}
@@ -71,7 +71,7 @@ const PlayerList = props => {
           >
             <p style={style.playerName}>{gameState.users[user]}</p>
           </button>
-          {(gameState.currentPhase === 'teamSelection' || gameState.currentPhase === 'roundStart') && user in gameState.proposedTeam &&
+          {(gameState.currentPhase === 'teamSelection' || gameState.currentPhase === 'mission') && user in gameState.proposedTeam &&
             <img
               style={style.gunImage}
               src={gameState.proposedTeam[user]}
