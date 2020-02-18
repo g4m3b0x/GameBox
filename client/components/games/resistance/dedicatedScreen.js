@@ -121,6 +121,15 @@ const DedicatedScreen = props => {
           ))}
         </div>
       </div>
+      <div style={style.screenBottomArea}>
+        {gameState.winner &&
+          (gameState.winner === 'res' ? (
+            <p style={{ color: 'blue' }}>The Resistance wins!</p>
+          ) : (
+            <p style={{ color: 'red' }}>The Spies win!</p>
+          ))
+        }
+      </div>
     </div>
   );
 };

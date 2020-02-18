@@ -98,7 +98,13 @@ export default class Resistance extends Component {
           }
           <StatusBar gameState={this.state} />
           <div style={style.instructions}>
-            {this.state.currentPhase === 'teamSelection' ? (
+            {this.state.winner ? (
+              this.state.winner === 'res' ? (
+                <p style={{ color: 'blue' }}>The Resistance wins!</p>
+              ) : (
+                <p style={{ color: 'red' }}>The Spies win!</p>
+              )
+            ) : this.state.currentPhase === 'teamSelection' ? (
               <TeamSelectionInput gameState={this.state} />
             ) : this.state.currentPhase === 'voteReveal' ? (
               <VoteRevealInput gameState={this.state} />

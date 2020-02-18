@@ -10,8 +10,6 @@ module.exports = {
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
   screenMissionReveal: {
     width: '100%',
@@ -94,7 +92,6 @@ module.exports = {
     width: '70%',
     display: 'flex',
     flexDirection: 'column',
-    // justifyContent: 'center',
     alignItems: 'center',
   },
   screenPlayerImage: {
@@ -113,7 +110,6 @@ module.exports = {
     width: '30%',
     display: 'flex',
     flexDirection: 'column',
-    // justifyContent: 'center',
   },
   screenPlayerGunToken: {
     height: '10%',
@@ -129,6 +125,12 @@ module.exports = {
     height: '10%',
     width: '0.75em',
     marginBottom: '0.25em',
+  },
+  screenBottomArea: {
+    height: '5%',
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
   },
   view: {
     height: '100%',
