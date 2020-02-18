@@ -226,24 +226,18 @@ module.exports = class Resistance {
         (total, vote) => (total += +vote), 0
       );
       const passed = tally > this.players.length / 2;
-      // this.voting = false;
       if (!passed) {
         this.rejectTracker++;
-        if (this.rejectTracker === 5) {
-          this.gameOver(io, socket, 'reject');
-          return;
-        }
-        // this.nextVote();
       } else {
         this.rejectTracker = 0;
         this.voting = false;
       }
       this.currentPhase = 'voteReveal';
       io.in(socket.roomName).emit('sendGameState', this.getGameState());
-      // setTimeout(() => {
-      //   this.currentPhase = passed ? 'mission' : 'teamSelection';
-      //   io.in(socket.roomName).emit('sendGameState', this.getGameState());
-      // }, 1);
+      if (this.rejectTracker === 5) {
+        this.gameOver(io, socket, 'reject');
+        return;
+      }
     }
   }
   completeVoteReveal(io, socket) {
@@ -282,6 +276,10 @@ module.exports = class Resistance {
       } else {
         this.missionResults[this.currentMission] = 1;
       }
+      this.currentPhase = 'missionReveal';
+      this.resultOfVotes = shuffle(Object.values(this.missionVotes));
+      io.in(socket.roomName).emit('sendGameState', this.getGameState());
+
       if (this.missionResults.reduce((failures, mission) => mission === 0 ? failures + 1 : failures, 0) === 3) {
         this.gameOver(io, socket, 'spiesWin');
         return;
@@ -294,9 +292,7 @@ module.exports = class Resistance {
         }
         return;
       }
-      this.currentPhase = 'missionReveal';
-      this.resultOfVotes = shuffle(Object.values(this.missionVotes));
-      io.in(socket.roomName).emit('sendGameState', this.getGameState());
+
     }
   }
   completeMissionReveal(io, socket) {
