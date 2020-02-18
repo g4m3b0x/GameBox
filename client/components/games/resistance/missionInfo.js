@@ -20,15 +20,22 @@ const MissionInfo = props => {
               src={'/resistance_token_success.png'}
             />
           ) : (
-            <p>{gameState.groupSize.missionSize[i]}</p>
+            <div
+              key={i}
+              style={style.screenMissionNumber}
+            >
+              {gameState.groupSize.missionSize[i]}
+            </div>
           )
         )}
       </div>
-
       <div style={style.screenRejectTracker}>
-        <p>Rejections: {gameState.rejectTracker}</p>
+        <p
+          style={{ color: gameState.rejectTracker >= 4 ? 'red' : 'black' }}
+        >
+          Rejections: {gameState.rejectTracker}
+        </p>
       </div>
-
     </div>
   );
 };

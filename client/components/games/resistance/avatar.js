@@ -9,14 +9,14 @@ const Avatar = props => {
       <div style={style.screenPlayerAvatarArea}>
         <img src="resistance_avatar.png" style={style.screenPlayerImage} />
         <p style={style.screenPlayerName}>{gameState.users[user]}</p>
-      </div>
-      <div style={style.screenPlayerTokenArea}>
         {user === gameState.players[gameState.currentLeader] &&
           <img
             style={style.screenPlayerLeaderToken}
             src={'/resistance_token_leader.png'}
           />
         }
+      </div>
+      <div style={style.screenPlayerTokenArea}>
         {user in gameState.proposedTeam &&
           <img
             style={style.screenPlayerGunToken}
