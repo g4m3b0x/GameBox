@@ -49,26 +49,6 @@ const DedicatedScreen = props => {
   return (
     <div style={style.screen}>
       <div style={style.screenTopArea}>
-        
-        {/* <div style={{ display: 'flex', flexDirection: 'column', fontSize: '0.75em' }}>
-          <p>Players:</p>
-          <p>
-            [
-            {gameState.players
-              .map(socketId => gameState.users[socketId])
-              .join(', ')}
-            ]
-          </p>
-          <p>
-            {!gameState.winner
-              ? 'Game in progress...'
-              : gameState.winner === 'res'
-              ? 'Resistance wins!'
-              : 'Spies win!'}
-          </p>
-          <p>Current phase: {gameState.currentPhase}</p>
-        </div> */}
-
         <StatusBar gameState={gameState} />
         <div style={style.screenMissionReveal}>
           {gameState.currentPhase === 'missionReveal' &&
