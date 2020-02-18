@@ -9,8 +9,14 @@ module.exports = {
     height: '25%',
     width: '100%',
     display: 'flex',
+    flexDirection: 'column',
+    // justifyContent: 'center',
+    // alignItems: 'center',
+  },
+  screenMissionReveal: {
+    width: '100%',
+    display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
   },
   screenMissionCard: {
     height: '2em',
@@ -50,6 +56,15 @@ module.exports = {
     alignItems: 'center',
     fontSize: '3.0em',
   },
+  screenMissionNumber: {
+    height: '0.75em',
+    width: '0.75em',
+    border: '1px solid gray',
+    borderRadius: '50%',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   screenMissionToken: {
     height: '0.75em',
     width: '0.75em',
@@ -79,23 +94,26 @@ module.exports = {
     width: '70%',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     alignItems: 'center',
   },
   screenPlayerImage: {
     width: '80%',
+  },
+  screenPlayerName: {
+    fontSize: '0.5em',
+    marginBottom: '0.25em',
+  },
+  screenPlayerLeaderToken: {
+    height: '20%',
+    width: '1.0em',
   },
   screenPlayerTokenArea: {
     height: '100%',
     width: '30%',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
-  },
-  screenPlayerLeaderToken: {
-    height: '10%',
-    width: '0.5em',
-    marginBottom: '0.25em',
+    // justifyContent: 'center',
   },
   screenPlayerGunToken: {
     height: '10%',
@@ -103,17 +121,13 @@ module.exports = {
     marginBottom: '0.25em',
   },
   screenPlayerVoteToken: {
-    height: '10%',
-    width: '0.5em',
+    height: '20%',
+    width: '1.0em',
     marginBottom: '0.25em',
   },
   screenPlayerMissionToken: {
     height: '10%',
     width: '0.75em',
-    marginBottom: '0.25em',
-  },
-  screenPlayerName: {
-    fontSize: '0.5em',
     marginBottom: '0.25em',
   },
   view: {

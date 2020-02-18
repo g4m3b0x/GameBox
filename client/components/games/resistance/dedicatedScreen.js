@@ -1,6 +1,7 @@
 import React from 'react';
 import style from './style';
 
+import StatusBar from './statusBar';
 import Avatar from './avatar';
 import MissionInfo from './missionInfo';
 
@@ -68,20 +69,22 @@ const DedicatedScreen = props => {
           <p>Current phase: {gameState.currentPhase}</p>
         </div> */}
 
-        {gameState.currentPhase === 'missionReveal' &&
-          gameState.resultOfVotes.map((card, i) => (
-            <img
-              key={i}
-              style={style.screenMissionCard}
-              src={
-                card
-                  ? '/resistance_mission_success.png'
-                  : '/resistance_mission_fail.png'
-              }
-            />
-          ))
-        }
-
+        <StatusBar gameState={gameState} />
+        <div style={style.screenMissionReveal}>
+          {gameState.currentPhase === 'missionReveal' &&
+            gameState.resultOfVotes.map((card, i) => (
+              <img
+                key={i}
+                style={style.screenMissionCard}
+                src={
+                  card
+                    ? '/resistance_mission_success.png'
+                    : '/resistance_mission_fail.png'
+                }
+              />
+            ))
+          }
+        </div>
       </div>
       <div style={style.screenMainArea}>
         <div style={style.screenTopLine}>
