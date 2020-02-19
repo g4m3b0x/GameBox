@@ -7,26 +7,19 @@ const MissionInfo = props => {
     <div style={style.screenMissionInfo}>
       <div style={style.screenMissionTracker}>
         {gameState.missionResults.map((result, i) => (
-          <div style={style.screenMissionItem}>
+          <div key={i} style={style.screenMissionItem}>
             {result === 0 ? (
               <img
-                key={i}
                 style={style.screenMissionToken}
                 src={'/resistance_token_failure.png'}
               />
             ) : result === 1 ? (
               <img
-                key={i}
                 style={style.screenMissionToken}
                 src={'/resistance_token_success.png'}
               />
             ) : (
-              <div
-                key={i}
-                style={style.screenMissionNumber}
-              >
-                {gameState.groupSize.missionSize[i]}
-              </div>
+              <p>{gameState.groupSize.missionSize[i]}</p>
             )}
             {(gameState.players.length >= 7 && i === 3 &&
               <p style={{ fontSize: '0.2em' }}>Needs 2 fails</p>
@@ -38,7 +31,7 @@ const MissionInfo = props => {
         <p
           style={{ color: gameState.rejectTracker >= 4 ? 'red' : 'black' }}
         >
-          Rejections: {gameState.rejectTracker}
+          Rejections: {gameState.rejectTracker} / 5
         </p>
       </div>
     </div>

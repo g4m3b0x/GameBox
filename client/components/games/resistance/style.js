@@ -40,24 +40,28 @@ module.exports = {
     justifyContent: 'space-evenly',
   },
   screenMissionInfo: {
-    height: '100%',
+    height: '80%',
     width: '60%',
+    border: '1px solid gray',
+    borderRadius: '5%',
     display: 'flex',
     flexDirection: 'column',
     fontSize: '0.75em',
   },
   screenMissionTracker: {
-    height: '50%',
+    height: '60%',
     width: '100%',
+    marginTop: '0.15em',
     display: 'flex',
     justifyContent: 'space-evenly',
     alignItems: 'flex-start',
-    fontSize: '3.0em',
+    fontSize: '2.25em',
   },
   screenMissionItem: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
   },
   screenMissionNumber: {
     height: '0.75em',
@@ -71,13 +75,14 @@ module.exports = {
   screenMissionToken: {
     height: '0.75em',
     width: '0.75em',
+    marginTop: '0.4em',
   },
   screenRejectTracker: {
-    height: '50%',
+    height: '40%',
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     fontSize: '1.0em',
   },
   screenBottomLine: {
