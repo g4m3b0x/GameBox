@@ -285,11 +285,11 @@ module.exports = class Resistance {
         return;
       }
       if (this.missionResults.reduce((successes, mission) => mission === 1 ? successes + 1 : successes, 0) === 3) {
-        if (!this.specialRoles.assassin) {
+        // if (!this.specialRoles.assassin) {
           this.gameOver(io, socket, 'resWin');
-        } else {
+        // } else {
           this.currentPhase = 'assassination';    // write code for assassination later!
-        }
+        // }
         return;
       }
 

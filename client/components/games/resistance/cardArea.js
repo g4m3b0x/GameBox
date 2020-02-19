@@ -8,6 +8,9 @@ const CardArea = props => {
     <div style={style.cardArea}>
       <div style={style.cardAreaBuffer} />
       <div className="flip-card" style={style.flipCard}>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <p>{gameState.users[socket.id]}</p>
+        </div>
         <div className="flip-card-inner">
           <div className="flip-card-front">
             <img style={style.card} src="resistance_char_back.png" />
