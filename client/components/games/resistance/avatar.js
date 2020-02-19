@@ -7,7 +7,15 @@ const Avatar = props => {
   return (
     <div style={style.screenPlayer}>
       <div style={style.screenPlayerAvatarArea}>
-        <img src="resistance_avatar.png" style={style.screenPlayerImage} />
+        <img
+          src={
+            !gameState.winner ? 'resistance_avatar.png'
+            : user in gameState.spies
+            ? gameState.spies[user]
+            : gameState.res[user]
+          }
+          style={style.screenPlayerImage}
+        />
         <p style={style.screenPlayerName}>{gameState.users[user]}</p>
         {user === gameState.players[gameState.currentLeader] &&
           <img

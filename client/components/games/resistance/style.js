@@ -47,12 +47,17 @@ module.exports = {
     fontSize: '0.75em',
   },
   screenMissionTracker: {
-    height: '75%',
+    height: '50%',
     width: '100%',
     display: 'flex',
     justifyContent: 'space-evenly',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     fontSize: '3.0em',
+  },
+  screenMissionItem: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
   screenMissionNumber: {
     height: '0.75em',
@@ -68,11 +73,11 @@ module.exports = {
     width: '0.75em',
   },
   screenRejectTracker: {
-    height: '25%',
+    height: '50%',
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     fontSize: '1.0em',
   },
   screenBottomLine: {
