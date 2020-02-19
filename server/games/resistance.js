@@ -31,45 +31,9 @@ const groupSize = {
   }
 };
 
-const resImages = [
-  'resistance_char_res1.png',
-  'resistance_char_res2.png',
-  'resistance_char_res3.png',
-  'resistance_char_res4.png',
-  'resistance_char_res5.png',
-  'resistance_char_res6.png',
-  'resistance_char_res7.png',
-  'resistance_char_res8.png',
-  'resistance_char_res9.png',
-  'resistance_char_res10.png'
-
-  // 'resistance_char_commander.png',
-  // 'resistance_char_bodyguard.png'
-];
-const spyImages = [
-  'resistance_char_spy1.png',
-  'resistance_char_spy2.png',
-  'resistance_char_spy3.png',
-  'resistance_char_spy4.png',
-  'resistance_char_spy5.png',
-  'resistance_char_spy6.png',
-  'resistance_char_spy7.png',
-  'resistance_char_spy8.png',
-  'resistance_char_spy9.png',
-  'resistance_char_spy10.png'
-
-  // 'resistance_char_assassin.png',
-  // 'resistance_char_falsecommander.png',
-  // 'resistance_char_deepcover.png',
-  // 'resistance_char_blindspy.png'
-];
-const gunImages = [
-  'resistance_token_gun1.png',
-  'resistance_token_gun2.png',
-  'resistance_token_gun3.png',
-  'resistance_token_gun4.png',
-  'resistance_token_gun5.png'
-];
+const resImages = Array(10).fill(0).map((_, i) => `resistance_char_res${i + 1}.png`);
+const spyImages = Array(10).fill(0).map((_, i) => `resistance_char_spy${i + 1}.png`);
+const gunImages = Array(5).fill(0).map((_, i) => `resistance_token_gun${i + 1}.png`);
 
 const shuffle = arr => {
   const output = [...arr];
@@ -91,17 +55,17 @@ module.exports = class Resistance {
     this.res = {};
     this.spies = {};
     this.specialRoles = {
-      commander: '',
-      assassin: '',
-      bodyguard: '',
-      falseCommander: '',
-      deepCover: '',
-      blindSpy: ''
+      commander: false,
+      assassin: false,
+      bodyguard: false,
+      falseCommander: false,
+      deepCover: false,
+      blindSpy: false
     };
     this.currentMission = 0;
     this.rejectTracker = 0;
     this.currentLeader = 0;
-    this.currentPhase = 'teamSelection';
+    this.currentPhase = 'chooseRoles';
     this.voting = false;
     this.proposedTeam = {};
     this.gunImages = gunImages;
@@ -110,54 +74,6 @@ module.exports = class Resistance {
     this.missionVotes = {};
     this.resultOfVotes = [];
     this.missionResults = [null, null, null, null, null];
-    this.generateTeams();
-  }
-  generateTeams() {
-    const shuffledPlayers = shuffle(this.players);
-    const shuffledResImages = shuffle(resImages);
-    const shuffledSpyImages = shuffle(spyImages);
-    for (let i = 0; i < shuffledPlayers.length; i++) {
-      if (i < this.numOfSpies) {
-        this.spies[shuffledPlayers[i]] = shuffledSpyImages[i];
-
-        // **********FOR TESTING (REMOVE LATER):
-        const TEST_SPY_IMAGES = {
-          0: 'resistance_char_assassin.png',
-          1: 'resistance_char_falsecommander.png',
-          2: 'resistance_char_deepcover.png',
-          3: 'resistance_char_blindspy.png'
-        };
-        const TEST_SPY_TITLES = {
-          0: 'assassin',
-          1: 'falseCommander',
-          2: 'deepCover',
-          3: 'blindSpy'
-        };
-        if (this.players.length === 10) {
-          this.spies[shuffledPlayers[i]] = TEST_SPY_IMAGES[i];
-          this.specialRoles[TEST_SPY_TITLES[i]] = shuffledPlayers[i];
-        }
-        // **********
-      } else {
-        this.res[shuffledPlayers[i]] = shuffledResImages[i - this.numOfSpies];
-
-        // **********FOR TESTING (REMOVE LATER):
-        const TEST_RES_IMAGES = {
-          4: 'resistance_char_commander.png',
-          5: 'resistance_char_bodyguard.png'
-        };
-        const TEST_RES_TITLES = {
-          4: 'commander',
-          5: 'bodyguard'
-        };
-        if (this.players.length === 10 && i < 6) {
-          this.res[shuffledPlayers[i]] = TEST_RES_IMAGES[i];
-          this.specialRoles[TEST_RES_TITLES[i]] = shuffledPlayers[i];
-        }
-        // **********
-      }
-    }
-    this.players = shuffle(shuffledPlayers);
   }
   getGameState() {
     return {
@@ -181,6 +97,49 @@ module.exports = class Resistance {
       resultOfVotes: this.resultOfVotes,
       missionResults: this.missionResults,
     };
+  }
+  startGame(io, socket) {
+    const shuffledPlayers = shuffle(this.players);
+    const shuffledResImages = shuffle(resImages);
+    const shuffledSpyImages = shuffle(spyImages);
+    for (let i = 0; i < shuffledPlayers.length; i++) {
+      const currentPlayer = shuffledPlayers[i];
+      if (i < this.numOfSpies) {
+        if (this.specialRoles.assassin === true) {
+          this.specialRoles.assassin = currentPlayer;
+          this.spies[currentPlayer] = 'resistance_char_assassin.png';
+        } else if (this.specialRoles.falseCommander === true) {
+          this.specialRoles.falseCommander = currentPlayer;
+          this.spies[currentPlayer] = 'resistance_char_falseCommander.png';
+        } else if (this.specialRoles.deepCover === true) {
+          this.specialRoles.deepCover = currentPlayer;
+          this.spies[currentPlayer] = 'resistance_char_deepCover.png';
+        } else if (this.specialRoles.blindSpy === true) {
+          this.specialRoles.blindSpy = currentPlayer;
+          this.spies[currentPlayer] = 'resistance_char_blindSpy.png';
+        } else {
+          this.spies[currentPlayer] = shuffledSpyImages[i];
+        }
+      } else {
+
+        if (this.specialRoles.commander === true) {
+          this.specialRoles.commander = currentPlayer;
+          this.res[currentPlayer] = 'resistance_char_commander.png';
+        } else if (this.specialRoles.bodyguard === true) {
+          this.specialRoles.bodyguard = currentPlayer;
+          this.res[currentPlayer] = 'resistance_char_bodyguard.png';
+        } else {
+          this.res[currentPlayer] = shuffledResImages[i - this.numOfSpies];
+        }
+      }
+    }
+    this.players = shuffle(shuffledPlayers);
+    this.currentPhase = 'teamSelection';
+    io.in(socket.roomName).emit('sendGameState', this.getGameState());
+  }
+  toggleRole(io, socket, role) {
+    this.specialRoles[role] = !this.specialRoles[role];
+    io.in(socket.roomName).emit('sendGameState', this.specialRoles);
   }
   proposeTeam(io, socket, player) {
     if (!Object.keys(this.proposedTeam).length) {

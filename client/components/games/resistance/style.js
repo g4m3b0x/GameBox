@@ -1,4 +1,33 @@
 module.exports = {
+  chooseRoles: {
+    height: '75%',
+    width: '75%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    alignItems: 'flex-start',
+  },
+  chooseRolesItem: {
+    width: '100%',
+    display: 'flex',
+  },
+  chooseRolesBlue: {
+    width: '75%',
+    borderRadius: '5px',
+    border: '1px solid blue',
+    backgroundColor: 'lightblue',
+  },
+  chooseRolesRed: {
+    width: '75%',
+    borderRadius: '5px',
+    border: '1px solid red',
+    backgroundColor: 'pink',
+  },
+  chooseRolesCheck: {
+    height: '1em',
+    width: '1em',
+    marginLeft: '1em',
+  },
   screen: {
     height: '100%',
     width: '100%',
