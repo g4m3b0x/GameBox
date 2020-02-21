@@ -2,9 +2,7 @@ import React from 'react';
 import socket from '../../../index.js';
 import style from './style';
 
-function completeVoteReveal() {
-  socket.emit('completeVoteReveal');
-}
+import { writeGameState } from '../functions';
 
 const VoteRevealInput = props => {
   const { gameState } = props;
@@ -13,7 +11,7 @@ const VoteRevealInput = props => {
       <p>Discuss results and proceed when ready...</p>
       <button
         style={style.genericButton}
-        onClick={completeVoteReveal}
+        onClick={() => writeGameState('completeVoteReveal')}
       >
         {gameState.voting
           ? 'Next'

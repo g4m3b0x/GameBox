@@ -2,112 +2,43 @@ import React from 'react';
 import socket from '../../../index.js';
 import style from './style';
 
-function toggleRole(role) {
-  socket.emit('toggleRole', role);
-}
+import { writeGameState } from '../functions';
 
-function startGame() {
-  socket.emit('startGame');
-}
+const roles = {
+  'commander': 'Commander',
+  'assassin': 'Assassin',
+  'bodyguard': 'Bodyguard',
+  'falseCommander': 'False Commander',
+  'deepCover': 'Deep Cover',
+  'blindSpy': 'Blind Spy',
+};
+const res = ['commander', 'bodyguard'];
 
 const ChooseRoles = props => {
   const { gameState } = props;
   return (
     <div style={style.chooseRoles}>
       <p>{gameState.users[gameState.players[0]]} is choosing roles...</p>
-      <div style={style.chooseRolesItem}>
-        <button
-          style={style.chooseRolesBlue}
-          disabled={!socket.hostBool}
-          onClick={() => toggleRole('commander')}
-        >
-          Commander
-        </button>
-        {gameState.commander &&
-          <img
-            style={style.chooseRolesCheck}
-            src="/resistance_token_approve.png"
-          />
-        }
-      </div>
-      <div style={style.chooseRolesItem}>
-        <button
-          style={style.chooseRolesRed}
-          disabled={!socket.hostBool}
-          onClick={() => toggleRole('assassin')}
-        >
-          Assassin
-        </button>
-        {gameState.assassin &&
-          <img
-            style={style.chooseRolesCheck}
-            src="/resistance_token_approve.png"
-          />
-        }
-      </div>
-      <div style={style.chooseRolesItem}>
-        <button
-          style={style.chooseRolesBlue}
-          disabled={!socket.hostBool}
-          onClick={() => toggleRole('bodyguard')}
-        >
-          Bodyguard
-        </button>
-        {gameState.bodyguard &&
-          <img
-            style={style.chooseRolesCheck}
-            src="/resistance_token_approve.png"
-          />
-        }
-      </div>
-      <div style={style.chooseRolesItem}>
-        <button
-          style={style.chooseRolesRed}
-          disabled={!socket.hostBool}
-          onClick={() => toggleRole('falseCommander')}
-        >
-          False Commander
-        </button>
-        {gameState.falseCommander &&
-          <img
-            style={style.chooseRolesCheck}
-            src="/resistance_token_approve.png"
-          />
-        }
-      </div>
-      <div style={style.chooseRolesItem}>
-        <button
-          style={style.chooseRolesRed}
-          disabled={!socket.hostBool}
-          onClick={() => toggleRole('deepCover')}
-        >
-          Deep Cover
-        </button>
-        {gameState.deepCover &&
-          <img
-            style={style.chooseRolesCheck}
-            src="/resistance_token_approve.png"
-          />
-        }
-      </div>
-      <div style={style.chooseRolesItem}>
-        <button
-          style={style.chooseRolesRed}
-          disabled={!socket.hostBool}
-          onClick={() => toggleRole('blindSpy')}
-        >
-          Blind Spy
-        </button>
-        {gameState.blindSpy &&
-          <img
-            style={style.chooseRolesCheck}
-            src="/resistance_token_approve.png"
-          />
-        }
-      </div>
+      {Object.keys(roles).map((role, i) => (
+        <div key={i} style={style.chooseRolesItem}>
+          <button
+            style={res.includes(role) ? style.chooseRolesBlue : style.chooseRolesRed}
+            disabled={!socket.hostBool}
+            onClick={() => writeGameState('toggleRole', { role })}
+          >
+            {roles[role]}
+          </button>
+          {gameState.specialRoles[role] &&
+            <img
+              style={style.chooseRolesCheck}
+              src="/resistance_token_approve.png"
+            />
+          }
+        </div>
+      ))}
       <button
         disabled={!socket.hostBool}
-        onClick={startGame}
+        onClick={() => writeGameState('startGame')}
       >
         Start Game
       </button>

@@ -2,9 +2,7 @@ import React from 'react';
 import socket from '../../../index.js';
 import style from './style';
 
-function completeMissionReveal() {
-  socket.emit('completeMissionReveal');
-}
+import { writeGameState } from '../functions';
 
 const MissionRevealInput = props => {
   const { gameState } = props;
@@ -13,7 +11,7 @@ const MissionRevealInput = props => {
       <p>Discuss results and proceed when ready...</p>
       <button
         style={style.genericButton}
-        onClick={completeMissionReveal}
+        onClick={() => writeGameState('completeMissionReveal')}
       >
         Next
       </button>

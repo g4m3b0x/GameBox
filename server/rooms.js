@@ -36,7 +36,7 @@ module.exports = class Room {
     };
     return roomData;
   }
-  joinRoom(userName, io, socket) {
+  joinRoom(userName, socket, io) {
     socket.userName = userName;
     socket.roomName = this.roomName;
     socket.hostBool = false;
@@ -59,7 +59,7 @@ module.exports = class Room {
       currentHost: this.host
     });
   }
-  disconnect(io, socket) {
+  disconnect(socket, io) {
     delete this.users[socket.id];
     const updatedUsers = Object.keys(this.users);
     if (this.dedicatedScreen === socket.id) {
@@ -85,7 +85,7 @@ module.exports = class Room {
     socket.broadcast.to(newHost).emit('hostMigration');
     this.host = newHost;
   }
-  startGame(game, io, socket) {
+  startGame(game, socket, io) {
     const numPlayers = Object.keys(this.users).length;
     if (numPlayers < Games[game].min) {
       socket.emit(

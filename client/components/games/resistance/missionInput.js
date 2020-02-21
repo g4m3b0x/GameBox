@@ -2,9 +2,7 @@ import React from 'react';
 import socket from '../../../index.js';
 import style from './style';
 
-function submitMissionVote(castedVote) {
-  socket.emit('submitMissionVote', castedVote);
-}
+import { writeGameState } from '../functions';
 
 const MissionInput = props => {
   const { gameState } = props;
@@ -15,13 +13,13 @@ const MissionInput = props => {
         <img
           style={style.missionVoteButton}
           src={'/resistance_mission_success.png'}
-          onClick={() => submitMissionVote(true)}
+          onClick={() => writeGameState('submitMissionVote', { castedVote: true })}
         />
         {socket.id in gameState.spies &&
           <img
             style={style.missionVoteButton}
             src={'/resistance_mission_fail.png'}
-            onClick={() => submitMissionVote(false)}
+            onClick={() => writeGameState('submitMissionVote', { castedVote: false })}
           />
         }
       </React.Fragment>
