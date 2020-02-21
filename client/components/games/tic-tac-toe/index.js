@@ -4,6 +4,8 @@ import style from './style';
 
 import BackToLobby from '../backToLobby';
 
+import { writeGameState } from '../functions';
+
 export default class TicTacToe extends Component {
   constructor() {
     super();
@@ -22,9 +24,7 @@ export default class TicTacToe extends Component {
     this._isMounted = true;
     if (socket.hostBool) {
       // done once, by the host
-      socket.emit('gameDataReducer', {
-        request: 'getInitGameState'
-      });
+      socket.emit('getGameState');
     }
     socket.on('sendGameState', data => {
       if (this._isMounted) this.setState(data);
@@ -36,10 +36,7 @@ export default class TicTacToe extends Component {
   }
 
   move(x, y) {
-    socket.emit('gameDataReducer', {
-      request: 'sendMove',
-      payload: { x, y }
-    });
+    writeGameState('sendMove', { x, y });
   }
 
   returnToLobby() {

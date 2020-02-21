@@ -2,12 +2,7 @@ import React from 'react';
 import socket from '../../../index.js';
 import style from './style';
 
-function startTeamVote() {
-  socket.emit('startTeamVote');
-}
-function submitTeamVote(castedVote) {
-  socket.emit('submitTeamVote', castedVote);
-}
+import { writeGameState } from '../functions';
 
 const TeamSelectionInput = props => {
   const { gameState } = props;
@@ -18,12 +13,12 @@ const TeamSelectionInput = props => {
         <img
           style={style.teamVoteButton}
           src={'/resistance_token_approve.png'}
-          onClick={() => submitTeamVote(true)}
+          onClick={() => writeGameState('submitTeamVote', { castedVote: true })}
         />
         <img
           style={style.teamVoteButton}
           src={'/resistance_token_reject.png'}
-          onClick={() => submitTeamVote(false)}
+          onClick={() => writeGameState('submitTeamVote', { castedVote: false })}
         />
       </React.Fragment>
     ) : (
@@ -40,7 +35,7 @@ const TeamSelectionInput = props => {
       </p>
       <button
         style={style.genericButton}
-        onClick={startTeamVote}
+        onClick={() => writeGameState('submitTeamNomination')}
         disabled={
           Object.keys(gameState.proposedTeam).length !==
           gameState.groupSize.missionSize[gameState.currentMission]

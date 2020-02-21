@@ -32,7 +32,7 @@ export default class Resistance extends Component {
       proposedTeam: {},
       teamVotes: {},
       missionVotes: {},
-      missionResults: [null, null, null, null, null],
+      missionResults: [],
     };
     this._isMounted = false; // prevent memory leak
     this.returnToLobby = this.returnToLobby.bind(this);
@@ -42,38 +42,10 @@ export default class Resistance extends Component {
     this._isMounted = true;
     if (socket.hostBool) {
       // done once, by the host
-      socket.emit('gameDataReducer', {
-        request: 'getInitGameState'
-      });
+      socket.emit('getGameState');
     }
     socket.on('sendGameState', data => {
       if (this._isMounted) this.setState(data);
-    });
-    socket.on('setVoteStatus', data => {
-      if (this._isMounted) this.setState(data);
-    });
-    socket.on('proposedTeam', data => {
-      if (this._isMounted) this.setState(data);
-    });
-    socket.on('updateTeamVote', data => {
-      const { socketId, castedVote } = data;
-      if (this._isMounted)
-        this.setState({
-          teamVotes: {
-            ...this.state.teamVotes,
-            [socketId]: castedVote
-          }
-        });
-    });
-    socket.on('updateMissionVote', data => {
-      const { socketId, castedVote } = data;
-      if (this._isMounted)
-        this.setState({
-          missionVotes: {
-            ...this.state.missionVotes,
-            [socketId]: castedVote
-          }
-        });
     });
   }
 

@@ -13,14 +13,28 @@ module.exports = class TicTacToe {
     this.freeSquares = 9;
     this.turn = 0;
   }
-  getGameState() {
-    return {
+  getGameState(socket, io) {
+    const gameState = {
       users: this.users,
       dedicatedScreen: this.dedicatedScreen,
       gameBoard: this.gameBoard,
       turn: this.turn,
       winner: this.winner
     };
+    io.in(socket.roomName).emit('sendGameState', gameState);
+  }
+  writeGameState(socket, io, data) {
+    const { request, payload } = data;
+    const gameState = {};
+    switch (request) {
+      case 'sendMove':
+        this.move(socket.id, payload);
+        gameState.gameBoard = this.gameBoard;
+        gameState.turn = this.turn;
+        gameState.winner = this.winner;
+        break;
+    }
+    io.in(socket.roomName).emit('sendGameState', gameState);
   }
   move(socketId, payload) {
     const {x, y} = payload;

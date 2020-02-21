@@ -2,9 +2,11 @@ import React from 'react';
 import socket from '../../../index.js';
 import style from './style';
 
-function setProposeTeam(currentPhase, leaderId, id) {
-  if (currentPhase !== 'teamSelection' || socket.id !== leaderId) return;
-  socket.emit('proposingTeam', { id });
+import { writeGameState } from '../functions';
+
+function togglePlayer(currentPhase, voting, leaderId, playerId) {
+  if (currentPhase !== 'teamSelection' || voting || socket.id !== leaderId) return;
+  writeGameState('togglePlayer', { playerId });
 }
 
 const PlayerList = props => {
@@ -77,7 +79,7 @@ const PlayerList = props => {
                           ? style.playerBlue
                           : style.playerRed
             }
-            onClick={() => setProposeTeam(gameState.currentPhase, gameState.players[gameState.currentLeader], user)}
+            onClick={() => togglePlayer(gameState.currentPhase, gameState.voting, gameState.players[gameState.currentLeader], user)}
           >
             <p style={style.playerName}>{gameState.users[user]}</p>
           </button>

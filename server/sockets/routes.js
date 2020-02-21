@@ -20,7 +20,7 @@ module.exports = (socket, io, rooms, users) => {
         } while (roomName in rooms);
         rooms[roomName] = new Room(roomName, payload.dedicatedScreen);
         const currRoom = rooms[roomName];
-        currRoom.joinRoom(payload.userName, io, socket);
+        currRoom.joinRoom(payload.userName, socket, io);
         return;
       case 'joinRoom':
         const errorObj = rooms[payload.roomName]
@@ -30,14 +30,14 @@ module.exports = (socket, io, rooms, users) => {
           socket.emit('errorOnJoin', errorObj);
           return;
         }
-        rooms[payload.roomName].joinRoom(payload.userName, io, socket);
+        rooms[payload.roomName].joinRoom(payload.userName, socket, io);
         return;
       case 'exitRoom':
         socket.emit('status', 'welcome screen');
         return;
       case 'startGame':
         const { game } = payload;
-        rooms[socket.roomName].startGame(game, io, socket);
+        rooms[socket.roomName].startGame(game, socket, io);
         return;
       case 'returnToLobby':
         rooms[socket.roomName].gameOver(io);
