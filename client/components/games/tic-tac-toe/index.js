@@ -39,50 +39,38 @@ export default class TicTacToe extends Component {
     writeGameState('sendMove', { x, y });
   }
 
-  returnToLobby() {
-    socket.emit('routesReducer', {
-      request: 'returnToLobby'
-    });
-  }
-
   render() {
     return (
       <div>
-        {!this.state.winner ? (
-          <div>
-            <div style={style.topArea}>
-              <BackToLobby />
-              <p style={{ width: '100%' }}>{Object.values(this.state.users)[this.state.turn]}'s turn:</p>
-            </div>
-            <div style={style.table}>
-              {this.state.gameBoard.map((row, y) => (
-                <div key={y} style={style.row}>
-                  {this.state.gameBoard[y].map((col, x) => (
-                    <div key={x} style={style.cell}>
-                      <div
-                        style={style.cellDiv}
-                        onClick={() => {
-                          this.move(x, y);
-                        }}
-                      >
-                        {this.state.gameBoard[y][x]}
-                      </div>
-                    </div>
-                  ))}
+        <div style={style.topArea}>
+          <BackToLobby />
+          <p style={{ width: '100% '}}>
+            {!this.state.winner
+              ? `${Object.values(this.state.users)[this.state.turn]}'s turn:`
+              : this.state.winner === -1
+              ? 'Draw!'
+              : `${this.state.winner} wins!`
+            }
+          </p>
+        </div>
+        <div style={style.table}>
+          {this.state.gameBoard.map((row, y) => (
+            <div key={y} style={style.row}>
+              {this.state.gameBoard[y].map((col, x) => (
+                <div key={x} style={style.cell}>
+                  <div
+                    style={style.cellDiv}
+                    onClick={() => {
+                      this.move(x, y);
+                    }}
+                  >
+                    {this.state.gameBoard[y][x]}
+                  </div>
                 </div>
               ))}
             </div>
-          </div>
-        ) : (
-          <div>
-            <p>
-              {this.state.winner === -1
-                ? 'Draw!'
-                : `${this.state.winner} wins!`}
-            </p>
-            <button onClick={this.returnToLobby}>Back to Lobby</button>
-          </div>
-        )}
+          ))}
+        </div>
       </div>
     );
   }

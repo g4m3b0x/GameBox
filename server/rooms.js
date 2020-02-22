@@ -113,8 +113,8 @@ module.exports = class Room {
   canJoin() {
     const errorObj = { status: false };
     if (this.maxPlayers === Object.keys(this.users).length)
-      errorObj.msg = 'Game is at capacity';
-    else if (this.game) errorObj.msg = 'Game is already in progress';
+      errorObj.msg = `${this.roomName} is at capacity`;
+    else if (this.game) errorObj.msg = `${this.roomName} is already in progress`;
     else errorObj.status = true;
     return errorObj;
   }

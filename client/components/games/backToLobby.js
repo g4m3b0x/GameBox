@@ -5,9 +5,7 @@ const BackToLobby = () => {
   return (
     <button
       className="tiny-button"
-      onClick={() => socket.emit('routesReducer', {
-        request: 'returnToLobby'
-      })}
+      onClick={() => socket.emit('returnToLobby')}
     >
       Back to Lobby
     </button>
