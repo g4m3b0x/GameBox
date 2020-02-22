@@ -4,9 +4,13 @@ import style from './style';
 
 import { writeGameState } from '../functions';
 
-function togglePlayer(currentPhase, voting, leaderId, playerId) {
-  if (currentPhase !== 'teamSelection' || voting || socket.id !== leaderId) return;
-  writeGameState('togglePlayer', { playerId });
+function handleClick(currentPhase, voting, leaderId, assassinId, assassinatedId, playerId) {
+  if (currentPhase === 'teamSelection' && !voting && socket.id === leaderId) {
+    writeGameState('togglePlayer', { playerId });
+  }
+  if (currentPhase === 'assassination' && socket.id === assassinId && !assassinatedId) {
+    writeGameState('assassinatePlayer', { playerId });
+  }
 }
 
 const PlayerList = props => {
@@ -64,8 +68,8 @@ const PlayerList = props => {
           </div>
           <button
             style={
-              user === socket.id
-                ? socket.id in gameState.res
+              user === socket.id || gameState.currentPhase === 'assassination'
+                ? user in gameState.res
                   ? style.playerBlue
                   : style.playerRed
                 : socket.id === gameState.specialRoles.bodyguard && (user === gameState.specialRoles.commander || user === gameState.specialRoles.falseCommander)
@@ -79,7 +83,14 @@ const PlayerList = props => {
                           ? style.playerBlue
                           : style.playerRed
             }
-            onClick={() => togglePlayer(gameState.currentPhase, gameState.voting, gameState.players[gameState.currentLeader], user)}
+            onClick={() => handleClick(
+              gameState.currentPhase,
+              gameState.voting,
+              gameState.players[gameState.currentLeader],
+              gameState.specialRoles.assassin,
+              gameState.assassinated,
+              user
+            )}
           >
             <p style={style.playerName}>{gameState.users[user]}</p>
           </button>

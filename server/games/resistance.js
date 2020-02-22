@@ -74,6 +74,7 @@ module.exports = class Resistance {
     this.missionVotes = {};
     this.resultOfVotes = [];
     this.missionResults = [null, null, null, null, null];
+    this.assassinated = null;
   }
   getGameState(socket, io) {
     const gameState = {};
@@ -95,6 +96,7 @@ module.exports = class Resistance {
     gameState.missionVotes = this.missionVotes;
     gameState.resultOfVotes = this.resultOfVotes;
     gameState.missionResults = this.missionResults;
+    gameState.asassinated = this.assassinated;
     io.in(socket.roomName).emit('sendGameState', gameState);
   }
   writeGameState(socket, io, data) {
@@ -156,6 +158,11 @@ module.exports = class Resistance {
         gameState.currentPhase = this.currentPhase;
         gameState.proposedTeam = this.proposedTeam;
         gameState.gunImages = this.gunImages;
+        break;
+      case 'assassinatePlayer':
+        this.assassinate(payload.playerId);
+        gameState.assassinated = this.assassinated;
+        gameState.winner = this.winner;
         break;
     }
     io.in(socket.roomName).emit('sendGameState', gameState);
@@ -265,15 +272,13 @@ module.exports = class Resistance {
     this.resultOfVotes = shuffle(Object.values(this.missionVotes));
     if (this.missionResults.reduce((failures, mission) => mission === 0 ? failures + 1 : failures, 0) === 3) {
       this.gameOver('spiesWin');
-      return;
     }
     if (this.missionResults.reduce((successes, mission) => mission === 1 ? successes + 1 : successes, 0) === 3) {
-      // if (!this.specialRoles.assassin) {
+      if (!this.specialRoles.assassin || !this.specialRoles.commander) {
         this.gameOver('resWin');
-      // } else {
-        this.currentPhase = 'assassination';    // write code for assassination later!
-      // }
-      return;
+      } else {
+        this.currentPhase = 'assassination';
+      }
     }
   }
   completeMissionReveal() {
@@ -281,6 +286,14 @@ module.exports = class Resistance {
     this.currentMission++;
     this.missionVotes = {};
     this.nextVote();
+  }
+  assassinate(playerId) {
+    this.assassinated = playerId;
+    this.gameOver(
+      this.specialRoles.commander === playerId
+        ? 'assassinateSuccess'
+        : 'assassinateFail'
+    );
   }
   gameOver(reason) {
     switch (reason) {
@@ -292,6 +305,12 @@ module.exports = class Resistance {
         break;
       case 'spiesWin':
         this.winner = 'spies';
+        break;
+      case 'assassinateSuccess':
+        this.winner = 'spies';
+        break;
+      case 'assassinateFail':
+        this.winner = 'res';
         break;
     }
   }
