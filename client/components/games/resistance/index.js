@@ -10,6 +10,7 @@ import TeamSelectionInput from './teamSelectionInput';
 import VoteRevealInput from './voteRevealInput';
 import MissionInput from './missionInput';
 import MissionRevealInput from './missionRevealInput';
+import AssassinationInput from './assassinationInput';
 import PlayerList from './playerList';
 import CardArea from './cardArea';
 
@@ -33,6 +34,7 @@ export default class Resistance extends Component {
       teamVotes: {},
       missionVotes: {},
       missionResults: [],
+      asassinated: null,
     };
     this._isMounted = false; // prevent memory leak
   }
@@ -80,6 +82,8 @@ export default class Resistance extends Component {
                 <MissionInput gameState={this.state} />
               ) : this.state.currentPhase === 'missionReveal' ? (
                 <MissionRevealInput gameState={this.state} />
+              ) : this.state.currentPhase === 'assassination' ? (
+                <AssassinationInput gameState={this.state} />
               ) : (
                 null
               )}
