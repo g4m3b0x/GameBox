@@ -10,12 +10,12 @@ const Avatar = props => {
         <img
           src={
             gameState.winner
-            ? (user in gameState.spies
+              ? user in gameState.spies
+                ? gameState.spies[user]
+                : gameState.res[user]
+              : gameState.currentPhase === 'assassination' && user in gameState.spies
               ? gameState.spies[user]
-              : gameState.res[user]
-            ) : gameState.currentPhase === 'assassination' && user in gameState.spies
-            ? gameState.spies[user]
-            : 'resistance_avatar.png'
+              : 'resistance_avatar.png'
           }
           style={style.screenPlayerImage}
         />
