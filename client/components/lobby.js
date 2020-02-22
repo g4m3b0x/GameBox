@@ -23,9 +23,7 @@ export default class Lobby extends Component {
     this._isMounted = true;
 
     // GET DATA
-    socket.emit('routesReducer', {
-      request: 'joinedRoom'
-    });
+    socket.emit('joinedRoom');
     socket.on('sendRoomData', data => {
       if (this._isMounted) this.setState(data);
     });
@@ -39,7 +37,7 @@ export default class Lobby extends Component {
       });
 
     // SOCKET LISTENERS
-    socket.on('changedSelectedGame', game => {
+    socket.on('updateSelectedGame', game => {
       if (this._isMounted)
         this.setState({ selectedGame: game, hostErrorMsg: '' });
     });
@@ -86,12 +84,7 @@ export default class Lobby extends Component {
   }
 
   handleSelect(e) {
-    socket.emit('lobbyReducer', {
-      request: 'changeSelectedGame',
-      payload: {
-        game: e.target.value
-      }
-    });
+    socket.emit('changeSelectedGame', e.target.value);
   }
 
   handleType(e) {
@@ -120,10 +113,7 @@ export default class Lobby extends Component {
         return newWordArr.join(' ');
       })
       .join(' ');
-    socket.emit('lobbyReducer', {
-      request: 'sendMessage',
-      payload: { message }
-    });
+    socket.emit('sendMessage', message);
     this.setState({ currentMessage: '' });
   }
 
@@ -136,7 +126,7 @@ export default class Lobby extends Component {
             <button
               className="tiny-button"
               onClick={() => {
-                socket.emit('routesReducer', { request: 'exitRoom' });
+                socket.emit('exitRoom');
                 socket.emit('disconnecting');
               }}
             >
@@ -165,12 +155,7 @@ export default class Lobby extends Component {
                   <button
                     disabled={this.state.selectedGame === '--None--'}
                     onClick={() => {
-                      socket.emit('routesReducer', {
-                        request: 'startGame',
-                        payload: {
-                          game: this.state.selectedGame
-                        }
-                      });
+                      socket.emit('startGame', this.state.selectedGame);
                     }}
                   >
                     Start

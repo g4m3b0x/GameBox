@@ -43,8 +43,7 @@ class Welcome extends Component {
     );
     // SOCKET LISTENERS
     socket.on('errorOnJoin', data => {
-      const { msg } = data;
-      this.handleError(msg);
+      this.handleError(data.msg);
     });
     // FOCUS
     document.getElementById('welcome-nameInput').focus();
@@ -54,12 +53,9 @@ class Welcome extends Component {
     if (!this.state.userName) {
       this.handleError('user');
     } else {
-      socket.emit('routesReducer', {
-        request: 'createRoom',
-        payload: {
-          userName: this.state.userName,
-          dedicatedScreen: this.state.dedicatedScreen ? socket.id : null
-        }
+      socket.emit('createRoom', {
+        userName: this.state.userName,
+        dedicatedScreen: this.state.dedicatedScreen ? socket.id : null
       });
     }
   }
@@ -78,13 +74,10 @@ class Welcome extends Component {
     ) {
       this.handleError(`Invalid room name: ${this.state.roomName}`);
     } else {
-      socket.emit('routesReducer', {
-        request: 'joinRoom',
-        payload: {
-          userName: this.state.userName,
-          roomName: this.state.roomName.toUpperCase(),
-          dedicatedScreen: null
-        }
+      socket.emit('joinRoom', {
+        userName: this.state.userName,
+        roomName: this.state.roomName.toUpperCase(),
+        dedicatedScreen: null,
       });
     }
   }

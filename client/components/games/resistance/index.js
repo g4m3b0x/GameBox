@@ -25,17 +25,16 @@ export default class Resistance extends Component {
       res: {},
       spies: {},
       specialRoles: {},
-      currentMission: 0,
-      currentLeader: 0,
+      currentMission: null,
+      currentLeader: null,
       currentPhase: null,
-      voting: false,
+      voting: null,
       proposedTeam: {},
       teamVotes: {},
       missionVotes: {},
       missionResults: [],
     };
     this._isMounted = false; // prevent memory leak
-    this.returnToLobby = this.returnToLobby.bind(this);
   }
 
   componentDidMount() {
@@ -53,12 +52,6 @@ export default class Resistance extends Component {
     this._isMounted = false;
   }
 
-  returnToLobby() {
-    socket.emit('routesReducer', {
-      request: 'returnToLobby'
-    });
-  }
-
   render() {
     if (this.state.currentPhase === 'chooseRoles') {
       return <ChooseRoles gameState={this.state} />;
@@ -68,9 +61,7 @@ export default class Resistance extends Component {
       return (
         <div style={style.view}>
           <div style={style.topArea}>
-            {socket.hostBool &&
-              <BackToLobby />
-            }
+            <BackToLobby />
             {this.state.currentPhase !== 'chooseRoles' &&
               <StatusBar gameState={this.state} />
             }
