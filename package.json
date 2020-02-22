@@ -29,7 +29,7 @@
     "start-dev": "npm-run-all --parallel build-watch start-server",
     "build-watch": "webpack -w",
     "start-server": "nodemon server",
-    "deploy": "deploy"
+    "deploy": "script/deploy"
   },
   "repository": {
     "type": "git",
