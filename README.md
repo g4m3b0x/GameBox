@@ -8,8 +8,9 @@ Uses JavaScript, Node.JS, Express, React, and Socket.IO.
 
 Built in ~5 weeks.
 
-https://github.com/stanley-c-so
-https://github.com/wilsonleung32
+Stanley So: https://github.com/stanley-c-so
+
+Wilson Leung: https://github.com/wilsonleung32
 
 Deployed at: http://g4m3b0x.herokuapp.com/
 
@@ -17,7 +18,7 @@ Deployed at: http://g4m3b0x.herokuapp.com/
 
 # Links
 
-- [How To Play](https://boardgamegeek.com/boardgame/41114/resistance "How to play")
+- [How to play The Resistance](https://boardgamegeek.com/boardgame/41114/resistance)
 
 # How to install and run
 
