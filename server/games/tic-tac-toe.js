@@ -11,7 +11,7 @@ module.exports = class TicTacToe {
       ['‏‏‎ ‎', '‏‏‎ ‎', '‏‏‎ ‎'],
     ];
     this.freeSquares = 9;
-    this.turn = 0;
+    this.turn = Math.floor(Math.random() * 2);
   }
   getGameState(socket, io) {
     const gameState = {
