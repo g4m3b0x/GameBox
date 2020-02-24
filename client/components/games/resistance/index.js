@@ -34,12 +34,16 @@ export default class Resistance extends Component {
       teamVotes: {},
       missionVotes: {},
       missionResults: [],
-      asassinated: null,
+      asassinated: null
     };
     this._isMounted = false; // prevent memory leak
   }
 
   componentDidMount() {
+    socket.on('reconnect', () => {
+      const data = { userName: socket.userName, roomName: socket.roomName };
+      socket.emit('rejoin', data);
+    });
     this._isMounted = true;
     if (socket.hostBool) {
       // done once, by the host
@@ -64,9 +68,9 @@ export default class Resistance extends Component {
         <div style={style.view}>
           <div style={style.topArea}>
             <BackToLobby />
-            {this.state.currentPhase !== 'chooseRoles' &&
+            {this.state.currentPhase !== 'chooseRoles' && (
               <StatusBar gameState={this.state} />
-            }
+            )}
             <div style={style.instructions}>
               {this.state.winner ? (
                 this.state.winner === 'res' ? (
@@ -84,17 +88,15 @@ export default class Resistance extends Component {
                 <MissionRevealInput gameState={this.state} />
               ) : this.state.currentPhase === 'assassination' ? (
                 <AssassinationInput gameState={this.state} />
-              ) : (
-                null
-              )}
+              ) : null}
             </div>
           </div>
-          {this.state.currentPhase !== 'chooseRoles' &&
+          {this.state.currentPhase !== 'chooseRoles' && (
             <div style={style.bottomArea}>
               <PlayerList gameState={this.state} />
               <CardArea gameState={this.state} />
             </div>
-          }
+          )}
         </div>
       );
     }
