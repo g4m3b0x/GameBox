@@ -4,6 +4,8 @@
 
 Inspired by the Jackbox Party Pack, GameBox is a free-to-play platform for party video games. Players need not download any software, but can immediately join the action by simply opening up a web browser on a smartphone.
 
+The GameBox experience is best enjoyed with one large "dedicated screen" showing the primary game information, with players referring to their phones for private information and player inputs. However, play is also possible without a dedicated screen - perfect for when friends gather at a bar, or when the group is not physically gathered in one place!
+
 Uses JavaScript, Node.JS, Express, React, and Socket.IO.
 
 Built in ~5 weeks.
