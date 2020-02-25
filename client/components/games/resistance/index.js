@@ -41,7 +41,12 @@ export default class Resistance extends Component {
 
   componentDidMount() {
     socket.on('reconnect', () => {
-      const data = { userName: socket.userName, roomName: socket.roomName };
+      console.log(socket.id);
+      const data = {
+        userName: socket.userName,
+        roomName: socket.roomName,
+        socketId: socket.id
+      };
       socket.emit('rejoin', data);
     });
     this._isMounted = true;
