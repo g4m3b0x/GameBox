@@ -16,7 +16,7 @@ Wilson Leung: https://github.com/wilsonleung32
 
 Deployed at: http://g4m3b0x.herokuapp.com/
 
-<!-- [Video Demo](https://youtu.be/6eiez7QiTvg) -->
+![](./github/readme_2.png)
 
 # Links
 
