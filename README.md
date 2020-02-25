@@ -1,4 +1,4 @@
-<!-- ![Screenshot](https://raw.githubusercontent.com/xMNG/proof-of-existence/master/githubImages/screenshot.png "screenshot") -->
+![](./github/readme_1.png)
 
 # What is GameBox?
 
