@@ -13,15 +13,19 @@ const MissionInput = props => {
         <img
           style={style.missionVoteButton}
           src={'/resistance_mission_success.png'}
-          onClick={() => writeGameState('submitMissionVote', { castedVote: true })}
+          onClick={() =>
+            writeGameState('submitMissionVote', { castedVote: true })
+          }
         />
-        {socket.id in gameState.spies &&
+        {socket.id in gameState.spies && (
           <img
             style={style.missionVoteButton}
             src={'/resistance_mission_fail.png'}
-            onClick={() => writeGameState('submitMissionVote', { castedVote: false })}
+            onClick={() =>
+              writeGameState('submitMissionVote', { castedVote: false })
+            }
           />
-        }
+        )}
       </React.Fragment>
     ) : (
       <p>Waiting for remaining team members...</p>

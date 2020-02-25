@@ -59,6 +59,14 @@ module.exports = class Room {
       currentHost: this.host
     });
   }
+  rejoin(socket, data) {
+    const oldSocketId = socket.request.session.socketId;
+    const { roomName, userName } = data;
+    socket.roomName = roomName;
+    socket.userName = userName;
+    delete this.users[oldSocketId];
+    this.users[socket.id] = userName;
+  }
   disconnect(socket, io) {
     delete this.users[socket.id];
     const updatedUsers = Object.keys(this.users);
@@ -79,7 +87,7 @@ module.exports = class Room {
       currentHost: this.host
     });
     if (this.game) this.gameOver(io);
-    return !this.dedicatedScreen && !updatedUsers.length;   // whether room should be deleted
+    return !this.dedicatedScreen && !updatedUsers.length; // whether room should be deleted
   }
   updateHost(socket, newHost) {
     socket.broadcast.to(newHost).emit('hostMigration');
@@ -88,17 +96,11 @@ module.exports = class Room {
   startGame(game, socket, io) {
     const numPlayers = Object.keys(this.users).length;
     if (numPlayers < Games[game].min) {
-      socket.emit(
-        'lobbyError',
-        `Minimum ${Games[game].min} players`
-      );
+      socket.emit('lobbyError', `Minimum ${Games[game].min} players`);
       return;
     }
     if (numPlayers > Games[game].max) {
-      socket.emit(
-        'lobbyError',
-        `Maximum ${Games[game].max} players`
-      );
+      socket.emit('lobbyError', `Maximum ${Games[game].max} players`);
       return;
     }
     const newGame = new Games[game].instance(this.users, this.dedicatedScreen);
@@ -114,7 +116,8 @@ module.exports = class Room {
     const errorObj = { status: false };
     if (this.maxPlayers === Object.keys(this.users).length)
       errorObj.msg = `${this.roomName} is at capacity`;
-    else if (this.game) errorObj.msg = `${this.roomName} is already in progress`;
+    else if (this.game)
+      errorObj.msg = `${this.roomName} is already in progress`;
     else errorObj.status = true;
     return errorObj;
   }

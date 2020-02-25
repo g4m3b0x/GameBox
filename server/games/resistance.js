@@ -32,9 +32,15 @@ const groupSize = {
   }
 };
 
-const resImages = Array(10).fill(0).map((_, i) => `resistance_char_res${i + 1}.png`);
-const spyImages = Array(10).fill(0).map((_, i) => `resistance_char_spy${i + 1}.png`);
-const gunImages = Array(5).fill(0).map((_, i) => `resistance_token_gun${i + 1}.png`);
+const resImages = Array(10)
+  .fill(0)
+  .map((_, i) => `resistance_char_res${i + 1}.png`);
+const spyImages = Array(10)
+  .fill(0)
+  .map((_, i) => `resistance_char_spy${i + 1}.png`);
+const gunImages = Array(5)
+  .fill(0)
+  .map((_, i) => `resistance_token_gun${i + 1}.png`);
 
 const shuffle = arr => {
   const output = [...arr];
@@ -215,7 +221,8 @@ module.exports = class Resistance {
       this.gunImages.push(this.proposedTeam[playerId]);
       delete this.proposedTeam[playerId];
     } else if (
-      Object.keys(this.proposedTeam).length === this.groupSize.missionSize[this.currentMission]
+      Object.keys(this.proposedTeam).length ===
+      this.groupSize.missionSize[this.currentMission]
     ) {
       return;
     } else {
@@ -226,7 +233,8 @@ module.exports = class Resistance {
     this.teamVotes[socket.id] = castedVote;
     if (Object.keys(this.teamVotes).length !== this.players.length) return;
     const tally = Object.values(this.teamVotes).reduce(
-      (total, vote) => (total += +vote), 0
+      (total, vote) => (total += +vote),
+      0
     );
     const passed = tally > this.players.length / 2;
     if (!passed) {
@@ -258,11 +266,13 @@ module.exports = class Resistance {
     const totalVotes = this.groupSize.missionSize[this.currentMission];
     if (Object.keys(this.missionVotes).length !== totalVotes) return;
     const tally = Object.values(this.missionVotes).reduce(
-      (total, vote) => (total += +vote), 0
+      (total, vote) => (total += +vote),
+      0
     );
     if (
-      ((this.players.length < 7 || this.currentMission !== 3) && totalVotes - tally >= 1)
-      || totalVotes - tally >= 2
+      ((this.players.length < 7 || this.currentMission !== 3) &&
+        totalVotes - tally >= 1) ||
+      totalVotes - tally >= 2
     ) {
       this.missionResults[this.currentMission] = 0;
     } else {
@@ -270,10 +280,20 @@ module.exports = class Resistance {
     }
     this.currentPhase = 'missionReveal';
     this.resultOfVotes = shuffle(Object.values(this.missionVotes));
-    if (this.missionResults.reduce((failures, mission) => mission === 0 ? failures + 1 : failures, 0) === 3) {
+    if (
+      this.missionResults.reduce(
+        (failures, mission) => (mission === 0 ? failures + 1 : failures),
+        0
+      ) === 3
+    ) {
       this.gameOver('spiesWin');
     }
-    if (this.missionResults.reduce((successes, mission) => mission === 1 ? successes + 1 : successes, 0) === 3) {
+    if (
+      this.missionResults.reduce(
+        (successes, mission) => (mission === 1 ? successes + 1 : successes),
+        0
+      ) === 3
+    ) {
       if (!this.specialRoles.assassin || !this.specialRoles.commander) {
         this.gameOver('resWin');
       } else {
@@ -294,6 +314,45 @@ module.exports = class Resistance {
         ? 'assassinateSuccess'
         : 'assassinateFail'
     );
+  }
+  rejoin(socket, io, data) {
+    console.log('inrejoin');
+    const oldSocketId = socket.request.session.socketId; // grabs previous socket id stored in sessions
+    console.log(oldSocketId, 'old', socket.id, 'new');
+    socket.request.session.socketId = socket.id; // stores new socket id, in case they rejoin again
+    socket.request.session.save(); //saves changes made in sessions
+    const { userName } = data;
+    delete this.users[oldSocketId];
+    this.users[socket.id] = userName;
+    if (this.spies[oldSocketId]) {
+      this.spies[socket.id] = this.spies[oldSocketId];
+      delete this.spies[oldSocketId];
+    }
+    if (this.res[oldSocketId]) {
+      this.res[socket.id] = this.res[oldSocketId];
+      delete this.res[oldSocketId];
+    }
+    for (let i = 0; i < this.players.length; i++) {
+      if (this.players[i] === oldSocketId) {
+        console.log('in for loop');
+        this.players[i] = socket.id;
+        break;
+      }
+    }
+    for (let key in this.specialRoles) {
+      if (this.specialRoles[key] === oldSocketId)
+        this.specialRoles[key] = socket.id;
+    }
+    if (this.proposedTeam[oldSocketId]) {
+      this.proposedTeam[socket.id] = this.proposedTeam[oldSocketId];
+      delete this.proposedTeam[oldSocketId];
+    }
+    if (oldSocketId in this.missionVotes) {
+      this.missionVotes[socket.id] = this.missionVotes[oldSocketId];
+      delete this.missionVotes[oldSocketId];
+    }
+    socket.join(socket.roomName);
+    this.getGameState(socket, io);
   }
   gameOver(reason) {
     switch (reason) {

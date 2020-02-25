@@ -3,7 +3,7 @@
 const path = require('path');
 const express = require('express');
 const app = express();
-
+const session = require('express-session');
 // START EXPRESS SERVER
 
 const PORT = process.env.PORT || 1337;
@@ -12,10 +12,25 @@ const server = app.listen(PORT, () => {
 });
 
 // SOCKET.IO CODE
+const sessionMiddleware = session({
+  secret: 'a secret'
+});
 
 const socketio = require('socket.io');
-const io = socketio(server);  // places a socket.io/socket.io.js route onto server
-io.on('connection', socket => require('./sockets/')(socket, io));
+const io = socketio(server); // places a socket.io/socket.io.js route onto server
+app.use(sessionMiddleware);
+
+io.use((socket, next) =>
+  sessionMiddleware(socket.request, socket.request.res, next)
+);
+
+io.on('connection', socket => {
+  if (!socket.request.session.socketId) {
+    socket.request.session.socketId = socket.id;
+    socket.request.session.save();
+  }
+  require('./sockets/')(socket, io);
+});
 
 // EXPRESS ROUTES
 
