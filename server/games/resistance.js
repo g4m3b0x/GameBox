@@ -317,12 +317,33 @@ module.exports = class Resistance {
   }
   rejoin(socket, io, data) {
     console.log('inrejoin');
-    const oldSocketId = socket.request.session.socketId;
-    socket.request.session.socketId = socket.id;
-    socket.request.session.save();
+    const oldSocketId = socket.request.session.socketId; // grabs previous socket id stored in sessions
+    socket.request.session.socketId = socket.id; // stores new socket id, in case they rejoin again
+    socket.request.session.save(); //saves changes made in sessions
     const { userName } = data;
     delete this.users[oldSocketId];
     this.users[socket.id] = userName;
+    if (this.spies[oldSocketId]) {
+      this.spies[socket.id] = this.spies[oldSocketId];
+      delete this.spies[oldSocketId];
+    }
+    if (this.res[oldSocketId]) {
+      this.res[socket.id] = this.res[oldSocketId];
+      delete this.res[oldSocketId];
+    }
+    for (let i = 0; i < this.players.length; i++) {
+      if (this.players[i] === oldSocketId) {
+        this.players[i] = socket.id;
+        break;
+      }
+    }
+    for (let key in this.specialRoles) {
+      if (this.specialRoles[key] === oldSocketId) this.specialRoles = socket.id;
+    }
+    if (this.proposedTeam[oldSocketId]) {
+      this.proposedTeam[socket.id] = this.proposedTeam[oldSocketId];
+      delete this.proposedTeam[oldSocketId];
+    }
     socket.join(socket.roomName);
     this.getGameState(socket, io);
   }
