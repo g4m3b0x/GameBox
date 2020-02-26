@@ -6,6 +6,8 @@ module.exports = (socket, io, rooms, users) => {
     }
   });
   socket.on('disconnect', () => {
-    console.log('A client has disconnected from the server!');
+    console.log('A client has DISCONNECTED from the server:');
+    console.log(`Session ID: ${socket.request.session.id}`);
+    console.log(`Socket ID: ${socket.id}`);
   });
 };

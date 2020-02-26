@@ -13,7 +13,8 @@ const server = app.listen(PORT, () => {
 
 // SOCKET.IO CODE
 const sessionMiddleware = session({
-  secret: 'a secret'
+  secret: 'a secret',
+  resave: true
 });
 
 const socketio = require('socket.io');
@@ -25,10 +26,13 @@ io.use((socket, next) =>
 );
 
 io.on('connection', socket => {
-  if (!socket.request.session.socketId) {
-    socket.request.session.socketId = socket.id;
-    socket.request.session.save();
-  }
+  // if (!socket.request.session.socketId) {
+  //   socket.request.session.socketId = socket.id;
+  //
+  // }
+  socket.request.session.save();
+  console.log(socket.request.session.roomName);
+
   require('./sockets/')(socket, io);
 });
 

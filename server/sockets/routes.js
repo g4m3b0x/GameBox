@@ -4,6 +4,15 @@ module.exports = (socket, io, rooms, users) => {
     socket.emit('sendRoomData', rooms[socket.roomName].getRoomData());
   });
   socket.on('createRoom', data => {
+    console.log(rooms, socket.request.session.roomName, 'roomName');
+    const errorObj =
+      socket.request.session.roomName in rooms
+        ? { status: false, msg: 'You are in a lobby on another browser' }
+        : { status: true };
+    if (!errorObj.status) {
+      socket.emit('errorOnJoin', errorObj);
+      return;
+    }
     const { userName, dedicatedScreen } = data;
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     let roomName;
@@ -19,7 +28,7 @@ module.exports = (socket, io, rooms, users) => {
   socket.on('joinRoom', data => {
     const { userName, roomName } = data;
     const errorObj = rooms[roomName]
-      ? rooms[roomName].canJoin()
+      ? rooms[roomName].canJoin(socket, rooms)
       : { status: false, msg: `Invalid room: ${roomName}` };
     if (!errorObj.status) {
       socket.emit('errorOnJoin', errorObj);

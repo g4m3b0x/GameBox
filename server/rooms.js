@@ -37,6 +37,9 @@ module.exports = class Room {
     return roomData;
   }
   joinRoom(userName, socket, io) {
+    socket.request.session.socketId = socket.id;
+    socket.request.session.roomName = this.roomName;
+    socket.request.session.save();
     socket.userName = userName;
     socket.roomName = this.roomName;
     socket.hostBool = false;
@@ -112,12 +115,15 @@ module.exports = class Room {
     this.selectGame('--None--');
     io.in(this.roomName).emit('status', 'lobby');
   }
-  canJoin() {
+  canJoin(socket, rooms) {
+    console.log(socket.request.session.roomName);
     const errorObj = { status: false };
     if (this.maxPlayers === Object.keys(this.users).length)
       errorObj.msg = `${this.roomName} is at capacity`;
     else if (this.game)
       errorObj.msg = `${this.roomName} is already in progress`;
+    else if (socket.request.session.roomName in rooms)
+      errorObj.msg = 'You are already in another lobby';
     else errorObj.status = true;
     return errorObj;
   }
